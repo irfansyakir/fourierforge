@@ -1,5 +1,5 @@
 name: fourierforge
-description: "A new Flutter project."
+description: "Irfan Syakir's FYP"
 publish_to: 'none'
 version: 0.1.0
 
@@ -7,8 +7,10 @@ environment:
   sdk: ^3.7.0
 
 dependencies:
+  fl_chart: ^0.70.2
   flutter:
     sdk: flutter
+  flutter_math_fork: ^0.7.3
 
 dev_dependencies:
   flutter_test:
