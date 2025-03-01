@@ -85,19 +85,18 @@ class FormulaDisplay extends StatelessWidget {
         const SizedBox(height: 12.0),
         
         Math.tex(
-          r'f(t) = \frac{2}{\pi} \sum_{k=1}^{\infty} \frac{(-1)^{k+1}\sin(kt)}{k}',
+          r'f(t) = \frac{2}{\pi} \sum_{n=1}^{\infty} \frac{(-1)^{n+1}\sin(nt)}{n}',
           textStyle: const TextStyle(fontSize: 16),
         ),
       ],
     );
   }
 
-  // Triangle wave formula
   Widget _buildTriangleWaveFormula() {
     List<String> termsList = [];
-    for (int k = 1; k <= min(5, waveModel.terms); k++) {
-      int n = 2 * k - 1; // Odd harmonics
-      termsList.add(r'\frac{(-1)^{' '${(n-1)/2}' r'}\cos(' '${n}t' r')}{' '$n^2' '}');
+    for (int k = 0; k < min(5, waveModel.terms); k++) {
+      int n = 2 * k + 1; // Odd harmonics
+      termsList.add(r'\frac{(-1)^{' '$k' r'}\sin(' '${n}t' r')}{' '$n^2' '}');
     }
     if (waveModel.terms > 5) termsList.add(r'\cdots');
 
@@ -120,7 +119,7 @@ class FormulaDisplay extends StatelessWidget {
         const SizedBox(height: 12.0),
         
         Math.tex(
-          r'f(t) = \frac{8}{\pi^2} \sum_{n=1,3,5,\dots}^{\infty} \frac{(-1)^{(n-1)/2}\cos(nt)}{n^2}',
+          r'f(t) = \frac{8}{\pi^2} \sum_{k=0}^{\infty} \frac{(-1)^{k}\sin((2k+1)t)}{(2k+1)^2}',
           textStyle: const TextStyle(fontSize: 16),
         ),
       ],

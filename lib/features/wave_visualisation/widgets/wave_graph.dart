@@ -49,7 +49,6 @@ class WaveGraph extends StatelessWidget {
               border: Border.all(color: const Color(0xffe7e8ec)),
             ),
             lineBarsData: [
-              // Main waveform
               LineChartBarData(
                 spots: points,
                 isCurved: false,

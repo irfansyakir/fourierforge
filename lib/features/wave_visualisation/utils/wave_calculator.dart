@@ -10,10 +10,10 @@ class WaveCalculator {
     final List<FlSpot> points = [];
     
     for (double t = 0; t <= graphWidth; t += 0.01) {
+      // t = time
       double x = t;
       double y = 0;
       
-      // Apply frequency and phase shift to x
       double adjustedX = model.frequency * x + model.phaseShift;
       
       switch (model.type) {
@@ -33,15 +33,14 @@ class WaveCalculator {
           break;
           
         case WaveType.triangle:
-          for (int k = 1; k <= model.terms; k++) {
-            int n = 2 * k - 1; // Odd harmonics for triangle wave
-            double term = (8 / (n * n * pi * pi)) * cos(n * adjustedX) * pow(-1, (n-1)/2);
+          for (int k = 0; k < model.terms; k++) {
+            int n = 2 * k + 1; 
+            double term = (8 / (pi * pi)) * pow(-1, k) / (n * n) * sin(n * adjustedX);
             y += term;
           }
           break;
       }
       
-      // Apply amplitude
       y *= model.amplitude;
       
       points.add(FlSpot(x, y));
