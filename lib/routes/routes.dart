@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import '../screens/home_screen.dart';
 import '../screens/wave_visualisation_screen.dart';
+import '../screens/tutorial_solution_screen.dart';
+import '../screens/cheat_sheet_screen.dart';
 
 class AppRoutes {
   static const String home = "/";
   static const String waveVisualisation = '/wave_visualisation';
+  static const String tutorialSolutionScreen = '/tutorial_solution_screen';
+  static const String cheatSheet = '/cheat_sheet';
 
-   static Route<dynamic> generateRoute(RouteSettings settings) {
+  static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
@@ -14,6 +18,11 @@ class AppRoutes {
       case waveVisualisation:
         return MaterialPageRoute(builder: (_) => const WaveVisualisationScreen());
 
+      case tutorialSolutionScreen:
+        return MaterialPageRoute(builder: (_) => const TutorialSolutionScreen());
+        
+      case cheatSheet:
+        return MaterialPageRoute(builder: (_) => const CheatSheetScreen());
    
       default:
         return _errorRoute();
