@@ -14,6 +14,19 @@ class WaveGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double minY = points.map((point) => point.y).reduce((a, b) => a < b ? a : b);
+    double maxY = points.map((point) => point.y).reduce((a, b) => a > b ? a : b);
+    
+    double padding = (maxY - minY) * 0.1; 
+    minY = minY - padding;
+    maxY = maxY + padding;
+    
+    if (maxY - minY < 4) {
+      double mid = (maxY + minY) / 2;
+      minY = mid - 2;
+      maxY = mid + 2;
+    }
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.4,
       decoration: BoxDecoration(
@@ -26,8 +39,8 @@ class WaveGraph extends StatelessWidget {
           LineChartData(
             minX: 0,
             maxX: graphWidth,
-            minY: -2,
-            maxY: 2,
+            minY: minY,
+            maxY: maxY,
             gridData: FlGridData(
               show: true,
               drawVerticalLine: true,
@@ -86,13 +99,17 @@ class WaveGraph extends StatelessWidget {
               leftTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
-                  interval: 1,
                   getTitlesWidget: (value, meta) {
-                    if (value == -2 || value == -1 || value == 0 || value == 1 || value == 2) {
-                      return Text(value.toInt().toString());
+                    if (value == -2 || value == -1 || value == 0 || 
+                        value == 1 || value == 2 || 
+                        value == value.roundToDouble()) {
+                      if (value >= minY && value <= maxY) {
+                        return Text(value.toInt().toString());
+                      }
                     }
                     return const Text('');
                   },
+                  interval: 1.0,
                   reservedSize: 30,
                 ),
               ),

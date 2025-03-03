@@ -15,7 +15,6 @@ class WaveModel {
     required this.phaseShift,
   });
 
-  // Create a copy with updated values
   WaveModel copyWith({
     WaveType? type,
     int? terms,

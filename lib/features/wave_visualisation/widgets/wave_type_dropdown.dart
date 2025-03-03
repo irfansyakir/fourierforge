@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../models/wave_model.dart';
 
-class WaveTypeSelector extends StatelessWidget {
+class WaveTypeDropdown extends StatelessWidget {
   final WaveType selectedType;
   final Function(WaveType) onTypeChanged;
 
-  const WaveTypeSelector({
+  const WaveTypeDropdown({
     super.key,
     required this.selectedType,
     required this.onTypeChanged,

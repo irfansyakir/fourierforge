@@ -39,6 +39,8 @@ class FormulaDisplay extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
+          width: double.infinity,
+          alignment: Alignment.center,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Math.tex(
@@ -49,10 +51,13 @@ class FormulaDisplay extends StatelessWidget {
         ),
         
         const SizedBox(height: 12.0),
-        
-        Math.tex(
-          r'f(t) = \frac{4}{\pi} \sum_{n=1,3,5,\dots}^\infty \frac{\sin(nt)}{n}',
-          textStyle: const TextStyle(fontSize: 16),
+        Container(
+          width: double.infinity,
+          alignment: Alignment.center,
+          child: Math.tex(
+            r'f(t) = \frac{4}{\pi} \sum_{n=1,3,5,\dots}^\infty \frac{\sin(nt)}{n}',
+            textStyle: const TextStyle(fontSize: 16),
+          ),
         ),
       ],
     );
@@ -73,6 +78,8 @@ class FormulaDisplay extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
+          width: double.infinity,
+          alignment: Alignment.center,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Math.tex(
@@ -83,10 +90,13 @@ class FormulaDisplay extends StatelessWidget {
         ),
         
         const SizedBox(height: 12.0),
-        
-        Math.tex(
-          r'f(t) = \frac{2}{\pi} \sum_{n=1}^{\infty} \frac{(-1)^{n+1}\sin(nt)}{n}',
-          textStyle: const TextStyle(fontSize: 16),
+        Container(
+          width: double.infinity,
+          alignment: Alignment.center,
+          child: Math.tex(
+            r'f(t) = \frac{2}{\pi} \sum_{n=1}^{\infty} \frac{(-1)^{n+1}\sin(nt)}{n}',
+            textStyle: const TextStyle(fontSize: 16),
+          ),
         ),
       ],
     );
@@ -107,6 +117,8 @@ class FormulaDisplay extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
+          width: double.infinity,
+          alignment: Alignment.center,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Math.tex(
@@ -116,11 +128,14 @@ class FormulaDisplay extends StatelessWidget {
           ),
         ),
         
-        const SizedBox(height: 12.0),
-        
-        Math.tex(
-          r'f(t) = \frac{8}{\pi^2} \sum_{k=0}^{\infty} \frac{(-1)^{k}\sin((2k+1)t)}{(2k+1)^2}',
-          textStyle: const TextStyle(fontSize: 16),
+        const SizedBox(height: 12.0),       
+        Container(
+          width: double.infinity,
+          alignment: Alignment.center,
+          child: Math.tex(
+            r'f(t) = \frac{8}{\pi^2} \sum_{n=0}^{\infty} \frac{(-1)^{n}\sin((2n+1)t)}{(2n+1)^2}',
+            textStyle: const TextStyle(fontSize: 16),
+          ),
         ),
       ],
     );

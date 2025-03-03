@@ -13,8 +13,8 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'FourierForge',
-      initialRoute: AppRoutes.home, // Default route
-      onGenerateRoute: AppRoutes.generateRoute, // Use centralized routes
+      initialRoute: AppRoutes.home,
+      onGenerateRoute: AppRoutes.generateRoute,
     );
   }
 }

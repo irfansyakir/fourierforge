@@ -3,14 +3,12 @@ import 'package:fl_chart/fl_chart.dart';
 import '../models/wave_model.dart';
 
 class WaveCalculator {
-  static const double graphWidth = 6.28; // Width of the graph (2π for periodicity)
+  static const double graphWidth = 6.28; 
 
-  // Calculate the points for the main wave
   static List<FlSpot> calculateWave(WaveModel model) {
     final List<FlSpot> points = [];
     
     for (double t = 0; t <= graphWidth; t += 0.01) {
-      // t = time
       double x = t;
       double y = 0;
       

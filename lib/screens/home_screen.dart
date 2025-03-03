@@ -17,17 +17,19 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildNavButton(context, 'Waves Visualization', AppRoutes.waveVisualisation),
-            _buildNavButton(context, 'Tutorial Solutions', AppRoutes.tutorialSolutionScreen),
+            _buildNavButton(context, 'Waves Visualization', AppRoutes.waveVisualisation,
+            Icons.ssid_chart),
+            _buildNavButton(context, 'Tutorial Solutions', AppRoutes.tutorialSolutionScreen,
+            Icons.tungsten_outlined),
             _buildNavButton(context, 'Fourier Series Cheat Sheet', AppRoutes.cheatSheet, 
-              icon: Icons.sticky_note_2_outlined),
+            Icons.sticky_note_2_outlined),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildNavButton(BuildContext context, String text, String route, {IconData? icon}) {
+  Widget _buildNavButton(BuildContext context, String text, String route, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ElevatedButton(
@@ -39,10 +41,8 @@ class HomeScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (icon != null) ...[
-              Icon(icon),
-              const SizedBox(width: 8),
-            ],
+            Icon(icon),
+            const SizedBox(width: 8),
             Text(text),
           ],
         ),

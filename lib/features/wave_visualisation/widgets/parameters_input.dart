@@ -30,13 +30,36 @@ class ParameterInput extends StatefulWidget {
 
 class _ParameterInputState extends State<ParameterInput> {
   late TextEditingController _controller;
+  late FocusNode _focusNode;
   bool _isEditing = false;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _focusNode = FocusNode();
     _updateTextController();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    if (!_focusNode.hasFocus && _isEditing) {
+      _applyTextValue();
+    }
+  }
+
+  void _applyTextValue() {
+    double? newValue = double.tryParse(_controller.text);
+    if (newValue != null) {
+      newValue = newValue.clamp(widget.min, widget.max);
+      widget.onChanged(newValue); 
+      _controller.text = newValue.toStringAsFixed(widget.decimalPlaces);
+    } else {
+      _updateTextController();
+    }
+    setState(() {
+      _isEditing = false;
+    });
   }
 
   @override
@@ -48,13 +71,14 @@ class _ParameterInputState extends State<ParameterInput> {
   }
 
   void _updateTextController() {
-    // Format the number based on decimal places
     _controller.text = widget.value.toStringAsFixed(widget.decimalPlaces);
   }
 
   @override
   void dispose() {
+    _focusNode.removeListener(_onFocusChange);
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -63,14 +87,13 @@ class _ParameterInputState extends State<ParameterInput> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Label
+
         Text(
           widget.label,
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         
-        // Slider and text input row
         Row(
           children: [
             // Slider
@@ -102,56 +125,87 @@ class _ParameterInputState extends State<ParameterInput> {
               ),
             ),
             
-            // Number input field
             Expanded(
               flex: 3,
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: TextField(
-                  controller: _controller,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _controller,
+                        focusNode: _focusNode,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.check, size: 16),
+                            onPressed: () {
+                              _applyTextValue();
+                              _focusNode.unfocus();
+                            },
+                          ),
+                          isDense: true,
+                        ),
+                        textInputAction: TextInputAction.done,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                          TextInputFormatter.withFunction((oldValue, newValue) {
+                            if (newValue.text.isEmpty) {
+                              return newValue;
+                            }
+
+                            double? value = double.tryParse(newValue.text);
+                            if (value == null) {
+                              return oldValue;
+                            }
+                            
+                            if (value > widget.max) {
+                              return TextEditingValue(
+                                text: widget.max.toStringAsFixed(widget.decimalPlaces),
+                                selection: TextSelection.collapsed(offset: widget.max.toStringAsFixed(widget.decimalPlaces).length),
+                              );
+                            }
+                            
+                            if (value < widget.min) {
+                              return TextEditingValue(
+                                text: widget.min.toStringAsFixed(widget.decimalPlaces),
+                                selection: TextSelection.collapsed(offset: widget.min.toStringAsFixed(widget.decimalPlaces).length),
+                              );
+                            }
+                            
+                            return newValue;
+                          }),
+                        ],
+                        onChanged: (text) {
+                          setState(() {
+                            _isEditing = true;
+                          });
+                        },
+                        onEditingComplete: () {
+                          _applyTextValue();
+                          _focusNode.unfocus();
+                        },
+                        onSubmitted: (text) {
+                          _applyTextValue();
+                        },
+                        onTap: () {
+                          setState(() {
+                            _isEditing = true;
+                            _controller.selection = TextSelection(
+                              baseOffset: 0,
+                              extentOffset: _controller.text.length,
+                            );
+                          });
+                        },
+                      ),
                     ),
-                    isDense: true, // Reduces height of the field
-                  ),
-                  inputFormatters: [
-                    // For filtering inputs
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                   ],
-                  onChanged: (text) {
-                    setState(() {
-                      _isEditing = true;
-                    });
-                  },
-                  onSubmitted: (text) {
-                    double? newValue = double.tryParse(text);
-                    if (newValue != null) {
-                      // Clamp the value to min and max
-                      newValue = newValue.clamp(widget.min, widget.max);
-                      widget.onChanged(newValue);
-                    } else {
-                      // If parsing fails, reset to current value
-                      _updateTextController();
-                    }
-                    setState(() {
-                      _isEditing = false;
-                    });
-                  },
-                  onTap: () {
-                    setState(() {
-                      _isEditing = true;
-                      // Select all text when tapped for easy replacement
-                      _controller.selection = TextSelection(
-                        baseOffset: 0,
-                        extentOffset: _controller.text.length,
-                      );
-                    });
-                  },
                 ),
               ),
             ),
@@ -190,7 +244,6 @@ class ParameterInputs extends StatelessWidget {
       spacing: 16,
       runSpacing: 16,
       children: [
-        // Terms input
         SizedBox(
           width: MediaQuery.of(context).size.width > 600 
               ? (MediaQuery.of(context).size.width - 48) / 2 
@@ -255,6 +308,26 @@ class ParameterInputs extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class ParameterInputsScreen extends StatelessWidget {
+  final Widget child;
+
+  const ParameterInputsScreen({
+    super.key,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      behavior: HitTestBehavior.translucent,
+      child: child,
     );
   }
 }

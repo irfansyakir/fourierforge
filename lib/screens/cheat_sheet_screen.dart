@@ -97,7 +97,6 @@ class CheatSheetScreen extends StatelessWidget {
                     title: 'Time Shifting',
                     content: 'If f(t) → {cn}, then f(t-τ) →',
                     formula: r'c_n e^{-jn\omega_0\tau}',
-                    extraInfo: 'Magnitude unchanged, phase is shifted',
                   ),
                   
                   PropertyCard(
@@ -110,74 +109,12 @@ class CheatSheetScreen extends StatelessWidget {
                     title: 'Differentiation',
                     content: 'If f(t) → {cn}, then df/dt →',
                     formula: r'jn\omega_0 c_n',
-                    extraInfo: 'Enhances higher harmonics',
                   ),
                   
                   PropertyCard(
                     title: 'Integration',
                     content: 'If f(t) → {cn}, then ∫f(t)dt →',
                     formula: r'c_n / (jn\omega_0), n \neq 0',
-                    extraInfo: 'Attenuates higher harmonics',
-                  ),
-                ],
-              ),
-              
-              // Common Waveforms
-              CheatSheetSection(
-                title: 'Common Waveforms',
-                children: [
-                  WaveFormCard(
-                    title: 'Square Wave',
-                    formula: r'f(t) = \frac{4}{\pi}\sum_{n=1,3,5,...}^{\infty}\frac{\sin(n\omega t)}{n}',
-                    notes: 'Only odd harmonics, amplitudes decay as 1/n',
-                  ),
-                  
-                  WaveFormCard(
-                    title: 'Sawtooth Wave',
-                    formula: r'f(t) = \frac{2}{\pi}\sum_{n=1}^{\infty}\frac{(-1)^{n+1}\sin(n\omega t)}{n}',
-                    notes: 'All harmonics, amplitudes decay as 1/n',
-                  ),
-                  
-                  WaveFormCard(
-                    title: 'Triangle Wave',
-                    formula: r'f(t) = \frac{8}{\pi^2}\sum_{n=1,3,5,...}^{\infty}\frac{(-1)^{\frac{n-1}{2}}\sin(n\omega t)}{n^2}',
-                    notes: 'Only odd harmonics, amplitudes decay as 1/n²',
-                  ),
-                ],
-              ),
-              
-              // Convergence Properties
-              CheatSheetSection(
-                title: 'Convergence Properties',
-                children: [
-                  PropertyCard(
-                    title: 'Dirichlet Conditions',
-                    content: 'For Fourier series convergence, a function must:\n- Be periodic\n- Have a finite number of discontinuities\n- Have a finite number of extrema\n- Be absolutely integrable',
-                  ),
-                  
-                  PropertyCard(
-                    title: 'Gibbs Phenomenon',
-                    content: 'Overshoot occurs near discontinuities that doesn\'t vanish as more terms are added (remains ~9% of jump)',
-                  ),
-                  
-                  PropertyCard(
-                    title: 'Rate of Convergence',
-                    content: 'Depends on smoothness of function:\n- Discontinuous function: Coefficients decay as 1/n\n- Continuous with discontinuous derivative: Coefficients decay as 1/n²',
-                  ),
-                ],
-              ),
-              
-              // Parseval's Theorem
-              CheatSheetSection(
-                title: 'Parseval\'s Theorem',
-                children: [
-                  FormulaCard(
-                    title: 'Energy Relation',
-                    formula: r'\frac{1}{T}\int_{0}^{T}|f(t)|^2 dt = |a_0|^2 + \frac{1}{2}\sum_{n=1}^{\infty}(|a_n|^2 + |b_n|^2)',
-                    details: [
-                      'Relates signal energy in time domain to energy in frequency domain',
-                      'Useful for power calculations in signals',
-                    ],
                   ),
                 ],
               ),
@@ -189,7 +126,6 @@ class CheatSheetScreen extends StatelessWidget {
   }
 }
 
-// A section in the cheat sheet with a title and content
 class CheatSheetSection extends StatelessWidget {
   final String title;
   final String? content;
@@ -244,7 +180,6 @@ class CheatSheetSection extends StatelessWidget {
   }
 }
 
-// Card displaying a formula with title and details
 class FormulaCard extends StatelessWidget {
   final String title;
   final String formula;
@@ -313,19 +248,16 @@ class FormulaCard extends StatelessWidget {
   }
 }
 
-// Card for displaying properties and operations
 class PropertyCard extends StatelessWidget {
   final String title;
   final String content;
   final String? formula;
-  final String? extraInfo;
 
   const PropertyCard({
     super.key,
     required this.title,
     required this.content,
     this.formula,
-    this.extraInfo,
   });
 
   @override
@@ -369,16 +301,6 @@ class PropertyCard extends StatelessWidget {
                   ),
                 ),
               ),
-              
-            // Optional extra information
-            if (extraInfo != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  extraInfo!,
-                  style: const TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
           ],
         ),
       ),
@@ -386,17 +308,14 @@ class PropertyCard extends StatelessWidget {
   }
 }
 
-// Card for displaying common waveforms
 class WaveFormCard extends StatelessWidget {
   final String title;
   final String formula;
-  final String notes;
 
   const WaveFormCard({
     super.key,
     required this.title,
     required this.formula,
-    required this.notes,
   });
 
   @override
@@ -432,16 +351,6 @@ class WaveFormCard extends StatelessWidget {
                   formula,
                   textStyle: const TextStyle(fontSize: 16),
                 ),
-              ),
-            ),
-            
-            // Notes
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                notes,
-                style: const TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
           ],

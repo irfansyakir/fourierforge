@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../features/wave_visualisation/models/wave_model.dart';
 import '../features/wave_visualisation/utils/wave_calculator.dart';
-import '../features/wave_visualisation/widgets/wave_type_selector.dart';
+import '../features/wave_visualisation/widgets/wave_type_dropdown.dart';
 import '../features/wave_visualisation/widgets/wave_graph.dart';
 import '../features/wave_visualisation/widgets/parameters_input.dart';
 import '../features/wave_visualisation/widgets/formula_display.dart';
@@ -15,16 +15,14 @@ class WaveVisualisationScreen extends StatefulWidget {
 }
 
 class WaveVisualisationScreenState extends State<WaveVisualisationScreen> {
-  // Wave model containing all wave parameters
   late WaveModel waveModel;
   
-  // Data points for the graph
   List<FlSpot> points = [];
 
   @override
   void initState() {
     super.initState();
-    // Initialize wave model with default values
+
     waveModel = WaveModel(
       type: WaveType.square,
       terms: 1,
@@ -33,11 +31,9 @@ class WaveVisualisationScreenState extends State<WaveVisualisationScreen> {
       phaseShift: 0.0,
     );
     
-    // Calculate initial points
     updateGraph();
   }
 
-  // Updates the graph data based on the current wave model
   void updateGraph() {
     setState(() {
       points = WaveCalculator.calculateWave(waveModel);
@@ -56,8 +52,16 @@ class WaveVisualisationScreenState extends State<WaveVisualisationScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // Wave type selector
-              WaveTypeSelector(
+              
+              WaveGraph(
+                points: points,
+              ),
+              const SizedBox(height: 16),
+
+              FormulaDisplay(waveModel: waveModel),
+              const SizedBox(height: 16),
+
+              WaveTypeDropdown(
                 selectedType: waveModel.type,
                 onTypeChanged: (WaveType type) {
                   setState(() {
@@ -68,18 +72,6 @@ class WaveVisualisationScreenState extends State<WaveVisualisationScreen> {
               ),
               const SizedBox(height: 16),
               
-              // Graph visualization
-              WaveGraph(
-                points: points,
-              ),
-              const SizedBox(height: 16),
-              
-              // Formula display (above the sliders)
-              FormulaDisplay(waveModel: waveModel),
-              
-              const SizedBox(height: 16),
-              
-              // Parameter inputs (sliders + text input)
               ParameterInputs(
                 terms: waveModel.terms,
                 frequency: waveModel.frequency,
