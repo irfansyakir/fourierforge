@@ -9,6 +9,7 @@ class AppRoutes {
   static const String waveVisualisation = '/wave_visualisation';
   static const String tutorialSolutionScreen = '/tutorial_solution_screen';
   static const String cheatSheet = '/cheat_sheet';
+  static const String manim = 'manim';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {

@@ -4,7 +4,7 @@ import 'dart:math' as math;
 
 // Import the separate card components
 import 'question_card.dart';
-import 'signal_visualization_card.dart';
+import 'video_card.dart';
 import 'solution_a_card.dart';
 import 'solution_b_card.dart';
 import 'spectra_visualization_card.dart';
@@ -27,26 +27,10 @@ class Question801ScreenState extends State<Question801Screen> {
   @override
   void initState() {
     super.initState();
-    _generateSignalPoints();
     _generateSpectraPoints();
   }
   
-  void _generateSignalPoints() {
-    inputSignalPoints = [];
-    outputSignalPoints = [];
-    
-    // Generate points for one full period
-    for (double x = -1.25; x <= 1.25; x += 0.01) {
-      // Input signal: x(t) = cos(2πt)
-      double inputY = math.cos(2 * math.pi * x);
-      inputSignalPoints.add(FlSpot(x, inputY));
-      
-      // Output signal (after full-wave rectification)
-      double outputY = inputY >= 0 ? inputY : -inputY;
-      outputSignalPoints.add(FlSpot(x, outputY));
-    }
-  }
-
+ 
   void _generateSpectraPoints() {
     // Clear existing points
     magnitudeSpectraPoints = [];
@@ -92,10 +76,9 @@ class Question801ScreenState extends State<Question801Screen> {
             const SizedBox(height: 16),
             
             // Signal visualization card
-            SignalVisualizationCard(
-              inputSignalPoints: inputSignalPoints,
-              outputSignalPoints: outputSignalPoints,
-            ),
+            VideoCard(
+              videoName: 'Signal Visualization',
+              videoPath: 'lib/assets/animations/Tutorial8.mp4'),
             
             const SizedBox(height: 16),
             
@@ -108,6 +91,13 @@ class Question801ScreenState extends State<Question801Screen> {
             const SolutionBCard(),
             
             const SizedBox(height: 16),
+
+            VideoCard(
+              videoName: 'Fourier Series Visualizer',
+              videoPath: 'lib/assets/animations/FourierVisualiser.mp4'),
+
+            const SizedBox(height: 16),
+
             
             // Spectra visualization
             SpectraVisualizationCard(
