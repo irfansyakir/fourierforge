@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../features/tutorial_solutions/question7_1/question7_1_screen.dart';
+import '../features/tutorial_solutions/question7_2/question7_2_screen.dart';
 import '../features/tutorial_solutions/question8_1/question8_1_screen.dart';
 import '../features/tutorial_solutions/question8_2/question8_2_screen.dart';
 
@@ -39,6 +41,32 @@ class TutorialSolutionScreen extends StatelessWidget {
               ],
             ),
           ),
+
+          _buildQuestionCard(
+            context,
+            '7.1',
+            'Periodic Impulse Train',
+            'Determine the complex exponential Fourier series',
+            Icons.signal_cellular_alt,
+            () => Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => const Question701Screen())
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+
+          _buildQuestionCard(
+            context,
+            '7.2',
+            'Periodic Rectangular Signal',
+            'Determine the complex exponential Fourier series',
+            Icons.signal_cellular_alt,
+            () => Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => const Question702Screen())
+            ),
+          ),
           
           const SizedBox(height: 16),
           
@@ -61,8 +89,8 @@ class TutorialSolutionScreen extends StatelessWidget {
           _buildQuestionCard(
             context,
             '8.2',
-            'Question title',
-            'Question Subtitle',
+            'Frequency and Fourier Coefficient Calculation',
+            'Find the frequency and Fourier coefficient of a given signal',
             Icons.signal_cellular_alt,
             () => Navigator.push(
               context, 

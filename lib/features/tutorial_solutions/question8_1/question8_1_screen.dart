@@ -76,7 +76,7 @@ class Question801ScreenState extends State<Question801Screen> {
             const SizedBox(height: 16),
             
             // Signal visualization card
-            VideoCard(
+             VideoCard(
               videoName: 'Signal Visualization',
               videoPath: 'lib/assets/animations/Tutorial8.mp4'),
             

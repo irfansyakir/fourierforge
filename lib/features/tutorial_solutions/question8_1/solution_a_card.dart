@@ -108,7 +108,7 @@ class SolutionACard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Math.tex(
-              r'= \frac{2}{\pi}',
+              r'=\boxed{\frac{2}{\pi}}',
               textStyle: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),
@@ -161,7 +161,7 @@ class SolutionACard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Math.tex(
-              r'= \frac{4}{2\pi(2n-1)}\times(-1)^{n+1} + \frac{4}{2\pi(2n+1)}\times(-1)^n',
+              r'= \boxed{\frac{4}{2\pi(2n-1)}\times(-1)^{n+1} + \frac{4}{2\pi(2n+1)}\times(-1)^n}',
               textStyle: const TextStyle(fontSize: 16),
             ),
           ],
