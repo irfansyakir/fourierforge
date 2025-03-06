@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../features/wave_visualisation/models/wave_model.dart';
-import '../features/wave_visualisation/utils/wave_calculator.dart';
-import '../features/wave_visualisation/widgets/wave_type_dropdown.dart';
-import '../features/wave_visualisation/widgets/wave_graph.dart';
-import '../features/wave_visualisation/widgets/parameters_input.dart';
-import '../features/wave_visualisation/widgets/formula_display.dart';
+import '../features/wave_visualisation/wave_model.dart';
+import '../features/wave_visualisation/wave_calculator.dart';
+import '../features/wave_visualisation/wave_type_dropdown.dart';
+import '../features/wave_visualisation/wave_graph.dart';
+import '../features/wave_visualisation/parameters_input.dart';
+import '../features/wave_visualisation/formula_display.dart';
 
 class WaveVisualisationScreen extends StatefulWidget {
   const WaveVisualisationScreen({super.key});

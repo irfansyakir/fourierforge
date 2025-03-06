@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
-import '../models/wave_model.dart';
+import 'wave_model.dart';
 
 class WaveCalculator {
   static const double graphWidth = 6.28; 

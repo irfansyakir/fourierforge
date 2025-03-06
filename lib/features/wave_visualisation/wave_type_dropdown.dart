@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/wave_model.dart';
+import 'wave_model.dart';
 
 class WaveTypeDropdown extends StatelessWidget {
   final WaveType selectedType;

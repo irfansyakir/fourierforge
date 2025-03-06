@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'dart:math';
-import '../models/wave_model.dart';
+import 'wave_model.dart';
 
 class FormulaDisplay extends StatelessWidget {
   final WaveModel waveModel;

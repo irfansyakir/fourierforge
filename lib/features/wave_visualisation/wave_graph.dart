@@ -27,12 +27,8 @@ class WaveGraph extends StatelessWidget {
       maxY = mid + 2;
     }
 
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height * 0.4,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(8),
-      ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: LineChart(
@@ -45,21 +41,21 @@ class WaveGraph extends StatelessWidget {
               show: true,
               drawVerticalLine: true,
               getDrawingHorizontalLine: (value) {
+                // Check if this is the zero line
+                if (value == 0) {
+                  return FlLine(
+                    color: Colors.black,
+                    strokeWidth: 2.5, // Thicker line for y=0
+                    dashArray: [5, 0], // Optional: Make it solid (no dashes)
+                  );
+                }
+                // Regular grid lines
                 return FlLine(
                   color: const Color(0xffe7e8ec),
                   strokeWidth: 1,
                 );
               },
-              getDrawingVerticalLine: (value) {
-                return FlLine(
-                  color: const Color(0xffe7e8ec),
-                  strokeWidth: 1,
-                );
-              },
-            ),
-            borderData: FlBorderData(
-              show: true,
-              border: Border.all(color: const Color(0xffe7e8ec)),
+              
             ),
             lineBarsData: [
               LineChartBarData(
@@ -87,9 +83,10 @@ class WaveGraph extends StatelessWidget {
                       text = 'π';
                     } else if (value == 3 * pi / 2) {
                       text = '3π/2';
-                    } else if (value == 2 * pi) {
+                    } else if (value == 6.28) {
                       text = '2π';
-                    } else {
+                    } 
+                    else {
                       return const Text('');
                     }
                     return Text(text);
