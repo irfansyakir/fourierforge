@@ -21,6 +21,8 @@ class HomeScreen extends StatelessWidget {
             Icons.ssid_chart),
             _buildNavButton(context, 'Tutorial Solutions', AppRoutes.tutorialSolutionScreen,
             Icons.tungsten_outlined),
+            _buildNavButton(context, 'PYP Solutions', AppRoutes.pypSolutionScreen,
+            Icons.tungsten_outlined),
             _buildNavButton(context, 'Fourier Series Cheat Sheet', AppRoutes.cheatSheet, 
             Icons.sticky_note_2_outlined),
           ],
