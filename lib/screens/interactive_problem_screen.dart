@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import '../features/pyp_solutions/2122S1/question3_screen.dart';
+import '../features/interactive_problems/rectifier_problem.dart';
 
-
-class PYPSolutionScreen extends StatelessWidget {
-  const PYPSolutionScreen({super.key});
+class InteractiveProblemScreen extends StatelessWidget {
+  const InteractiveProblemScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Past Year Exam Solutions'),
+        title: const Text('Interactive Problem Solver'),
         backgroundColor: Colors.indigo,
       ),
       body: ListView(
@@ -22,7 +21,7 @@ class PYPSolutionScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Past Year Exam Questions',
+                  'Interactive Problem Solver',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -30,7 +29,7 @@ class PYPSolutionScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Tap on a question to see its detailed solution.',
+                  'Customize the problem parameters and see how solutions change in real-time.',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey,
@@ -40,27 +39,27 @@ class PYPSolutionScreen extends StatelessWidget {
             ),
           ),
 
-          _buildQuestionCard(
+          // Problem cards
+          _buildProblemCard(
             context,
-            '21/22 Semester 1',
-            'Question 3',
-            'Determine the Fourier series coefficients.',
-            Icons.signal_cellular_alt,
+            'Full-Wave Rectifier',
+            'Explore how different input signals affect the rectified output and Fourier Series.',
+            Icons.waves,
             () => Navigator.push(
               context, 
-              MaterialPageRoute(builder: (context) => const AY2122S1Question3Screen())
+              MaterialPageRoute(builder: (context) => const RectifierProblemScreen())
             ),
           ),
           
+          // More problem cards can be added here later
           
         ],
       ),
     );
   }
   
-  Widget _buildQuestionCard(
+  Widget _buildProblemCard(
     BuildContext context, 
-    String questionNumber,
     String title, 
     String subtitle, 
     IconData icon,
@@ -79,23 +78,26 @@ class PYPSolutionScreen extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Right side - Question title and subtitle
+              // Left side - Icon
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.indigo.withAlpha(25), 
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: Colors.indigo, size: 32),
+              ),
+              const SizedBox(width: 16),
+              
+              // Right side - Problem title and subtitle
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      questionNumber,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
                       title,
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -110,10 +112,10 @@ class PYPSolutionScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(icon, size: 16, color: Colors.indigo),
+                        Icon(Icons.touch_app, size: 16, color: Colors.indigo),
                         const SizedBox(width: 4),
                         const Text(
-                          'Tap to view solution',
+                          'Try it out',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.indigo,

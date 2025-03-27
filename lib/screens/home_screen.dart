@@ -1,3 +1,5 @@
+// Updated lib/screens/home_screen.dart to add the new button
+
 import 'package:flutter/material.dart';
 import '../routes/routes.dart';
 
@@ -19,10 +21,16 @@ class HomeScreen extends StatelessWidget {
           children: [
             _buildNavButton(context, 'Waves Visualization', AppRoutes.waveVisualisation,
             Icons.ssid_chart),
+            
+            _buildNavButton(context, 'Interactive Problem Solver', AppRoutes.interactiveProblemSolver,
+            Icons.science_outlined), // New button
+            
             _buildNavButton(context, 'Tutorial Solutions', AppRoutes.tutorialSolutionScreen,
             Icons.tungsten_outlined),
+            
             _buildNavButton(context, 'PYP Solutions', AppRoutes.pypSolutionScreen,
             Icons.tungsten_outlined),
+            
             _buildNavButton(context, 'Fourier Series Cheat Sheet', AppRoutes.cheatSheet, 
             Icons.sticky_note_2_outlined),
           ],

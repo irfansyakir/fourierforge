@@ -513,7 +513,7 @@ class SpectraVisualization extends StatelessWidget {
                         drawHorizontalLine: true,
                         getDrawingHorizontalLine: (value) {
                           return FlLine(
-                            color: Colors.grey.withOpacity(0.3),
+                            color: Colors.grey.withAlpha(76),
                             strokeWidth: 1,
                           );
                         },
@@ -612,7 +612,7 @@ class SpectraVisualization extends StatelessWidget {
                         drawHorizontalLine: true,
                         getDrawingHorizontalLine: (value) {
                           return FlLine(
-                            color: Colors.grey.withOpacity(0.3),
+                            color: Colors.grey.withAlpha(76),
                             strokeWidth: 1,
                           );
                         },

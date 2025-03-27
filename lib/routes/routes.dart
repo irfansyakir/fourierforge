@@ -1,9 +1,12 @@
+// Updated lib/routes/routes.dart to include the new screens
+
 import 'package:flutter/material.dart';
 import '../screens/home_screen.dart';
 import '../screens/wave_visualisation_screen.dart';
 import '../screens/tutorial_solution_screen.dart';
 import '../screens/pyp_solution_screen.dart';
 import '../screens/cheat_sheet_screen.dart';
+import '../screens/interactive_problem_screen.dart'; // New import
 
 class AppRoutes {
   static const String home = "/";
@@ -11,6 +14,7 @@ class AppRoutes {
   static const String tutorialSolutionScreen = '/tutorial_solution_screen';
   static const String pypSolutionScreen = '/pyp_solution_screen';
   static const String cheatSheet = '/cheat_sheet';
+  static const String interactiveProblemSolver = '/interactive_problem_solver'; // New route
   static const String manim = 'manim';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -29,6 +33,9 @@ class AppRoutes {
         
       case cheatSheet:
         return MaterialPageRoute(builder: (_) => const CheatSheetScreen());
+        
+      case interactiveProblemSolver: // New case
+        return MaterialPageRoute(builder: (_) => const InteractiveProblemScreen());
    
       default:
         return _errorRoute();
