@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
-import '../features/pyp_solutions/2122S1/question3_screen.dart';
+import '../features/problem_solvers/rectifier/rectifier_problem.dart';
 
-
-class PYPSolutionScreen extends StatelessWidget {
-  const PYPSolutionScreen({super.key});
+class InteractiveProblemScreen extends StatelessWidget {
+  const InteractiveProblemScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Past Year Exam Solutions'),
+        title: const Text('Problem Solver'),
         backgroundColor: Colors.indigo,
       ),
+      // List of Questions
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           // Header section
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
+           
             child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Past Year Exam Questions',
+                  'Problem Solver',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -30,41 +31,63 @@ class PYPSolutionScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Tap on a question to see its detailed solution.',
+                  'These problems are based on questions from tutorial questions, quizzes and Past Year Papers.',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Tap on a question to explore the Problem Solver.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
                   ),
                 ),
               ],
             ),
           ),
 
-          _buildQuestionCard(
+          // Calls the function and builds the widgets with individual Question Details
+
+          // Problem Card for Rectifier Problem
+          _buildProblemCard(
             context,
-            '21/22 Semester 1',
-            'Question 3',
-            'Determine the Fourier series coefficients.',
-            Icons.signal_cellular_alt,
+            'Rectifier',
+            'Compute the Fourier series coefficients for a full and half wave rectifier circuits.',
             () => Navigator.push(
               context, 
-              MaterialPageRoute(builder: (context) => const AY2122S1Question3Screen())
+              MaterialPageRoute(builder: (context) => const RectifierProblemScreen())
+            ),
+          ),
+
+
+          // Problem Card for Equation Problem
+          _buildProblemCard(
+            context,
+            'Equations',
+            'Compute the Fourier Series coefficients for the given equations.',
+            () => Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (context) => const RectifierProblemScreen())
             ),
           ),
           
+          // More problem cards can be added here later
           
         ],
       ),
     );
   }
   
-  Widget _buildQuestionCard(
+  // Widget to build each problem card
+  // This widget is reusable for each question
+  Widget _buildProblemCard(
     BuildContext context, 
-    String questionNumber,
-    String title, 
-    String subtitle, 
-    IconData icon,
-    VoidCallback onTap,
+    String title, // Name of Question
+    String subtitle, // Details of Question
+    VoidCallback onTap, // Function to navigate to the question screen
   ) {
     return Card(
       elevation: 4,
@@ -78,28 +101,22 @@ class PYPSolutionScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Right side - Question title and subtitle
+            children: [                 
+              // Right side - Problem title and subtitle
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Name of Question
                     Text(
-                      questionNumber,
+                      title,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
+                    // Question Details
                     Text(
                       subtitle,
                       style: const TextStyle(
@@ -110,10 +127,10 @@ class PYPSolutionScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(icon, size: 16, color: Colors.indigo),
+                        Icon(Icons.touch_app, size: 16, color: Colors.indigo),
                         const SizedBox(width: 4),
                         const Text(
-                          'Tap to view solution',
+                          'Try it out',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.indigo,

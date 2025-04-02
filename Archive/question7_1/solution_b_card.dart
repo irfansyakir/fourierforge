@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
-import '../../../themes/colours.dart';
+//import '../../../themes/colours.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class SolutionBCard extends StatelessWidget {
@@ -140,18 +140,18 @@ class MagnitudeSpectrumChart extends StatelessWidget {
           getDrawingHorizontalLine: (value) {
             if (value == 0) {
               return FlLine(
-                color: AppColours.gridLine,
+                //color: AppColours.gridLine,
                 strokeWidth: 2,
               );
             }
             return FlLine(
-              color: AppColours.gridLine,
+              //color: AppColours.gridLine,
               strokeWidth: 1,
             );
           },
           getDrawingVerticalLine: (value) {
             return FlLine(
-              color: AppColours.gridLine,
+              //color: AppColours.gridLine,
               strokeWidth: 1,
             );
           },
@@ -234,18 +234,18 @@ class PhaseSpectrumChart extends StatelessWidget {
           getDrawingHorizontalLine: (value) {
             if (value == 0) {
               return FlLine(
-                color: AppColours.gridLine,
+             //   color: AppColours.gridLine,
                 strokeWidth: 2,
               );
             }
             return FlLine(
-              color: AppColours.gridLine,
+          //    color: AppColours.gridLine,
               strokeWidth: 1,
             );
           },
           getDrawingVerticalLine: (value) {
             return FlLine(
-              color: AppColours.gridLine,
+              //color: AppColours.gridLine,
               strokeWidth: 1,
             );
           },

@@ -3,18 +3,17 @@
 import 'package:flutter/material.dart';
 import '../screens/home_screen.dart';
 import '../screens/wave_visualisation_screen.dart';
-import '../screens/tutorial_solution_screen.dart';
-import '../screens/pyp_solution_screen.dart';
+import '../screens/sample_solution_screen.dart';
 import '../screens/cheat_sheet_screen.dart';
-import '../screens/interactive_problem_screen.dart'; // New import
+import '../screens/problem_solvers_screen.dart'; // New import
 
 class AppRoutes {
   static const String home = "/";
   static const String waveVisualisation = '/wave_visualisation';
-  static const String tutorialSolutionScreen = '/tutorial_solution_screen';
+  static const String sampleSolutionScreen = '/sample_solution_screen';
   static const String pypSolutionScreen = '/pyp_solution_screen';
   static const String cheatSheet = '/cheat_sheet';
-  static const String interactiveProblemSolver = '/interactive_problem_solver'; // New route
+  static const String interactiveProblemSolver = '/problem_solvers_solver'; // New route
   static const String manim = 'manim';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -25,11 +24,10 @@ class AppRoutes {
       case waveVisualisation:
         return MaterialPageRoute(builder: (_) => const WaveVisualisationScreen());
 
-      case tutorialSolutionScreen:
-        return MaterialPageRoute(builder: (_) => const TutorialSolutionScreen());
+      case sampleSolutionScreen:
+        return MaterialPageRoute(builder: (_) => const SampleSolutionScreen());
 
-      case pypSolutionScreen:
-        return MaterialPageRoute(builder: (_) => const PYPSolutionScreen());
+      
         
       case cheatSheet:
         return MaterialPageRoute(builder: (_) => const CheatSheetScreen());

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../themes/colours.dart';
+//import '../../../themes/colours.dart';
 
 class SignalVisualizationCard extends StatelessWidget {
   final List<FlSpot> xSignalPoints;
@@ -46,12 +46,12 @@ class SignalVisualizationCard extends StatelessWidget {
                       // Draw a thicker line at y=0
                       if (value == 0) {
                         return FlLine(
-                          color: AppColours.gridLine,
+                        //  color: AppColours.gridLine,
                           strokeWidth: 2.5,
                         );
                       }
                       return FlLine(
-                        color: AppColours.gridLine,
+                      //  color: AppColours.gridLine,
                         strokeWidth: 1,
                       );
                     },
@@ -125,12 +125,12 @@ class SignalVisualizationCard extends StatelessWidget {
                       // Draw a thicker line at y=0
                       if (value == 0) {
                         return FlLine(
-                          color: AppColours.gridLine,
+                         // color: AppColours.gridLine,
                           strokeWidth: 2.5,
                         );
                       }
                       return FlLine(
-                        color: AppColours.gridLine,
+                       // color: AppColours.gridLine,
                         strokeWidth: 1,
                       );
                     },

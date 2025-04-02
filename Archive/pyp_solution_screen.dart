@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import '../features/tutorial_solutions/question7_1/question7_1_screen.dart';
-import '../features/tutorial_solutions/question7_2/question7_2_screen.dart';
-import '../features/tutorial_solutions/question8_1/question8_1_screen.dart';
-import '../features/tutorial_solutions/question8_2/question8_2_screen.dart';
+//import '../features/sample_solutions/2122S1/question3_screen.dart';
 
-class TutorialSolutionScreen extends StatelessWidget {
-  const TutorialSolutionScreen({super.key});
+
+class PYPSolutionScreen extends StatelessWidget {
+  const PYPSolutionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tutorial Solutions'),
+        title: const Text('Past Year Exam Solutions'),
         backgroundColor: Colors.indigo,
       ),
       body: ListView(
@@ -24,7 +22,7 @@ class TutorialSolutionScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Tutorial Questions',
+                  'Past Year Exam Questions',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -42,61 +40,18 @@ class TutorialSolutionScreen extends StatelessWidget {
             ),
           ),
 
-          _buildQuestionCard(
-            context,
-            '7.1',
-            'Periodic Impulse Train',
-            'Determine the complex exponential Fourier series',
-            Icons.signal_cellular_alt,
-            () => Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const Question701Screen())
-            ),
-          ),
+          // _buildQuestionCard(
+          //   context,
+          //   '21/22 Semester 1',
+          //   'Question 3',
+          //   'Determine the Fourier series coefficients.',
+          //   Icons.signal_cellular_alt,
+          //   () => Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => const AY2122S1Question3Screen())
+          //   ),
+          // ),
           
-          const SizedBox(height: 16),
-
-          _buildQuestionCard(
-            context,
-            '7.2',
-            'Periodic Rectangular Signal',
-            'Determine the complex exponential Fourier series',
-            Icons.signal_cellular_alt,
-            () => Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const Question702Screen())
-            ),
-          ),
           
-          const SizedBox(height: 16),
-          
-          // Question 8.1 Card
-          _buildQuestionCard(
-            context,
-            '8.1',
-            'Full-Wave Rectifier Fourier Series',
-            'Find the trigonometric Fourier series representation of a rectified sinusoidal signal',
-            Icons.signal_cellular_alt,
-            () => Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const Question801Screen())
-            ),
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // Question 8.2 Card
-          _buildQuestionCard(
-            context,
-            '8.2',
-            'Frequency and Fourier Coefficient Calculation',
-            'Find the frequency and Fourier coefficient of a given signal',
-            Icons.signal_cellular_alt,
-            () => Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const Question802Screen())
-            ),
-          ),
         ],
       ),
     );
