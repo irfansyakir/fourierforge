@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'wave_model.dart';
 
 class WaveTypeDropdown extends StatelessWidget {
+
+  
   final WaveType selectedType;
   final Function(WaveType) onTypeChanged;
 
@@ -11,6 +13,7 @@ class WaveTypeDropdown extends StatelessWidget {
     required this.onTypeChanged,
   });
 
+  /// This widget displays a dropdown menu for selecting the type of wave
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -21,6 +24,8 @@ class WaveTypeDropdown extends StatelessWidget {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
+
+        /// Dropdown menu for selecting the type of wave
         Container(
           width: double.infinity,
           decoration: BoxDecoration(

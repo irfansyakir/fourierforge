@@ -102,7 +102,7 @@ class WaveTransformationPainter extends CustomPainter {
     
     // Set up paints
     final axisPaint = Paint()
-      ..color = Colors.black.withAlpha(178)
+      ..color = Colors.black
       ..strokeWidth = 1.0;
     
     final originalWavePaint = Paint()
@@ -120,7 +120,7 @@ class WaveTransformationPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
     
     final connectionPaint = Paint()
-      ..color = Colors.black.withAlpha(178)  // Using withAlpha instead of withOpacity
+      ..color = Colors.black
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
     
@@ -201,7 +201,7 @@ class WaveTransformationPainter extends CustomPainter {
       // Draw labels
       textPainter.text = TextSpan(
         text: axisLabels[i].toStringAsFixed(2),
-        style: TextStyle(color: Colors.black.withAlpha(178), fontSize: 10),
+        style: TextStyle(color: Colors.black, fontSize: 10),
       );
       textPainter.layout();
       textPainter.paint(

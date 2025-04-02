@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../../../themes/colours.dart';
 import 'dart:math' as math;
 
 class Question3ASolutionCard extends StatelessWidget {
@@ -513,7 +514,7 @@ class SpectraVisualization extends StatelessWidget {
                         drawHorizontalLine: true,
                         getDrawingHorizontalLine: (value) {
                           return FlLine(
-                            color: Colors.grey.withAlpha(76),
+                            color: AppColours.gridLine,
                             strokeWidth: 1,
                           );
                         },
@@ -612,7 +613,7 @@ class SpectraVisualization extends StatelessWidget {
                         drawHorizontalLine: true,
                         getDrawingHorizontalLine: (value) {
                           return FlLine(
-                            color: Colors.grey.withAlpha(76),
+                            color: AppColours.gridLine,
                             strokeWidth: 1,
                           );
                         },

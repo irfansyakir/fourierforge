@@ -300,7 +300,7 @@ class MagnitudeSpectrumVisualization extends StatelessWidget {
             dotData: FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
-              color: Colors.blue.withAlpha(51),  
+              color: Colors.blue,  
             ),
           ),
         ],

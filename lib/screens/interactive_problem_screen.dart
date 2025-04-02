@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../features/interactive_problems/rectifier_problem.dart';
+import '../features/interactive_problems/rectifier/rectifier_problem.dart';
 
 class InteractiveProblemScreen extends StatelessWidget {
   const InteractiveProblemScreen({super.key});
@@ -11,12 +11,14 @@ class InteractiveProblemScreen extends StatelessWidget {
         title: const Text('Interactive Problem Solver'),
         backgroundColor: Colors.indigo,
       ),
+      // List of Questions
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           // Header section
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
+           
             child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -29,22 +31,29 @@ class InteractiveProblemScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Customize the problem parameters and see how solutions change in real-time.',
+                  'These problems are based on questions from tutorial questions, quizzes and Past Year Papers.',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Tap on a question to explore the interactive problem solver.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
                   ),
                 ),
               ],
             ),
           ),
 
-          // Problem cards
+          // Calls the function and builds the widgets with individual Question Details
           _buildProblemCard(
             context,
-            'Full-Wave Rectifier',
+            'Rectifier',
             'Explore how different input signals affect the rectified output and Fourier Series.',
-            Icons.waves,
             () => Navigator.push(
               context, 
               MaterialPageRoute(builder: (context) => const RectifierProblemScreen())
@@ -58,12 +67,13 @@ class InteractiveProblemScreen extends StatelessWidget {
     );
   }
   
+  // Widget to build each problem card
+  // This widget is reusable for each question
   Widget _buildProblemCard(
     BuildContext context, 
-    String title, 
-    String subtitle, 
-    IconData icon,
-    VoidCallback onTap,
+    String title, // Name of Question
+    String subtitle, // Details of Question
+    VoidCallback onTap, // Function to navigate to the question screen
   ) {
     return Card(
       elevation: 4,
@@ -77,23 +87,13 @@ class InteractiveProblemScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Left side - Icon
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.indigo.withAlpha(25), 
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: Colors.indigo, size: 32),
-              ),
-              const SizedBox(width: 16),
-              
+            children: [                 
               // Right side - Problem title and subtitle
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Name of Question
                     Text(
                       title,
                       style: const TextStyle(
@@ -102,6 +102,7 @@ class InteractiveProblemScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
+                    // Question Details
                     Text(
                       subtitle,
                       style: const TextStyle(

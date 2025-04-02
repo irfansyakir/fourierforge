@@ -2,6 +2,97 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
 
+// This file has 2 widgets: 
+// ParameterInputs: A StatelessWidget that calls the ParameterInput widget for each parameter.
+// ParameterInput: A StatefulWidget that displays a slider and a text field for a parameter.
+
+class ParameterInputs extends StatelessWidget {
+  final int terms;
+  final double frequency;
+  final double amplitude;
+  final double phaseShift;
+  final Function(int) onTermsChanged;
+  final Function(double) onFrequencyChanged;
+  final Function(double) onAmplitudeChanged;
+  final Function(double) onPhaseShiftChanged;
+
+  const ParameterInputs({
+    super.key,
+    required this.terms,
+    required this.frequency,
+    required this.amplitude,
+    required this.phaseShift,
+    required this.onTermsChanged,
+    required this.onFrequencyChanged,
+    required this.onAmplitudeChanged,
+    required this.onPhaseShiftChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
+      // 4 ParameterInput widgets for Number of terms, Frequency, Amplitude, and Phase Shift
+      children: [
+        // Number of terms input
+        SizedBox(
+          child: ParameterInput(
+            label: 'Number of Terms',
+            value: terms.toDouble(),
+            min: 1,
+            max: 20,
+            divisions: 19,
+            formatLabel: (value) => value.toInt().toString(),
+            onChanged: (value) => onTermsChanged(value.toInt()),
+            decimalPlaces: 0,
+          ),
+        ),
+        
+        // Frequency input
+        SizedBox(
+          child: ParameterInput(
+            label: 'Frequency',
+            value: frequency,
+            min: 0.1,
+            max: 3.0,
+            divisions: 29,
+            formatLabel: (value) => value.toStringAsFixed(1),
+            onChanged: onFrequencyChanged,
+          ),
+        ),
+        
+        // Amplitude input
+        SizedBox(
+          child: ParameterInput(
+            label: 'Amplitude',
+            value: amplitude,
+            min: 0.1,
+            max: 2.0,
+            divisions: 19,
+            formatLabel: (value) => value.toStringAsFixed(1),
+            onChanged: onAmplitudeChanged,
+          ),
+        ),
+        
+        // Phase shift input
+        SizedBox(
+          child: ParameterInput(
+            label: 'Phase Shift',
+            value: phaseShift,
+            min: 0,
+            max: 2 * pi,
+            divisions: 20,
+            formatLabel: (value) => '${(value / pi).toStringAsFixed(2)}π',
+            onChanged: onPhaseShiftChanged,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
 class ParameterInput extends StatefulWidget {
   final String label;
   final double value;
@@ -30,22 +121,13 @@ class ParameterInput extends StatefulWidget {
 
 class _ParameterInputState extends State<ParameterInput> {
   late TextEditingController _controller;
-  late FocusNode _focusNode;
-  bool _isEditing = false;
+
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
-    _focusNode = FocusNode();
     _updateTextController();
-    _focusNode.addListener(_onFocusChange);
-  }
-
-  void _onFocusChange() {
-    if (!_focusNode.hasFocus && _isEditing) {
-      _applyTextValue();
-    }
   }
 
   void _applyTextValue() {
@@ -57,15 +139,13 @@ class _ParameterInputState extends State<ParameterInput> {
     } else {
       _updateTextController();
     }
-    setState(() {
-      _isEditing = false;
-    });
+   
   }
 
   @override
   void didUpdateWidget(ParameterInput oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.value != widget.value && !_isEditing) {
+    if (oldWidget.value != widget.value) {
       _updateTextController();
     }
   }
@@ -76,9 +156,7 @@ class _ParameterInputState extends State<ParameterInput> {
 
   @override
   void dispose() {
-    _focusNode.removeListener(_onFocusChange);
     _controller.dispose();
-    _focusNode.dispose();
     super.dispose();
   }
 
@@ -104,7 +182,7 @@ class _ParameterInputState extends State<ParameterInput> {
                   activeTrackColor: Colors.blue,
                   inactiveTrackColor: Colors.grey[300],
                   thumbColor: Colors.blueAccent,
-                  overlayColor: Colors.blue.withAlpha(51), 
+                  overlayColor: Colors.blue, 
                   trackHeight: 8.0,
                   thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
                   tickMarkShape: const RoundSliderTickMarkShape(tickMarkRadius: 6.0),
@@ -134,7 +212,6 @@ class _ParameterInputState extends State<ParameterInput> {
                     Expanded(
                       child: TextField(
                         controller: _controller,
-                        focusNode: _focusNode,
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
@@ -147,7 +224,6 @@ class _ParameterInputState extends State<ParameterInput> {
                             icon: const Icon(Icons.check, size: 16),
                             onPressed: () {
                               _applyTextValue();
-                              _focusNode.unfocus();
                             },
                           ),
                           isDense: true,
@@ -182,21 +258,12 @@ class _ParameterInputState extends State<ParameterInput> {
                             return newValue;
                           }),
                         ],
-                        onChanged: (text) {
-                          setState(() {
-                            _isEditing = true;
-                          });
-                        },
-                        onEditingComplete: () {
-                          _applyTextValue();
-                          _focusNode.unfocus();
-                        },
+                        
                         onSubmitted: (text) {
                           _applyTextValue();
                         },
                         onTap: () {
                           setState(() {
-                            _isEditing = true;
                             _controller.selection = TextSelection(
                               baseOffset: 0,
                               extentOffset: _controller.text.length,
@@ -216,118 +283,3 @@ class _ParameterInputState extends State<ParameterInput> {
   }
 }
 
-class ParameterInputs extends StatelessWidget {
-  final int terms;
-  final double frequency;
-  final double amplitude;
-  final double phaseShift;
-  final Function(int) onTermsChanged;
-  final Function(double) onFrequencyChanged;
-  final Function(double) onAmplitudeChanged;
-  final Function(double) onPhaseShiftChanged;
-
-  const ParameterInputs({
-    super.key,
-    required this.terms,
-    required this.frequency,
-    required this.amplitude,
-    required this.phaseShift,
-    required this.onTermsChanged,
-    required this.onFrequencyChanged,
-    required this.onAmplitudeChanged,
-    required this.onPhaseShiftChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width > 600 
-              ? (MediaQuery.of(context).size.width - 48) / 2 
-              : MediaQuery.of(context).size.width - 32,
-          child: ParameterInput(
-            label: 'Number of Terms',
-            value: terms.toDouble(),
-            min: 1,
-            max: 20,
-            divisions: 19,
-            formatLabel: (value) => value.toInt().toString(),
-            onChanged: (value) => onTermsChanged(value.toInt()),
-            decimalPlaces: 0,
-          ),
-        ),
-        
-        // Frequency input
-        SizedBox(
-          width: MediaQuery.of(context).size.width > 600 
-              ? (MediaQuery.of(context).size.width - 48) / 2 
-              : MediaQuery.of(context).size.width - 32,
-          child: ParameterInput(
-            label: 'Frequency',
-            value: frequency,
-            min: 0.1,
-            max: 3.0,
-            divisions: 29,
-            formatLabel: (value) => value.toStringAsFixed(1),
-            onChanged: onFrequencyChanged,
-          ),
-        ),
-        
-        // Amplitude input
-        SizedBox(
-          width: MediaQuery.of(context).size.width > 600 
-              ? (MediaQuery.of(context).size.width - 48) / 2 
-              : MediaQuery.of(context).size.width - 32,
-          child: ParameterInput(
-            label: 'Amplitude',
-            value: amplitude,
-            min: 0.1,
-            max: 2.0,
-            divisions: 19,
-            formatLabel: (value) => value.toStringAsFixed(1),
-            onChanged: onAmplitudeChanged,
-          ),
-        ),
-        
-        // Phase shift input
-        SizedBox(
-          width: MediaQuery.of(context).size.width > 600 
-              ? (MediaQuery.of(context).size.width - 48) / 2 
-              : MediaQuery.of(context).size.width - 32,
-          child: ParameterInput(
-            label: 'Phase Shift',
-            value: phaseShift,
-            min: 0,
-            max: 2 * pi,
-            divisions: 20,
-            formatLabel: (value) => '${(value / pi).toStringAsFixed(2)}π',
-            onChanged: onPhaseShiftChanged,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class ParameterInputsScreen extends StatelessWidget {
-  final Widget child;
-
-  const ParameterInputsScreen({
-    super.key,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      behavior: HitTestBehavior.translucent,
-      child: child,
-    );
-  }
-}
