@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../features/problem_solvers/rectifier/rectifier_problem.dart';
-
+import '../features/problem_solvers/equations/equation_problem.dart';
 class InteractiveProblemScreen extends StatelessWidget {
   const InteractiveProblemScreen({super.key});
 
@@ -70,7 +70,7 @@ class InteractiveProblemScreen extends StatelessWidget {
             'Compute the Fourier Series coefficients for the given equations.',
             () => Navigator.push(
               context, 
-              MaterialPageRoute(builder: (context) => const RectifierProblemScreen())
+              MaterialPageRoute(builder: (context) => const EquationProblemScreen())
             ),
           ),
           

@@ -746,7 +746,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                 textStyle: const TextStyle(fontSize: 16),
               )
             : Math.tex(
-              r'a_n = \begin{cases} -\frac{2\cdot\boxed{' + amplitude.toString() + r'}}{\pi(4k^2-1)} & \text{for } n = 2k \quad (k = 1, 2, 3, \ldots), \\[8pt] 0 & \text{for odd } n > 1. \end{cases}',
+              r'a_n = \begin{cases} -\frac{2\cdot\boxed{' + amplitude.toString() + r'}}{\pi(4k^2-1)} & \text{for } n = 2k \quad (k = 1, 2, 3, \ldots), \\[8pt] 0 & \text{for odd } n. \end{cases}',
               textStyle: const TextStyle(fontSize: 16),
             ),
         ),
