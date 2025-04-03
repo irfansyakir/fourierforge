@@ -63,8 +63,6 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
       outputSignalPoints = solver.getOutputSignalPoints();
       outputPeriod = solver.getOutputPeriod();
       outputFrequency = solver.getOutputFrequency();
-      //spectraPoints = solver.getMagnitudeSpectrumPoints();
-      //solution = solver.getSolution();
     });
   }
 
@@ -72,7 +70,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Rectifier'),
+        title: const Text('Rectifier Solver'),
         backgroundColor: Colors.indigo,
       ),
       body: SingleChildScrollView(
@@ -347,22 +345,6 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                 )
               ],
             )          
-            
-            // Calculate button
-            // SizedBox(
-            //   width: double.infinity,
-            //   child: ElevatedButton(
-            //     onPressed: calculateSolution,
-            //     style: ElevatedButton.styleFrom(
-            //       padding: const EdgeInsets.symmetric(vertical: 16),
-            //       backgroundColor: Colors.indigo,
-            //     ),
-            //     child: const Text(
-            //       'Calculate Solution',
-            //       style: TextStyle(fontSize: 18, color: Colors.white),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -942,4 +924,3 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
     );
   }
 }
-// Add _buildStep3Content(), _buildStep4Content(), etc.

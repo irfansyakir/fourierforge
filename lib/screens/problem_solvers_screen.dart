@@ -54,7 +54,7 @@ class InteractiveProblemScreen extends StatelessWidget {
           // Problem Card for Rectifier Problem
           _buildProblemCard(
             context,
-            'Rectifier',
+            'Rectifier Problem',
             'Compute the Fourier series coefficients for a full and half wave rectifier circuits.',
             () => Navigator.push(
               context, 
@@ -66,7 +66,7 @@ class InteractiveProblemScreen extends StatelessWidget {
           // Problem Card for Equation Problem
           _buildProblemCard(
             context,
-            'Equations',
+            'Equations Problem',
             'Compute the Fourier Series coefficients for the given equations.',
             () => Navigator.push(
               context, 
