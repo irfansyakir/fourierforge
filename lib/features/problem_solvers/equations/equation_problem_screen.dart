@@ -36,7 +36,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
         functionType: 'cos',
         frequencyNumerator: 3,
         frequencyDenominator: 5,
-        includesPi: true,
+        includesPi: false,
         phaseShiftNumerator: 1,
         phaseShiftDenominator: 3,
         isPositive: true,
@@ -223,6 +223,19 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     return combinedPoints;
   }
 
+  int _hcf(int a, int b) {
+    a = a.abs();
+    b = b.abs();
+    if (b == 0) return a;
+    return _hcf(b, a % b);
+  }
+
+  int _lcm(int a, int b) {
+    if (a == 0 || b == 0) return 0;
+    return (a * b) ~/ _hcf(a, b);
+  }
+
+/// ***********************************************************************************************
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -241,6 +254,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
               _buildParametersCard(),
               const SizedBox(height: 16),
               _buildSignalVisualisationCard(),
+              const SizedBox(height: 16),
+              _buildCheckPeriodicityCard(),
             ],
           ),
         )
@@ -248,6 +263,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     );
   }
 
+/// ***********************************************************************************************
   Widget _buildProblemDescriptionCard() {
     return Card(
       elevation: 4,
@@ -275,7 +291,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
 
             const Text(
               'Determine if the signal f(t) is periodic.',
@@ -290,7 +306,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
       ),
     );
   }
-
+/// ***********************************************************************************************
   Widget _buildParametersCard() {
     return Card(
       elevation: 4,
@@ -348,7 +364,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
       ),
     );
   }
-
+/// ***********************************************************************************************
   Widget _buildTermInputRow(int index) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0),
@@ -759,7 +775,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
       ),
     );
   }
-
+/// ***********************************************************************************************
   Widget _buildSignalVisualisationCard() {
     // Calculate combined signal points
     List<FlSpot> signalPoints = getCombinedSignalPoints(0, 2 * math.pi, 0.01);
@@ -874,6 +890,297 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+/// ***********************************************************************************************
+  Widget _buildCheckPeriodicityCard() {
+    // Check for empty terms
+    if (terms.isEmpty) {
+      return Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Periodicity',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Add terms to analyze periodicity.',
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Calculate frequencies and periods for each term
+    List<Map<String, dynamic>> termAnalysis = [];
+    List<int> freqNumerators = [];
+    List<int> freqDenominators = [];
+    
+    for (int i = 0; i < terms.length; i++) {
+      var term = terms[i];
+      Map<String, dynamic> analysis = {};
+      
+      // Constant terms have no frequency
+      if (!term.hasTrigFunction) {
+        analysis['hasFrequency'] = false;
+        termAnalysis.add(analysis);
+        continue;
+      }
+      
+      // Get frequency as p/q * π
+      int p = term.frequencyNumerator;
+      int q = term.frequencyDenominator;
+      
+      // Skip invalid frequencies
+      if (p <= 0 || q <= 0) {
+        analysis['hasFrequency'] = false;
+        termAnalysis.add(analysis);
+        continue;
+      }
+      
+      // Simplify the fraction
+      int hcf = _hcf(p, q);
+      p = p ~/ hcf;
+      q = q ~/ hcf;
+      
+      analysis['hasFrequency'] = true;
+      analysis['freqNumerator'] = p;
+      analysis['freqDenominator'] = q;
+      
+      // Calculate period as 2q/p
+      int periodNum = 2 * q;
+      int periodDenom = p;
+      
+      // Simplify period fraction
+      hcf = _hcf(periodNum, periodDenom);
+      periodNum = periodNum ~/ hcf;
+      periodDenom = periodDenom ~/ hcf;
+      
+      analysis['periodNumerator'] = periodNum;
+      analysis['periodDenominator'] = periodDenom;
+      
+      termAnalysis.add(analysis);
+      freqNumerators.add(p);
+      freqDenominators.add(q);
+    }
+    
+    // Check if there are any terms with frequency
+    bool hasFrequencyTerms = termAnalysis.any((info) => info['hasFrequency'] == true);
+    
+    // If no frequency terms, signal is constant
+    if (!hasFrequencyTerms) {
+      return Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Periodicity',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'The signal consists only of constant terms, so it is periodic with any period.',
+                style: TextStyle(fontSize: 16, color: Colors.green),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
+    // Check for mixed π and non-π terms which would make the signal aperiodic
+    bool hasPiTerms = false;
+    bool hasNonPiTerms = false;
+    
+    for (var term in terms) {
+      if (term.hasTrigFunction) {
+        if (term.includesPi) {
+          hasPiTerms = true;
+        } else {
+          hasNonPiTerms = true;
+        }
+      }
+    }
+    
+    // If we have both π and non-π terms, the signal is aperiodic
+    bool hasMixedTerms = hasPiTerms && hasNonPiTerms;
+    
+    // Calculate fundamental frequency and period
+    int freqhcf = freqNumerators[0];
+    for (int i = 1; i < freqNumerators.length; i++) {
+      freqhcf = _hcf(freqhcf, freqNumerators[i]);
+    }
+    
+    int freqLCM = freqDenominators[0];
+    for (int i = 1; i < freqDenominators.length; i++) {
+      freqLCM = _lcm(freqLCM, freqDenominators[i]);
+    }
+    
+    // Calculate fundamental period: T₀ = 2 * lcm(q₁, q₂, ...) / hcf(p₁, p₂, ...)
+    int periodNum = 2 * freqLCM;
+    int periodDenom = freqhcf;
+    
+    // Simplify period fraction
+    int periodhcf = _hcf(periodNum, periodDenom);
+    periodNum = periodNum ~/ periodhcf;
+    periodDenom = periodDenom ~/ periodhcf;
+    
+    // Signal is periodic if hcf of frequency numerators is not zero AND
+    // we don't have mixed π/non-π terms
+    bool isSignalPeriodic = freqhcf > 0 && !hasMixedTerms;
+    
+    // Build the explanation card
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Periodicity',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            // Explanation of periodicity
+            const Text(
+              'A signal is periodic if the LCM of the periods of each terms is rational.',
+              style: TextStyle(fontSize: 16),
+            ),
+            
+            const SizedBox(height: 16),
+            
+            // Term-by-term analysis
+            const Text(
+              'Step 1: Find the angular frequency and period of each term:',
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            
+            // List each term's periodicity
+            ...List.generate(terms.length, (index) {
+              var term = terms[index];
+              var analysis = termAnalysis[index];
+              
+              if (!term.hasTrigFunction) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Text(
+                    'Term ${index + 1}: Constant term (no frequency)',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                );
+              }
+              
+              if (analysis['hasFrequency'] != true) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 4.0),
+                  child: Text(
+                    'Term ${index + 1}: Invalid frequency',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                );
+              }
+              
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 4.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Term ${index + 1}: ',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Math.tex(
+                        r'\omega_{' + (index + 1).toString() + r'} = \frac{' + analysis['freqNumerator'].toString() + r'}{' + analysis['freqDenominator'].toString() + r'}\pi \text{ rad/s}, ' +
+                        r'T_{' + (index + 1).toString() + r'} = \frac{' + analysis['periodNumerator'].toString() + r'}{' + analysis['periodDenominator'].toString() + r'}',
+                        textStyle: const TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+            
+            const SizedBox(height: 16),
+            
+            // Fundamental frequency calculation
+            const Text(
+              'Step 2: Find the fundamental frequency and period:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Math.tex(
+                r'\omega_0 = \frac{\text{hcf}(\text{numerators})}{\text{lcm}(\text{denominators})}\pi = \frac{' + freqhcf.toString() + r'}{' + freqLCM.toString() + r'}\pi \text{ rad/s}',
+                textStyle: const TextStyle(fontSize: 16),
+              ),
+            ),
+            
+            const SizedBox(height: 8),
+            
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Math.tex(
+                r'T_0 = \frac{2\pi}{\omega_0} = \frac{2 \cdot ' + freqLCM.toString() + r'}{' + freqhcf.toString() + r'} = \frac{' + periodNum.toString() + r'}{' + periodDenom.toString() + r'}',
+                textStyle: const TextStyle(fontSize: 16),
+              ),
+            ),
+            
+            const SizedBox(height: 16),
+            
+            // Conclusion
+            Text(
+              isSignalPeriodic 
+                  ? 'The signal IS periodic as fundamental period T₀ = $periodNum/$periodDenom is rational.'
+                  : 'The signal is NOT periodic',
+              style: TextStyle(
+                fontSize: 16, 
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+                        
+            // If not periodic, explain why
+            if (!isSignalPeriodic) ...[
+              const SizedBox(height: 8),
+              hasMixedTerms 
+                  ? const Text(
+                      'The signal contains both π and non-π terms, making their frequency ratio irrational.',
+                      style: TextStyle(fontSize: 16),
+                    )
+                  : const Text(
+                      'The frequency ratio between terms is irrational, so the signal never repeats exactly.',
+                      style: TextStyle(fontSize: 16),
+                    ),
+            ],
           ],
         ),
       ),

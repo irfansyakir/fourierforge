@@ -99,10 +99,10 @@ class EquationTerm {
   }
   
   // Helper function to find Greatest Common Divisor
-  int _findGCD(int a, int b) {
+  int _findhcf(int a, int b) {
     a = a.abs();
     b = b.abs();
-    return b == 0 ? a : _findGCD(b, a % b);
+    return b == 0 ? a : _findhcf(b, a % b);
   }
   
   // Simplify the fraction
@@ -110,10 +110,10 @@ class EquationTerm {
     if (frequencyNumerator == 0 || frequencyDenominator == 0) {
       return; // Avoid division by zero
     }
-    int gcd = _findGCD(frequencyNumerator, frequencyDenominator);
-    if (gcd > 0) {
-      frequencyNumerator ~/= gcd;
-      frequencyDenominator ~/= gcd;
+    int hcf = _findhcf(frequencyNumerator, frequencyDenominator);
+    if (hcf > 0) {
+      frequencyNumerator ~/= hcf;
+      frequencyDenominator ~/= hcf;
     }
   }
   
@@ -160,25 +160,32 @@ class EquationTerm {
   }
 
   double calculateValueAt(double t) {
-    // If it's just a constant term without trig function
+    // For constant term without trig function
     if (!hasTrigFunction) {
       return isPositive ? amplitude.toDouble() : -amplitude.toDouble();
     }
     
-    // Calculate the angle in radians
-    double frequency = frequencyNumerator / frequencyDenominator;
-    double phaseShift = phaseShiftNumerator * math.pi / phaseShiftDenominator;
-    double angle = frequency * math.pi * t + phaseShift;
+    // Apply correct sign to amplitude
+    double signedAmplitude = isPositive ? amplitude.toDouble() : -amplitude.toDouble();
     
-    // Apply the corresponding trig function
-    double value;
-    if (functionType == 'sin') {
-      value = amplitude * math.sin(angle);
-    } else { // cos
-      value = amplitude * math.cos(angle);
+    // Calculate frequency in terms of π
+    double freq = frequencyNumerator / frequencyDenominator;
+    if (!includesPi) {
+      // If π is not included, convert frequency to rad/s
+      freq = freq / math.pi;
     }
     
-    // Apply sign
-    return isPositive ? value : -value;
+    // Phase shift in radians
+    double phase = phaseShiftNumerator * math.pi / phaseShiftDenominator;
+    
+    // Calculate angle
+    double angle = freq * math.pi * t - phase;
+    
+    // Apply the appropriate trig function
+    if (functionType == 'sin') {
+      return signedAmplitude * math.sin(angle);
+    } else { // cos
+      return signedAmplitude * math.cos(angle);
+    }
   }
 }

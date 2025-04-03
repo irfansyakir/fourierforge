@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../features/problem_solvers/rectifier/rectifier_problem.dart';
-import '../features/problem_solvers/equations/equation_problem.dart';
+import '../features/problem_solvers/rectifier/rectifier_problem_screen.dart';
+import '../features/problem_solvers/equations/equation_problem_screen.dart';
 class InteractiveProblemScreen extends StatelessWidget {
   const InteractiveProblemScreen({super.key});
 
