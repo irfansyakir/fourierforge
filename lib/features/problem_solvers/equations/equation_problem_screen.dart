@@ -29,7 +29,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     
     // Initialize terms with example values
     terms = [
-      // Term 1: 4cos(3πt/5 + π/3)
+      // Term 1: 4cos(3t/5 + π/3)
       EquationTerm(
         amplitude: 4,
         hasTrigFunction: true,
@@ -372,8 +372,6 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
         // Title row with term number and sign
-        // Update only the sign toggle button section in _buildTermInputRow
-        // Title row with term number and sign
         Row(
           children: [
             Text(
@@ -602,10 +600,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                               controllers[index][2].text = '1';
                             });
                           } else if (parsed > 200) {
-                            parsed = 200; // Clamp to max 20
+                            parsed = 200; // Clamp to max 200
                             controllers[index][1].text = '200';
                             controllers[index][1].selection = TextSelection.fromPosition(
-                              const TextPosition(offset: 2), // Position at end of "20"
+                              const TextPosition(offset: 3), // Position at end of "200"
                             );
                             setState(() {
                               terms[index].frequencyNumerator = parsed!;
@@ -657,10 +655,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                               controllers[index][2].text = '1';
                             });
                           } else if (parsed > 200) {
-                            parsed = 200; // Clamp to max 20
+                            parsed = 200; // Clamp to max 200
                             controllers[index][2].text = '200';
                             controllers[index][2].selection = TextSelection.fromPosition(
-                              const TextPosition(offset: 2), // Position at end of "20"
+                              const TextPosition(offset: 3), // Position at end of "200"
                             );
                             setState(() {
                               terms[index].frequencyDenominator = parsed!;
@@ -927,8 +925,12 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
 
     // Calculate frequencies and periods for each term
     List<Map<String, dynamic>> termAnalysis = [];
-    List<int> freqNumerators = [];
-    List<int> freqDenominators = [];
+    
+    // Track whether we have terms with frequencies
+    bool hasFrequencyTerms = false;
+    // Track whether all terms include π or all don't include π
+    bool allPiTerms = true;
+    bool allNonPiTerms = true;
     
     for (int i = 0; i < terms.length; i++) {
       var term = terms[i];
@@ -941,7 +943,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
         continue;
       }
       
-      // Get frequency as p/q * π
+      // Get frequency as p/q (possibly * π)
       int p = term.frequencyNumerator;
       int q = term.frequencyDenominator;
       
@@ -958,12 +960,30 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
       q = q ~/ hcf;
       
       analysis['hasFrequency'] = true;
+      hasFrequencyTerms = true;
       analysis['freqNumerator'] = p;
       analysis['freqDenominator'] = q;
+      analysis['includesPi'] = term.includesPi;
       
-      // Calculate period as 2q/p
-      int periodNum = 2 * q;
-      int periodDenom = p;
+      // Track if all terms include π or all don't include π
+      if (term.includesPi) {
+        allNonPiTerms = false;
+      } else {
+        allPiTerms = false;
+      }
+      
+      // Calculate period
+      int periodNum, periodDenom;
+      
+      if (term.includesPi) {
+        // For terms with π: T = 2π/ω = 2π/(pπ/q) = 2q/p
+        periodNum = 2 * q;
+        periodDenom = p;
+      } else {
+        // For terms without π: T = 2π/ω = 2π/(p/q) = 2πq/p
+        periodNum = 2 * q;
+        periodDenom = p;
+      }
       
       // Simplify period fraction
       hcf = _hcf(periodNum, periodDenom);
@@ -974,12 +994,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
       analysis['periodDenominator'] = periodDenom;
       
       termAnalysis.add(analysis);
-      freqNumerators.add(p);
-      freqDenominators.add(q);
     }
-    
-    // Check if there are any terms with frequency
-    bool hasFrequencyTerms = termAnalysis.any((info) => info['hasFrequency'] == true);
     
     // If no frequency terms, signal is constant
     if (!hasFrequencyTerms) {
@@ -1008,46 +1023,62 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
       );
     }
     
-    // Check for mixed π and non-π terms which would make the signal aperiodic
-    bool hasPiTerms = false;
-    bool hasNonPiTerms = false;
+    // If we have both π and non-π terms, the signal is aperiodic
+    bool hasMixedTerms = !allPiTerms && !allNonPiTerms;
     
-    for (var term in terms) {
-      if (term.hasTrigFunction) {
-        if (term.includesPi) {
-          hasPiTerms = true;
-        } else {
-          hasNonPiTerms = true;
-        }
+    // Calculate fundamental period and frequency
+    bool isSignalPeriodic = !hasMixedTerms;
+    
+    // For non-mixed term cases, calculate the fundamental period
+    List<int> periodNumerators = [];
+    List<int> periodDenominators = [];
+    
+    for (var analysis in termAnalysis) {
+      if (analysis['hasFrequency'] == true) {
+        periodNumerators.add(analysis['periodNumerator']);
+        periodDenominators.add(analysis['periodDenominator']);
       }
     }
     
-    // If we have both π and non-π terms, the signal is aperiodic
-    bool hasMixedTerms = hasPiTerms && hasNonPiTerms;
+    // Calculate LCM of period numerators and HCF of period denominators
+    int periodNumLCM = 0;
+    int periodDenomHCF = 0;
     
-    // Calculate fundamental frequency and period
-    int freqhcf = freqNumerators[0];
-    for (int i = 1; i < freqNumerators.length; i++) {
-      freqhcf = _hcf(freqhcf, freqNumerators[i]);
+    if (periodNumerators.isNotEmpty) {
+      periodNumLCM = periodNumerators[0];
+      for (int i = 1; i < periodNumerators.length; i++) {
+        periodNumLCM = _lcm(periodNumLCM, periodNumerators[i]);
+      }
     }
     
-    int freqLCM = freqDenominators[0];
-    for (int i = 1; i < freqDenominators.length; i++) {
-      freqLCM = _lcm(freqLCM, freqDenominators[i]);
+    if (periodDenominators.isNotEmpty) {
+      periodDenomHCF = periodDenominators[0];
+      for (int i = 1; i < periodDenominators.length; i++) {
+        periodDenomHCF = _hcf(periodDenomHCF, periodDenominators[i]);
+      }
     }
     
-    // Calculate fundamental period: T₀ = 2 * lcm(q₁, q₂, ...) / hcf(p₁, p₂, ...)
-    int periodNum = 2 * freqLCM;
-    int periodDenom = freqhcf;
+    // Calculate T₀ = LCM(T₁, T₂, ...)
+    int fundPeriodNum = periodNumLCM;
+    int fundPeriodDenom = periodDenomHCF;
     
-    // Simplify period fraction
-    int periodhcf = _hcf(periodNum, periodDenom);
-    periodNum = periodNum ~/ periodhcf;
-    periodDenom = periodDenom ~/ periodhcf;
+    // Simplify
+    int periodHcf = _hcf(fundPeriodNum, fundPeriodDenom);
+    if (periodHcf > 0) {
+      fundPeriodNum = fundPeriodNum ~/ periodHcf;
+      fundPeriodDenom = fundPeriodDenom ~/ periodHcf;
+    }
     
-    // Signal is periodic if hcf of frequency numerators is not zero AND
-    // we don't have mixed π/non-π terms
-    bool isSignalPeriodic = freqhcf > 0 && !hasMixedTerms;
+    // Calculate ω₀ = 2π/T₀
+    int fundFreqNum = 2 * fundPeriodDenom;
+    int fundFreqDenom = fundPeriodNum;
+    
+    // Simplify
+    int freqHcf = _hcf(fundFreqNum, fundFreqDenom);
+    if (freqHcf > 0) {
+      fundFreqNum = fundFreqNum ~/ freqHcf;
+      fundFreqDenom = fundFreqDenom ~/ freqHcf;
+    }
     
     // Build the explanation card
     return Card(
@@ -1068,16 +1099,16 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             
             // Explanation of periodicity
             const Text(
-              'A signal is periodic if the LCM of the periods of each terms is rational.',
+              'A signal is periodic if the LCM of the periods of each term can be calulated.',
               style: TextStyle(fontSize: 16),
             ),
             
             const SizedBox(height: 16),
             
-            // Term-by-term analysis
+            // Calculate the angular frequency and period of each term
             const Text(
               'Step 1: Find the angular frequency and period of each term:',
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             
@@ -1106,6 +1137,29 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                 );
               }
               
+              // Build the correct frequency string based on whether it includes π or not
+              String freqFormula;
+              String periodFormula;
+              if (term.includesPi) {
+                // Include π in the formula (place π next to numerator)
+                freqFormula = r'\omega_{' + (index + 1).toString() + r'} = \frac{' + 
+                              analysis['freqNumerator'].toString() + r'\pi}{' + 
+                              analysis['freqDenominator'].toString() + r'} \text{ rad/s}';
+                
+                periodFormula = r'T_{' + (index + 1).toString() + r'} = \frac{' + 
+                                analysis['periodNumerator'].toString() + r'}{' + 
+                                analysis['periodDenominator'].toString() + r'}';
+              } else {
+                // Regular frequency without π
+                freqFormula = r'\omega_{' + (index + 1).toString() + r'} = \frac{' + 
+                              analysis['freqNumerator'].toString() + r'}{' + 
+                              analysis['freqDenominator'].toString() + r'} \text{ rad/s}';
+                
+                periodFormula = r'T_{' + (index + 1).toString() + r'} = \frac{' + 
+                                analysis['periodNumerator'].toString() + r'\pi}{' + 
+                                analysis['periodDenominator'].toString() + r'}';
+              }
+              
               return Padding(
                 padding: const EdgeInsets.only(bottom: 4.0),
                 child: SingleChildScrollView(
@@ -1117,8 +1171,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                         style: TextStyle(fontSize: 16),
                       ),
                       Math.tex(
-                        r'\omega_{' + (index + 1).toString() + r'} = \frac{' + analysis['freqNumerator'].toString() + r'}{' + analysis['freqDenominator'].toString() + r'}\pi \text{ rad/s}, ' +
-                        r'T_{' + (index + 1).toString() + r'} = \frac{' + analysis['periodNumerator'].toString() + r'}{' + analysis['periodDenominator'].toString() + r'}',
+                        freqFormula + ', ' + periodFormula,
                         textStyle: const TextStyle(fontSize: 16),
                       ),
                     ],
@@ -1129,58 +1182,60 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             
             const SizedBox(height: 16),
             
-            // Fundamental frequency calculation
-            const Text(
-              'Step 2: Find the fundamental frequency and period:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Math.tex(
-                r'\omega_0 = \frac{\text{hcf}(\text{numerators})}{\text{lcm}(\text{denominators})}\pi = \frac{' + freqhcf.toString() + r'}{' + freqLCM.toString() + r'}\pi \text{ rad/s}',
-                textStyle: const TextStyle(fontSize: 16),
+            if (hasMixedTerms) ...[
+              const Text(
+                'Step 2: Find the fundamental period and frequency:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-            ),
-            
-            const SizedBox(height: 8),
-            
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Math.tex(
-                r'T_0 = \frac{2\pi}{\omega_0} = \frac{2 \cdot ' + freqLCM.toString() + r'}{' + freqhcf.toString() + r'} = \frac{' + periodNum.toString() + r'}{' + periodDenom.toString() + r'}',
-                textStyle: const TextStyle(fontSize: 16),
+              const SizedBox(height: 8),
+              const Text(
+                'The LCM of the periods cannot be calculated as the signal contains both terms with and without π.',
+                style: TextStyle(fontSize: 16),
               ),
-            ),
+            ] else ...[
+              const Text(
+                'Step 2: Find the fundamental period and frequency:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Math.tex(
+                  r'T_0 = \text{LCM}(T_1, T_2, \ldots) = \frac{' + 
+                  (allNonPiTerms 
+                    ? fundPeriodNum.toString() + r'\pi}{' + fundPeriodDenom.toString() 
+                    : fundPeriodNum.toString() + r'}{' + fundPeriodDenom.toString()) + 
+                  r'}',
+                  textStyle: const TextStyle(fontSize: 16),
+                ),
+              ),
+              const SizedBox(height: 8),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Math.tex(
+                  r'\omega_0 = \frac{2\pi}{T_0} = \frac{' + 
+                  (allPiTerms 
+                    ? fundFreqNum.toString() + r'\pi}{' + fundFreqDenom.toString()
+                    : fundFreqNum.toString() + r'}{' + fundFreqDenom.toString()) + 
+                  r'} \text{ rad/s}',
+                  textStyle: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
             
             const SizedBox(height: 16),
             
             // Conclusion
             Text(
               isSignalPeriodic 
-                  ? 'The signal IS periodic as fundamental period T₀ = $periodNum/$periodDenom is rational.'
-                  : 'The signal is NOT periodic',
+                  ? 'The signal IS periodic as the LCM exists.'
+                  : 'The signal is NOT periodic.',
               style: TextStyle(
                 fontSize: 16, 
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
-                        
-            // If not periodic, explain why
-            if (!isSignalPeriodic) ...[
-              const SizedBox(height: 8),
-              hasMixedTerms 
-                  ? const Text(
-                      'The signal contains both π and non-π terms, making their frequency ratio irrational.',
-                      style: TextStyle(fontSize: 16),
-                    )
-                  : const Text(
-                      'The frequency ratio between terms is irrational, so the signal never repeats exactly.',
-                      style: TextStyle(fontSize: 16),
-                    ),
-            ],
           ],
         ),
       ),

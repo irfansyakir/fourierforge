@@ -73,20 +73,36 @@ class EquationTerm {
     
     // Handle frequency display as a fraction
     String freqStr;
-    String piSymbol = includesPi ? '\\pi ' : '';
-    
-    if (frequencyNumerator == frequencyDenominator) {
-      // If frequency = 1 (n/n)
-      freqStr = '${piSymbol}t';
-    } else if (frequencyDenominator == 1) {
-      // If it's a whole number
-      freqStr = '$frequencyNumerator${piSymbol}t';
-    } else if (frequencyNumerator == 1) {
-      // Special case for numerator = 1
-      freqStr = '\\frac{${piSymbol}t}{$frequencyDenominator}';
+    if (includesPi) {
+      // Format with π next to numerator
+      if (frequencyNumerator == frequencyDenominator) {
+        // If frequency = 1 (n/n)
+        freqStr = '\\pi t';
+      } else if (frequencyDenominator == 1) {
+        // If it's a whole number
+        freqStr = '$frequencyNumerator\\pi t';
+      } else if (frequencyNumerator == 1) {
+        // Special case for numerator = 1
+        freqStr = '\\frac{\\pi t}{$frequencyDenominator}';
+      } else {
+        // It's a proper fraction
+        freqStr = '\\frac{$frequencyNumerator\\pi t}{$frequencyDenominator}';
+      }
     } else {
-      // It's a proper fraction
-      freqStr = '\\frac{$frequencyNumerator${piSymbol}t}{$frequencyDenominator}';
+      // Regular format without π
+      if (frequencyNumerator == frequencyDenominator) {
+        // If frequency = 1 (n/n)
+        freqStr = 't';
+      } else if (frequencyDenominator == 1) {
+        // If it's a whole number
+        freqStr = '$frequencyNumerator t';
+      } else if (frequencyNumerator == 1) {
+        // Special case for numerator = 1
+        freqStr = '\\frac{t}{$frequencyDenominator}';
+      } else {
+        // It's a proper fraction
+        freqStr = '\\frac{$frequencyNumerator t}{$frequencyDenominator}';
+      }
     }
     
     // Handle amplitude = 1 case (don't show the 1)
@@ -99,10 +115,10 @@ class EquationTerm {
   }
   
   // Helper function to find Greatest Common Divisor
-  int _findhcf(int a, int b) {
+  int _findHcf(int a, int b) {
     a = a.abs();
     b = b.abs();
-    return b == 0 ? a : _findhcf(b, a % b);
+    return b == 0 ? a : _findHcf(b, a % b);
   }
   
   // Simplify the fraction
@@ -110,7 +126,7 @@ class EquationTerm {
     if (frequencyNumerator == 0 || frequencyDenominator == 0) {
       return; // Avoid division by zero
     }
-    int hcf = _findhcf(frequencyNumerator, frequencyDenominator);
+    int hcf = _findHcf(frequencyNumerator, frequencyDenominator);
     if (hcf > 0) {
       frequencyNumerator ~/= hcf;
       frequencyDenominator ~/= hcf;
@@ -168,18 +184,19 @@ class EquationTerm {
     // Apply correct sign to amplitude
     double signedAmplitude = isPositive ? amplitude.toDouble() : -amplitude.toDouble();
     
-    // Calculate frequency in terms of π
+    // Calculate frequency as a ratio
     double freq = frequencyNumerator / frequencyDenominator;
-    if (!includesPi) {
-      // If π is not included, convert frequency to rad/s
-      freq = freq / math.pi;
-    }
     
     // Phase shift in radians
     double phase = phaseShiftNumerator * math.pi / phaseShiftDenominator;
     
-    // Calculate angle
-    double angle = freq * math.pi * t - phase;
+    // Calculate angle based on whether π is included or not
+    double angle;
+    if (includesPi) {
+      angle = freq * math.pi * t - phase;
+    } else {
+      angle = freq * t - phase;  // No π multiplication for non-π terms
+    }
     
     // Apply the appropriate trig function
     if (functionType == 'sin') {
