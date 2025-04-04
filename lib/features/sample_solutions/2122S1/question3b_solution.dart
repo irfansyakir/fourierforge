@@ -515,7 +515,7 @@ class SignalVisualization extends StatelessWidget {
               FlSpot(5, 0),
             ],
             isCurved: false,
-            color: Colors.blue,
+            color: AppColours.chartLine,
             barWidth: 3,
             isStrokeCapRound: true,
             dotData: FlDotData(show: true),
@@ -555,7 +555,7 @@ class CoefficientVisualization extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const TabBar(
-            labelColor: Colors.blue,
+            labelColor: AppColours.secondary,
             tabs: [
               Tab(text: 'aₙ Coefficients'),
               Tab(text: 'bₙ Coefficients'),
@@ -578,7 +578,7 @@ class CoefficientVisualization extends StatelessWidget {
                           barRods: [
                             BarChartRodData(
                               toY: calculateA(index),
-                              color: Colors.blue,
+                              color: AppColours.chartBar,
                               width: 20,
                             ),
                           ],
@@ -653,7 +653,7 @@ class CoefficientVisualization extends StatelessWidget {
                           barRods: [
                             BarChartRodData(
                               toY: index == 0 ? 0 : calculateB(index),
-                              color: Colors.red,
+                              color: AppColours.phaseSpectrum,
                               width: 20,
                             ),
                           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fourier_forge/themes/colours.dart';
 import '../features/problem_solvers/rectifier/rectifier_problem_screen.dart';
 import '../features/problem_solvers/equations/equation_problem_screen.dart';
 class InteractiveProblemScreen extends StatelessWidget {
@@ -9,7 +10,7 @@ class InteractiveProblemScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Problem Solver'),
-        backgroundColor: Colors.indigo,
+        backgroundColor: AppColours.primaryLight
       ),
       // List of Questions
       body: ListView(
@@ -32,14 +33,6 @@ class InteractiveProblemScreen extends StatelessWidget {
                 SizedBox(height: 8),
                 Text(
                   'These problems are based on questions from tutorial questions, quizzes and Past Year Papers.',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Tap on a question to explore the Problem Solver.',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -123,20 +116,6 @@ class InteractiveProblemScreen extends StatelessWidget {
                         fontSize: 14,
                         color: Colors.grey,
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(Icons.touch_app, size: 16, color: Colors.indigo),
-                        const SizedBox(width: 4),
-                        const Text(
-                          'Try it out',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.indigo,
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                 ),

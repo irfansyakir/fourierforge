@@ -54,7 +54,7 @@ class WaveGraph extends StatelessWidget {
                 // Draws a thick black line for y=0
                 if (value == 0) {
                   return FlLine(
-                    color: Colors.black,
+                    color: AppColours.black,
                     strokeWidth: 2.5, // Thicker line 
                     dashArray: [5, 0], 
                   );
@@ -72,7 +72,7 @@ class WaveGraph extends StatelessWidget {
               LineChartBarData(
                 spots: points,  // This is where points are used
                 dotData: FlDotData(show: false),
-                color: Colors.blue,
+                color: AppColours.chartLine,
                 barWidth: 3,
               ),
             ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import '../../../../themes/colours.dart';
 
 class WaveTransformationCard extends StatefulWidget {
   final String title;
@@ -102,16 +103,16 @@ class WaveTransformationPainter extends CustomPainter {
     
     // Set up paints
     final axisPaint = Paint()
-      ..color = Colors.black
+      ..color = AppColours.black
       ..strokeWidth = 1.0;
     
     final originalWavePaint = Paint()
-      ..color = Colors.blue
+      ..color = AppColours.originalSignal
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
     
     final rectifiedWavePaint = Paint()
-      ..color = Colors.orange
+      ..color = AppColours.transformedSignal
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
     
@@ -120,7 +121,7 @@ class WaveTransformationPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
     
     final connectionPaint = Paint()
-      ..color = Colors.black
+      ..color = AppColours.black
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
     

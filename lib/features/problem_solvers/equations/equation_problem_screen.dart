@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../../../themes/colours.dart';
 import 'equation_solver.dart';
 
 class EquationProblemScreen extends StatefulWidget {
@@ -241,7 +242,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Equation Solver'),
-        backgroundColor: Colors.indigo,
+        backgroundColor: AppColours.primaryLight,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -336,8 +337,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                   child: ElevatedButton(
                     onPressed: terms.length < maxTerms ? addTerm : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: terms.length < maxTerms ? Colors.blue : Colors.grey.shade300,
-                      foregroundColor: Colors.white,
+                      backgroundColor: terms.length < maxTerms ? AppColours.secondary : AppColours.greyLight,
+                      foregroundColor: AppColours.white,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                     ),
                     child: const Text('Add Term'),
@@ -350,8 +351,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                   child: ElevatedButton(
                     onPressed: terms.length > 1 ? removeLastTerm : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: terms.length > 1 ? Colors.red : Colors.grey.shade300,
-                      foregroundColor: Colors.white,
+                      backgroundColor: terms.length > 1 ? AppColours.error : AppColours.greyLight,
+                      foregroundColor: AppColours.white,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                     ),
                     child: const Text('Remove Last Term'),
@@ -394,7 +395,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: terms[index].isPositive ? Colors.green : Colors.red,
+                backgroundColor: terms[index].isPositive ? AppColours.success : AppColours.error,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 minimumSize: const Size(40, 36),
                 shape: const CircleBorder(),
@@ -464,8 +465,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: terms[index].hasTrigFunction ? Colors.purple : Colors.grey.shade300,
-                    foregroundColor: terms[index].hasTrigFunction ? Colors.white : Colors.black,
+                    backgroundColor: terms[index].hasTrigFunction ? AppColours.primary : AppColours.greyLight,
+                    foregroundColor: terms[index].hasTrigFunction ? AppColours.white : AppColours.textPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                   child: Text(
@@ -502,8 +503,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                               });
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: terms[index].functionType == 'sin' ? Colors.blue : Colors.grey.shade300,
-                              foregroundColor: terms[index].functionType == 'sin' ? Colors.white : Colors.black,
+                              backgroundColor: terms[index].functionType == 'sin' ? AppColours.secondary : AppColours.greyLight,
+                              foregroundColor: terms[index].functionType == 'sin' ? AppColours.white : AppColours.textPrimary,
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(
@@ -524,8 +525,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                               });
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: terms[index].functionType == 'cos' ? Colors.blue : Colors.grey.shade300,
-                              foregroundColor: terms[index].functionType == 'cos' ? Colors.white : Colors.black,
+                              backgroundColor: terms[index].functionType == 'cos' ? AppColours.secondary : AppColours.greyLight,
+                              foregroundColor: terms[index].functionType == 'cos' ? AppColours.white : AppColours.textPrimary,
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(
@@ -553,7 +554,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                 
                 Switch(
                   value: terms[index].includesPi,
-                  activeColor: Colors.purple,
+                  activeColor: AppColours.primary,
                   onChanged: (value) {
                     setState(() {
                       terms[index].includesPi = value;
@@ -875,7 +876,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                   lineBarsData: [
                     LineChartBarData(
                       spots: signalPoints,
-                      color: Colors.blue,
+                      color: AppColours.chartLine,
                       barWidth: 2,
                       isCurved: false,
                       dotData: const FlDotData(show: false),
@@ -1015,7 +1016,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
               const SizedBox(height: 16),
               const Text(
                 'The signal consists only of constant terms, so it is periodic with any period.',
-                style: TextStyle(fontSize: 16, color: Colors.green),
+                style: TextStyle(fontSize: 16, color: AppColours.success),
               ),
             ],
           ),

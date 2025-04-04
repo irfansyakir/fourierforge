@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../features/sample_solutions/question8_1/question8_1_screen.dart';
 import '../features/sample_solutions/2122S1/question3_screen.dart';
-
-
+import '../themes/colours.dart';
 
 class SampleSolutionScreen extends StatelessWidget {
   const SampleSolutionScreen({super.key});
@@ -32,7 +31,7 @@ class SampleSolutionScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'These are the sample questions and solutions from the course IE2110 Signals and Systems.',
+                  'Sample questions and solutions from the course IE2110 Signals and Systems.',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -42,19 +41,17 @@ class SampleSolutionScreen extends StatelessWidget {
             ),
           ),
 
-        
           const SizedBox(height: 16),
-          
+
           // Question 8.1 Card
           _buildQuestionCard(
             context,
             'Tutorial 8.1',
             'Full-Wave Rectifier Fourier Series',
-            'Find the trigonometric Fourier series representation of a rectified sinusoidal signal',
-            Icons.signal_cellular_alt,
+            'Find the trigonometric Fourier series representation of a rectified sinusoidal signal.',
             () => Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const Question801Screen())
+              context,
+              MaterialPageRoute(builder: (context) => const Question801Screen()),
             ),
           ),
 
@@ -62,27 +59,22 @@ class SampleSolutionScreen extends StatelessWidget {
             context,
             'PYP 21/22 Semester 1',
             'Question 3',
-            'Determine the Fourier series coefficients.',
-            Icons.signal_cellular_alt,
+            'Determine the Fourier series coefficients of a given equation.',
             () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => const AY2122S1Question3Screen())
+              context,
+              MaterialPageRoute(builder: (context) => const AY2122S1Question3Screen()),
             ),
           ),
-          
- 
-          
-
         ],
       ),
     );
   }
-  
+
   Widget _buildQuestionCard(
-    BuildContext context, 
+    BuildContext context,
     String questionNumber,
-    String title, 
-    String subtitle, 
-    IconData icon,
+    String title,
+    String subtitle,
     VoidCallback onTap,
   ) {
     return Card(
@@ -98,7 +90,6 @@ class SampleSolutionScreen extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Right side - Question title and subtitle
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,34 +112,20 @@ class SampleSolutionScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey,
+                        color: AppColours.textSecondary,
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(icon, size: 16, color: Colors.indigo),
-                        const SizedBox(width: 4),
-                        const Text(
-                          'Tap to view solution',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.indigo,
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                 ),
               ),
-              
+
               // Arrow icon
-              const Icon(
+              Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
-                color: Colors.grey,
+                color: AppColours.grey,
               ),
             ],
           ),

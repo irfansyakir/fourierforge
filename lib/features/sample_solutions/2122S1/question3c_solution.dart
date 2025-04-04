@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
+import '../../../../themes/colours.dart';
 
 class Question3CSolutionCard extends StatelessWidget {
   const Question3CSolutionCard({super.key});
@@ -294,13 +295,13 @@ class MagnitudeSpectrumVisualization extends StatelessWidget {
           LineChartBarData(
             spots: magnitudePoints,
             isCurved: true,
-            color: Colors.blue,
+            color: AppColours.chartLine,
             barWidth: 2,
             isStrokeCapRound: true,
             dotData: FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
-              color: Colors.blue,  
+              color: AppColours.chartLine.withOpacity(0.2),  
             ),
           ),
         ],
@@ -391,7 +392,7 @@ class PhaseSpectrumVisualization extends StatelessWidget {
           LineChartBarData(
             spots: phasePoints,
             isCurved: false,
-            color: Colors.red,
+            color: AppColours.phaseSpectrum,
             barWidth: 2,
             isStrokeCapRound: true,
             dotData: FlDotData(show: false),

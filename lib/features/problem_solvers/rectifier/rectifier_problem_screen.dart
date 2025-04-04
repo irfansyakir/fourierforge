@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:fourier_forge/themes/colours.dart';
 import 'rectifier_solver.dart';
 import 'dart:math' as math;
 
@@ -71,7 +72,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rectifier Solver'),
-        backgroundColor: Colors.indigo,
+        backgroundColor: AppColours.primaryLight
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -105,7 +106,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
       ),
     );
   }
-  
+//*****************************************************************************/
   Widget _buildProblemDescriptionCard() {
     return Card(
       elevation: 4,
@@ -174,7 +175,8 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
       ),
     );
   }
-  
+//*****************************************************************************/
+
   Widget _buildParametersCard() {
     return Card(
       elevation: 4,
@@ -252,7 +254,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: waveType == 'sin' ? Colors.blue : Colors.grey.shade300,
+                          backgroundColor: waveType == 'sin' ? AppColours.primaryLight: Colors.grey.shade300,
                           foregroundColor: waveType == 'sin' ? Colors.white : Colors.black,
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         ),
@@ -267,7 +269,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: waveType == 'cos' ? Colors.blue : Colors.grey.shade300,
+                          backgroundColor: waveType == 'cos' ? AppColours.primaryLight : Colors.grey.shade300,
                           foregroundColor: waveType == 'cos' ? Colors.white : Colors.black,
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         ),
@@ -319,8 +321,8 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                       });
                     }, 
                     style: ElevatedButton.styleFrom(
-                          backgroundColor: rectifierType == 'full' ? Colors.blue : Colors.grey.shade300,
-                          foregroundColor: waveType == 'half' ? Colors.white : Colors.black,
+                          backgroundColor: rectifierType == 'full' ? AppColours.primaryLight : Colors.grey.shade300,
+                          foregroundColor: rectifierType == 'full' ? Colors.white : Colors.black,
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         ),
                     child: const Text('Full Wave'))
@@ -337,8 +339,8 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                     });
                   }, 
                   style: ElevatedButton.styleFrom(
-                          backgroundColor: rectifierType == 'half' ? Colors.blue : Colors.grey.shade300,
-                          foregroundColor: waveType == 'full' ? Colors.white : Colors.black,
+                          backgroundColor: rectifierType == 'half' ? AppColours.primaryLight : Colors.grey.shade300,
+                          foregroundColor: rectifierType == 'half' ? Colors.white : Colors.black,
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         ),
                   child: Text('Half Wave'))
@@ -350,6 +352,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
       ),
     );
   }
+//*****************************************************************************/
 
   Widget _buildSignalVisualizationCard() {
     return Card(
@@ -496,6 +499,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
       ),
     );
   }
+//*****************************************************************************/
 
   Widget _buildSolutionCard() {
     return Card(
@@ -528,7 +532,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: currentSolutionStep == index + 1 
-                        ? Colors.blue 
+                        ? AppColours.primaryLight 
                         : Colors.grey.shade300,
                       foregroundColor: currentSolutionStep == index + 1 
                         ? Colors.white 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'wave_model.dart';
+import '../../themes/colours.dart';
 
 class WaveTypeDropdown extends StatelessWidget {
 
@@ -40,7 +41,7 @@ class WaveTypeDropdown extends StatelessWidget {
                 isExpanded: true,
                 icon: const Icon(Icons.arrow_drop_down),
                 elevation: 16,
-                style: const TextStyle(color: Colors.blue, fontSize: 16),
+                style: const TextStyle(color: AppColours.titleText, fontSize: 16),
                 onChanged: (WaveType? newValue) {
                   if (newValue != null) {
                     onTypeChanged(newValue);

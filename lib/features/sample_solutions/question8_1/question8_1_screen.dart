@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../../../themes/colours.dart';
 import 'dart:math' as math;
 
-// Import the separate card components
 import 'question_card.dart';
 import 'video_card.dart';
 import 'solution_a_card.dart';
-import 'solution_b_card.dart';
-import 'spectra_visualization_card.dart';
-import 'solution_c_card.dart';
+
 
 class Question801Screen extends StatefulWidget {
   const Question801Screen({super.key});
@@ -63,7 +61,7 @@ class Question801ScreenState extends State<Question801Screen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Question 8.1'),
-        backgroundColor: Colors.indigo,
+        backgroundColor: AppColours.primary,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -86,31 +84,10 @@ class Question801ScreenState extends State<Question801Screen> {
             const SolutionACard(),
             
             const SizedBox(height: 16),
-            
-            // Solution part (b) - Spectrum
-            const SolutionBCard(),
-            
-            const SizedBox(height: 16),
 
             VideoCard(
-              videoName: 'Fourier Series Visualizer',
+              videoName: 'Fourier Series Visualisation',
               videoPath: 'lib/assets/animations/FourierVisualiser.mp4'),
-
-            const SizedBox(height: 16),
-
-            
-            // Spectra visualization
-            SpectraVisualizationCard(
-              magnitudeSpectraPoints: magnitudeSpectraPoints,
-              phaseSpectraPoints: phaseSpectraPoints,
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Solution part (c) - Conclusion
-            const SolutionCCard(),
-            
-            const SizedBox(height: 32),
           ],
         ),
       ),

@@ -40,15 +40,6 @@ class AY2122S1Question3ScreenState extends State<AY2122S1Question3Screen> {
             const SizedBox(height: 16),
 
             Question3BSolutionCard(),
-
-            const SizedBox(height: 16),
-
-            Question3CCard(),
-
-            const SizedBox(height: 16),
-
-            Question3CSolutionCard(),
-
           ],
         ),
       ),

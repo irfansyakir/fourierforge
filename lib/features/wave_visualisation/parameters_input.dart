@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
+import '../../themes/colours.dart';
 
 // This file has 2 widgets: 
 // ParameterInputs: A StatelessWidget that calls the ParameterInput widget for each parameter.
@@ -179,10 +180,10 @@ class _ParameterInputState extends State<ParameterInput> {
               flex: 7,
               child: SliderTheme(
                 data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: Colors.blue,
-                  inactiveTrackColor: Colors.grey[300],
-                  thumbColor: Colors.blueAccent,
-                  overlayColor: Colors.blue, 
+                  activeTrackColor: AppColours.primary,
+                  inactiveTrackColor: AppColours.greyLight,
+                  thumbColor: AppColours.primary,
+                  overlayColor: AppColours.primary, 
                   trackHeight: 8.0,
                   thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
                   tickMarkShape: const RoundSliderTickMarkShape(tickMarkRadius: 6.0),

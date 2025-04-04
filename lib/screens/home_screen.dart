@@ -1,5 +1,3 @@
-// Updated lib/screens/home_screen.dart to add the new button
-
 import 'package:flutter/material.dart';
 import '../routes/routes.dart';
 
@@ -10,7 +8,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FourierForge'),
+        title: const Text('Fourier Forge'),
         centerTitle: true,
       ),
       body: Padding(
@@ -27,8 +25,7 @@ class HomeScreen extends StatelessWidget {
             
             _buildNavButton(context, 'Sample Solutions', AppRoutes.sampleSolutionScreen,
             Icons.tungsten_outlined),
-            
-      
+          
             _buildNavButton(context, 'Fourier Series Cheat Sheet', AppRoutes.cheatSheet, 
             Icons.sticky_note_2_outlined),
           ],

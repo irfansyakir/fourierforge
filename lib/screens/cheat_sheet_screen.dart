@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
+import '../themes/colours.dart';
 
 class CheatSheetScreen extends StatelessWidget {
   const CheatSheetScreen({super.key});
@@ -10,6 +11,7 @@ class CheatSheetScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Fourier Series Cheat Sheet'),
         centerTitle: true,
+        backgroundColor: AppColours.primary,
       ),
       body: const SingleChildScrollView(
         child: Padding(
@@ -148,7 +150,7 @@ class CheatSheetSection extends StatelessWidget {
           margin: const EdgeInsets.only(top: 20, bottom: 10),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.blue.shade700,
+            color: AppColours.primaryDark,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Text(
@@ -156,7 +158,7 @@ class CheatSheetSection extends StatelessWidget {
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: AppColours.white,
             ),
           ),
         ),
@@ -199,7 +201,7 @@ class FormulaCard extends StatelessWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
-        side: BorderSide(color: Colors.blue.shade200),
+        side: BorderSide(color: AppColours.secondaryLight),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -267,7 +269,7 @@ class PropertyCard extends StatelessWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
-        side: BorderSide(color: Colors.blue.shade100),
+        side: BorderSide(color: AppColours.secondaryLight),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -324,8 +326,7 @@ class WaveFormCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       elevation: 2,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-        side: BorderSide(color: Colors.green.shade200),
+        side: BorderSide(color: AppColours.success),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),

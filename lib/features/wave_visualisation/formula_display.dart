@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'dart:math';
+import '../../../themes/colours.dart';
 import 'wave_model.dart';
 
 class FormulaDisplay extends StatelessWidget {

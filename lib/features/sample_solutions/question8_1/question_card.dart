@@ -33,17 +33,7 @@ class QuestionCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             const Text(
-              '(a) Find the trigonometric Fourier series representation of y(t).',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              '(b) Plot its two-sided line spectra.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              '(c) What can we conclude from the magnitude spectrum?',
+              'Find the trigonometric Fourier series representation of y(t).',
               style: TextStyle(fontSize: 16),
             ),
           ],

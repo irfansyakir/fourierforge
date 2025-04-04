@@ -82,7 +82,7 @@ class Question3ACard extends StatelessWidget {
                     alignment: PlaceholderAlignment.middle,
                   ),
                   const TextSpan(
-                    text: ' expressed in the amplitude-phase form. Plot the magnitude and phase spectra.',
+                    text: ' expressed in the amplitude-phase form.',
                   ),
                 ],
               ),
