@@ -32,8 +32,6 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
   late String outputPeriod = '0';
   late String outputFrequency = '0';
   late int currentSolutionStep = 1;
-  // late List<FlSpot> spectraPoints;
-  // late RectifierSolution solution;
   
   @override
   void initState() {
@@ -58,7 +56,6 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
       rectifierType: rectifierType
     );
 
-
     setState(() {
       inputSignalPoints = solver.getInputSignalPoints();
       outputSignalPoints = solver.getOutputSignalPoints();
@@ -72,7 +69,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rectifier Solver'),
-        backgroundColor: AppColours.primaryLight
+        backgroundColor: AppColours.primaryLight,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -80,7 +77,6 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               // Problem statement that describes the question details
               _buildProblemDescriptionCard(),
               
@@ -108,73 +104,55 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
   }
 //*****************************************************************************/
   Widget _buildProblemDescriptionCard() {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Problem',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+  return Card(
+    elevation: 4,
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Problem',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 12),
-            
-            Text(
-              'A sinusoidal signal x(t) is passed through a $rectifierType-wave rectifier to produce y(t):',
-              style: TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 12),
+          
+          Text(
+            'A sinusoidal signal x(t) is passed through a $rectifierType-wave rectifier to produce y(t):',
+            style: TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 16),
+          
+          // Rectifier definition
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: rectifierType == 'full' 
+                ? Math.tex(
+                    'y(t) = \\begin{cases} x(t), & \\text{if } x(t) \\geq 0 \\\\ -x(t), & \\text{if } x(t) < 0 \\end{cases}',
+                    textStyle: const TextStyle(fontSize: 20),
+                  )
+                : Math.tex(
+                    'y(t) = \\begin{cases} x(t), & \\text{if } x(t) \\geq 0 \\\\ 0, & \\text{if } x(t) < 0 \\end{cases}',
+                    textStyle: const TextStyle(fontSize: 20),
+                  ),
             ),
-            const SizedBox(height: 16),
-            
-            // Equations for input signal with variables
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Math.tex(
-                  r'x(t) = \boxed{' + amplitude.toStringAsFixed(1) + r'}' +
-                  waveType + r'(\boxed{' + frequency.toStringAsFixed(1) + r'}\pi t)',
-                  textStyle: const TextStyle(fontSize: 20),
-                ),
-
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            // Rectifier definition
-            
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                
-                child: rectifierType == 'full' 
-                  ? Math.tex(
-                      'y(t) = \\begin{cases} x(t), & \\text{if } x(t) \\geq 0 \\\\ -x(t), & \\text{if } x(t) < 0 \\end{cases}',
-                      textStyle: const TextStyle(fontSize: 20),
-                    )
-                  : Math.tex(
-                      'y(t) = \\begin{cases} x(t), & \\text{if } x(t) \\geq 0 \\\\ 0, & \\text{if } x(t) < 0 \\end{cases}',
-                      textStyle: const TextStyle(fontSize: 20),
-                    )
-                  ,
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            const Text(
-              'Find the Fourier series of the output signal.',
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 16),
+          
+          const Text(
+            'Find the Fourier series of the output signal.',
+            style: TextStyle(fontSize: 16),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 //*****************************************************************************/
 
   Widget _buildParametersCard() {

@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
 
 class AppColours {
-  // Primary colors
-  static const Color primary = Colors.indigo;
-  static const Color primaryDark = Color(0xFF303F9F); // indigo[700]
-  static const Color primaryLight = Color(0xFF7986CB); // indigo[300]
-  
-  // Accent/secondary colors
-  static const Color secondary = Colors.blue;
-  static const Color secondaryDark = Color(0xFF1565C0); // blue[800]
-  static const Color secondaryLight = Color(0xFF64B5F6); // blue[300]
-  
-  // Success, warning, error states
-  static const Color success = Colors.green;
-  static const Color warning = Colors.orange;
-  static const Color error = Colors.red;
-  
-  // Greyscale
-  static const Color grey = Colors.grey;
-  static const Color greyLight = Color(0xFFE0E0E0); // grey[300]
-  static const Color greyDark = Color(0xFF757575); // grey[600]
-  
   // Black and white variants
   static const Color black = Colors.black;
   static const Color white = Colors.white;
+  
+  // Material color variants
+  static const Color primary = Color(0xFF3F51B5); // indigo
+  static const Color primaryLight = Color(0xFF7986CB); // indigo[300]
+  static const Color primaryDark = Color(0xFF303F9F); // indigo[700]
+  static const Color secondary = Color(0xFF2196F3); // blue
+  static const Color secondaryLight = Color(0xFF90CAF9); // blue[200]
+  
+  // Status colors
+  static const Color success = Color(0xFF4CAF50); // green
+  static const Color warning = Color(0xFFFFC107); // amber
+  static const Color error = Color(0xFFF44336); // red
+  
+  // Gray shades
+  static const Color grey = Color(0xFF9E9E9E); // grey
+  static const Color greyLight = Color(0xFFE0E0E0); // grey[300]
   
   // Background colors
   static const Color background = Colors.white;

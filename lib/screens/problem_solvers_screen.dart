@@ -1,76 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:fourier_forge/themes/colours.dart';
-import '../features/problem_solvers/rectifier/rectifier_problem_screen.dart';
-import '../features/problem_solvers/equations/equation_problem_screen.dart';
-class InteractiveProblemScreen extends StatelessWidget {
-  const InteractiveProblemScreen({super.key});
+import '../routes/routes.dart';
+
+class ProblemsScreen extends StatelessWidget {
+  const ProblemsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Problem Solver'),
-        backgroundColor: AppColours.primaryLight
-      ),
-      // List of Questions
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          // Header section
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-           
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Problem Solver',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return ListView(
+      padding: const EdgeInsets.all(16.0),
+      children: [
+        // Header section
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
+         
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Problem Solver',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
-                SizedBox(height: 8),
-                Text(
-                  'These problems are based on questions from tutorial questions, quizzes and Past Year Papers.',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'These problems are based on questions from tutorial questions, quizzes and Past Year Papers.',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+        ),
 
-          // Calls the function and builds the widgets with individual Question Details
+        // Problem Card for Rectifier Problem
+        _buildProblemCard(
+          context,
+          'Rectifier Problem',
+          'Compute the Fourier series coefficients for a full and half wave rectifier circuits.',
+          () => Navigator.pushNamed(context, AppRoutes.rectifierProblem),
+        ),
 
-          // Problem Card for Rectifier Problem
-          _buildProblemCard(
-            context,
-            'Rectifier Problem',
-            'Compute the Fourier series coefficients for a full and half wave rectifier circuits.',
-            () => Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const RectifierProblemScreen())
-            ),
-          ),
-
-
-          // Problem Card for Equation Problem
-          _buildProblemCard(
-            context,
-            'Equations Problem',
-            'Compute the Fourier Series coefficients for the given equations.',
-            () => Navigator.push(
-              context, 
-              MaterialPageRoute(builder: (context) => const EquationProblemScreen())
-            ),
-          ),
-          
-          // More problem cards can be added here later
-          
-        ],
-      ),
+        // Problem Card for Equation Problem
+        _buildProblemCard(
+          context,
+          'Equations Problem',
+          'Compute the Fourier Series coefficients for the given equations.',
+          () => Navigator.pushNamed(context, AppRoutes.equationProblem),
+        ),
+      ],
     );
   }
   

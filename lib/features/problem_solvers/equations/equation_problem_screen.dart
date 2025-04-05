@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
@@ -33,7 +32,6 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     super.initState();
     
     // Initialize terms with example values
-
     presetTerms(preset);
     
     // Initialize controllers for each term

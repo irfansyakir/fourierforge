@@ -27,6 +27,14 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
+              const Text(
+                'Forge your understanding of Fourier Series!',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColours.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 8),
               Container(
                 width: 100,
                 height: 3,
@@ -44,7 +52,7 @@ class HomeScreen extends StatelessWidget {
                   crossAxisSpacing: 16.0,
                   childAspectRatio: 1.0,
                   children: [
-                    // Wave Visualization Card
+                    // Wave Visualization Card - Navigate to the appropriate tab
                     _buildFeatureCard(
                       context,
                       'Waves Visualization',

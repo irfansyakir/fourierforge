@@ -7,121 +7,86 @@ class CheatSheetScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Fourier Series Cheat Sheet'),
-        centerTitle: true,
-        backgroundColor: AppColours.primary,
-      ),
-      body: const SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Introduction
-              CheatSheetSection(
-                title: 'Fourier Series',
-                content: 'A method to represent a periodic function as a sum of sine and cosine terms.'
-              ),
-              
-              // Three Forms of Fourier Series
-              CheatSheetSection(
-                title: 'Fourier Series Forms',
-                children: [
-                  FormulaCard(
-                    title: 'Trigonometric Form',
-                    formula: r'f(t) = a_0 + \sum_{n=1}^{\infty} \left( a_n\cos(n\omega t) + b_n\sin(n\omega t) \right)',
-                    details: [
-                      r'a_0 = \frac{1}{T}\int_{0}^{T}f(t)dt',
-                      r'a_n = \frac{2}{T}\int_{0}^{T}f(t)\cos(n\omega t)dt',
-                      r'b_n = \frac{2}{T}\int_{0}^{T}f(t)\sin(n\omega t)dt',
-                      r'\omega = \frac{2\pi}{T}',
-                    ],
-                  ),
-                  
-                  FormulaCard(
-                    title: 'Amplitude-Phase Form',
-                    formula: r'f(t) = A_0 + \sum_{n=1}^{\infty}A_n\cos(n\omega t - \phi_n)',
-                    details: [
-                      r'A_0 = a_0',
-                      r'A_n = \sqrt{a_n^2 + b_n^2}',
-                      r'\phi_n = \tan^{-1}\left(\frac{b_n}{a_n}\right)',
-                    ],
-                  ),
-                  
-                  FormulaCard(
-                    title: 'Complex Exponential Form',
-                    formula: r'f(t) = \sum_{n=-\infty}^{\infty}c_n e^{jn\omega t}',
-                    details: [
-                      r'c_n = \frac{1}{T}\int_{0}^{T}f(t)e^{-jn\omega t}dt',
-                      r'c_0 = a_0',
-                      r'c_n = \frac{a_n - jb_n}{2}, n > 0',
-                      r'c_{-n} = \frac{a_n + jb_n}{2}, n > 0',
-                    ],
-                  ),
-                ],
-              ),
-              
-              // Signal Properties
-              CheatSheetSection(
-                title: 'Signal Properties',
-                children: [
-                  PropertyCard(
-                    title: 'Periodicity',
-                    content: 'A signal f(t) is periodic if f(t) = f(t+T) for some period T.',
-                  ),
-                  
-                  PropertyCard(
-                    title: 'Fundamental Frequency',
-                    formula: r'f_0 = \frac{1}{T}, \omega_0 = \frac{2\pi}{T}',
-                    content: 'The lowest frequency component in a periodic signal.',
-                  ),
-                  
-                  PropertyCard(
-                    title: 'Even & Odd Functions',
-                    content: 'Even: f(-t) = f(t) → only cosine terms (bn = 0)\nOdd: f(-t) = -f(t) → only sine terms (an = 0)',
-                  ),
-                  
-                  PropertyCard(
-                    title: 'Half-Wave Symmetry',
-                    content: 'f(t+T/2) = -f(t) → only odd harmonics exist',
-                    formula: r'a_0 = a_{2k} = b_{2k} = 0, \text{ for } k = 1,2,3,...',
-                  ),
-                ],
-              ),
-              
-              // Signal Operations
-              CheatSheetSection(
-                title: 'Signal Operations',
-                children: [
-                  PropertyCard(
-                    title: 'Time Shifting',
-                    content: 'If f(t) → {cn}, then f(t-τ) →',
-                    formula: r'c_n e^{-jn\omega_0\tau}',
-                  ),
-                  
-                  PropertyCard(
-                    title: 'Time Scaling',
-                    content: 'If f(t) has period T, then f(at) has period T/a',
-                    formula: r'f(at) \Rightarrow \text{same coefficients, } \omega_0 \rightarrow a\omega_0',
-                  ),
-                  
-                  PropertyCard(
-                    title: 'Differentiation',
-                    content: 'If f(t) → {cn}, then df/dt →',
-                    formula: r'jn\omega_0 c_n',
-                  ),
-                  
-                  PropertyCard(
-                    title: 'Integration',
-                    content: 'If f(t) → {cn}, then ∫f(t)dt →',
-                    formula: r'c_n / (jn\omega_0), n \neq 0',
-                  ),
-                ],
-              ),
-            ],
-          ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Introduction
+            CheatSheetSection(
+              title: 'Fourier Series',
+              content:
+                  'A method to represent a periodic function as a sum of sine and cosine terms.',
+            ),
+
+            // Three Forms of Fourier Series
+            CheatSheetSection(
+              title: 'Fourier Series Forms',
+              children: [
+                FormulaCard(
+                  title: 'Trigonometric Form',
+                  formula:
+                      r'f(t) = a_0 + \sum_{n=1}^{\infty} \left( a_n\cos(n\omega t) + b_n\sin(n\omega t) \right)',
+                  details: [
+                    r'a_0 = \frac{1}{T}\int_{0}^{T}f(t)dt',
+                    r'a_n = \frac{2}{T}\int_{0}^{T}f(t)\cos(n\omega t)dt',
+                    r'b_n = \frac{2}{T}\int_{0}^{T}f(t)\sin(n\omega t)dt',
+                    r'\omega = \frac{2\pi}{T}',
+                  ],
+                ),
+                FormulaCard(
+                  title: 'Amplitude-Phase Form',
+                  formula:
+                      r'f(t) = A_0 + \sum_{n=1}^{\infty}A_n\cos(n\omega t - \phi_n)',
+                  details: [
+                    r'A_0 = a_0',
+                    r'A_n = \sqrt{a_n^2 + b_n^2}',
+                    r'\phi_n = \tan^{-1}\left(\frac{b_n}{a_n}\right)',
+                  ],
+                ),
+                FormulaCard(
+                  title: 'Complex Exponential Form',
+                  formula:
+                      r'f(t) = \sum_{n=-\infty}^{\infty}c_n e^{jn\omega t}',
+                  details: [
+                    r'c_n = \frac{1}{T}\int_{0}^{T}f(t)e^{-jn\omega t}dt',
+                    r'c_0 = a_0',
+                    r'c_n = \frac{a_n - jb_n}{2}, n > 0',
+                    r'c_{-n} = \frac{a_n + jb_n}{2}, n > 0',
+                  ],
+                ),
+              ],
+            ),
+
+            // Signal Properties
+            CheatSheetSection(
+              title: 'Signal Properties',
+              children: [
+                PropertyCard(
+                  title: 'Periodicity',
+                  content:
+                      'A signal f(t) is periodic if f(t) = f(t+T) for some period T.',
+                ),
+                PropertyCard(
+                  title: 'Fundamental Frequency',
+                  formula: r'f_0 = \frac{1}{T}, \omega_0 = \frac{2\pi}{T}',
+                  content: 'The lowest frequency component in a periodic signal.',
+                ),
+                PropertyCard(
+                  title: 'Even & Odd Functions',
+                  content:
+                      'Even: f(-t) = f(t) → only cosine terms (bn = 0)\nOdd: f(-t) = -f(t) → only sine terms (an = 0)',
+                ),
+                PropertyCard(
+                  title: 'Half-Wave Symmetry',
+                  content: 'f(t+T/2) = -f(t) → only odd harmonics exist',
+                  formula:
+                      r'a_0 = a_{2k} = b_{2k} = 0, \text{ for } k = 1,2,3,...',
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -162,7 +127,7 @@ class CheatSheetSection extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Optional content text
         if (content != null)
           Padding(
@@ -172,10 +137,10 @@ class CheatSheetSection extends StatelessWidget {
               style: const TextStyle(fontSize: 16),
             ),
           ),
-        
+
         // Child widgets
         ...children,
-        
+
         const SizedBox(height: 10),
       ],
     );
@@ -212,12 +177,12 @@ class FormulaCard extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                fontSize: 16, 
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const Divider(),
-            
+
             // Main formula
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -229,19 +194,21 @@ class FormulaCard extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Details/coefficients
             if (details.isNotEmpty) ...[
               const Divider(),
               const Text('Where:', style: TextStyle(fontStyle: FontStyle.italic)),
               const SizedBox(height: 4),
-              ...details.map((detail) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Math.tex(
-                  detail,
-                  textStyle: const TextStyle(fontSize: 14),
+              ...details.map(
+                (detail) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Math.tex(
+                    detail,
+                    textStyle: const TextStyle(fontSize: 14),
+                  ),
                 ),
-              )),
+              ),
             ],
           ],
         ),
@@ -280,17 +247,17 @@ class PropertyCard extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                fontSize: 16, 
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
+
             // Content
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Text(content),
             ),
-            
+
             // Optional formula
             if (formula != null)
               Padding(
@@ -337,12 +304,12 @@ class WaveFormCard extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                fontSize: 16, 
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const Divider(),
-            
+
             // Formula
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),

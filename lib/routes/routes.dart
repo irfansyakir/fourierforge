@@ -1,11 +1,9 @@
-// Updated lib/routes/routes.dart to include the new screens
-
 import 'package:flutter/material.dart';
 import '../screens/home_screen.dart';
-import '../screens/wave_visualisation_screen.dart';
-import '../screens/sample_solution_screen.dart';
-import '../screens/cheat_sheet_screen.dart';
-import '../screens/problem_solvers_screen.dart'; // New import
+import '../screens/main_container_screen.dart';
+import '../features/sample_solutions/2122S1/question3_screen.dart';
+import '../features/problem_solvers/rectifier/rectifier_problem_screen.dart';
+import '../features/problem_solvers/equations/equation_problem_screen.dart';
 
 class AppRoutes {
   static const String home = "/";
@@ -13,8 +11,10 @@ class AppRoutes {
   static const String sampleSolutionScreen = '/sample_solution_screen';
   static const String pypSolutionScreen = '/pyp_solution_screen';
   static const String cheatSheet = '/cheat_sheet';
-  static const String interactiveProblemSolver = '/problem_solvers_solver'; // New route
+  static const String interactiveProblemSolver = '/problem_solvers_solver';
   static const String manim = 'manim';
+  static const String rectifierProblem = '/rectifier_problem';
+  static const String equationProblem = '/equation_problem';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -22,18 +22,25 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const HomeScreen());
 
       case waveVisualisation:
-        return MaterialPageRoute(builder: (_) => const WaveVisualisationScreen());
+        return MaterialPageRoute(builder: (_) => const MainContainerScreen(initialIndex: 0));
 
+      case interactiveProblemSolver:
+        return MaterialPageRoute(builder: (_) => const MainContainerScreen(initialIndex: 1));
+        
       case sampleSolutionScreen:
-        return MaterialPageRoute(builder: (_) => const SampleSolutionScreen());
-
-      
+        return MaterialPageRoute(builder: (_) => const MainContainerScreen(initialIndex: 2));
         
       case cheatSheet:
-        return MaterialPageRoute(builder: (_) => const CheatSheetScreen());
+        return MaterialPageRoute(builder: (_) => const MainContainerScreen(initialIndex: 3));
+
+      case rectifierProblem:
+        return MaterialPageRoute(builder: (_) => const RectifierProblemScreen());
         
-      case interactiveProblemSolver: // New case
-        return MaterialPageRoute(builder: (_) => const InteractiveProblemScreen());
+      case equationProblem:
+        return MaterialPageRoute(builder: (_) => const EquationProblemScreen());
+        
+      case pypSolutionScreen:
+        return MaterialPageRoute(builder: (_) => const AY2122S1Question3Screen());
    
       default:
         return _errorRoute();

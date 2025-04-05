@@ -36,7 +36,14 @@ class FormulaDisplay extends StatelessWidget {
     String f = waveModel.frequency.toStringAsFixed(1);
     double a = double.parse(waveModel.amplitude.toStringAsFixed(1));
     double amplitudeMultiplier = 4 * a;
-
+    
+    // Get phase shift term if not zero
+    String phaseShiftTerm = '';
+    if (waveModel.phaseShift != 0) {
+      double phaseShift = waveModel.phaseShift;
+      String formattedPhaseShift = _formatPhaseShiftForLatex(phaseShift);
+      phaseShiftTerm = phaseShift > 0 ? '+$formattedPhaseShift' : formattedPhaseShift;
+    }
 
     // Generate the fourier series terms for the square wave formula for up to 5 terms
     // The formula is a sum of odd harmonics
@@ -45,17 +52,17 @@ class FormulaDisplay extends StatelessWidget {
 
       if (n == 1) {
         if (f == '1.0') {
-          termsList.add(r'\sin(t)');
+          termsList.add(r'\sin(t' + phaseShiftTerm + r')');
         } else {
-          termsList.add(r'\sin(t \cdot ''$f' r')');
+          termsList.add(r'\sin(t \cdot ''$f' + phaseShiftTerm + r')');
         }
         
       } else {
         if (f == '1.0') {
-          termsList.add(r'\frac{\sin(' '${n}t' r')}{' '$n' r'}');
+          termsList.add(r'\frac{\sin(' '${n}t' + phaseShiftTerm + r')}{' '$n' r'}');
         } else {
           // Add the term to the list
-          termsList.add(r'\frac{\sin(' '${n}t' r' \cdot ''$f'r')}{' '$n' r'}');
+          termsList.add(r'\frac{\sin(' '${n}t' r' \cdot ''$f' + phaseShiftTerm + r')}{' '$n' r'}');
         }
       }
         
@@ -109,19 +116,27 @@ class FormulaDisplay extends StatelessWidget {
     double a = double.parse(waveModel.amplitude.toStringAsFixed(1));
     double amplitudeMultiplier = 4 * a;
 
+    // Get phase shift term if not zero
+    String phaseShiftTerm = '';
+    if (waveModel.phaseShift != 0) {
+      double phaseShift = waveModel.phaseShift;
+      String formattedPhaseShift = _formatPhaseShiftForLatex(phaseShift);
+      phaseShiftTerm = phaseShift > 0 ? '+$formattedPhaseShift' : formattedPhaseShift;
+    }
+
     for (int k = 1; k <= min(5, waveModel.terms); k++) {
       if (k == 1) {
         if (f == '1.0') {
-          termsList.add(r'\sin(t)');
+          termsList.add(r'\sin(t' + phaseShiftTerm + r')');
         } else {
-          termsList.add(r'\sin(t \cdot ''$f' r')');
+          termsList.add(r'\sin(t \cdot ''$f' + phaseShiftTerm + r')');
         }
       } else {
         if (f == '1.0') {
-          termsList.add(r'\frac{(-1)^{' '${k+1}' r'}\sin(' '${k}t' r')}{' '$k' '}');
+          termsList.add(r'\frac{(-1)^{' '${k+1}' r'}\sin(' '${k}t' + phaseShiftTerm + r')}{' '$k' '}');
         } else {
           // Add the term to the list
-          termsList.add(r'\frac{(-1)^{' '${k+1}' r'}\sin(' '${k}t' r' \cdot ''$f'r')}{' '$k' '}');
+          termsList.add(r'\frac{(-1)^{' '${k+1}' r'}\sin(' '${k}t' r' \cdot ''$f' + phaseShiftTerm + r')}{' '$k' '}');
         }
 
       }
@@ -169,22 +184,30 @@ class FormulaDisplay extends StatelessWidget {
     double a = double.parse(waveModel.amplitude.toStringAsFixed(1));
     double amplitudeMultiplier = 8 * a;
 
+    // Get phase shift term if not zero
+    String phaseShiftTerm = '';
+    if (waveModel.phaseShift != 0) {
+      double phaseShift = waveModel.phaseShift;
+      String formattedPhaseShift = _formatPhaseShiftForLatex(phaseShift);
+      phaseShiftTerm = phaseShift > 0 ? '+$formattedPhaseShift' : formattedPhaseShift;
+    }
+
     // Generate the fourier series terms for the triangle wave formula for up to 5 terms
     for (int k = 0; k < min(5, waveModel.terms); k++) {
       int n = 2 * k + 1; // Odd harmonics
 
       if (n == 1) {
         if (f == '1.0') {
-          termsList.add(r'\sin(t)');
+          termsList.add(r'\sin(t' + phaseShiftTerm + r')');
         } else {
-          termsList.add(r'\sin(t \cdot ''$f' r')');
+          termsList.add(r'\sin(t \cdot ''$f' + phaseShiftTerm + r')');
         }
       } else {
         if (f == '1.0') {
-          termsList.add(r'\frac{(-1)^{' '$k' r'}\sin(' '${n}t' r')}{' '$n^2' '}');
+          termsList.add(r'\frac{(-1)^{' '$k' r'}\sin(' '${n}t' + phaseShiftTerm + r')}{' '$n^2' '}');
         } else {
           // Add the term to the list
-          termsList.add(r'\frac{(-1)^{' '$k' r'}\sin(' '${n}t' r' \cdot ''$f'r')}{' '$n^2' '}');
+          termsList.add(r'\frac{(-1)^{' '$k' r'}\sin(' '${n}t' r' \cdot ''$f' + phaseShiftTerm + r')}{' '$n^2' '}');
         }
 
       }
@@ -223,5 +246,39 @@ class FormulaDisplay extends StatelessWidget {
         ),
       ],
     );
+  }
+  
+  // Add helper function to format phase shift for LaTeX
+  String _formatPhaseShiftForLatex(double phaseShift) {
+    
+    // Check if it's a simple fraction of π
+    double phaseInPi = phaseShift / pi;
+    
+    // Close to integer multiples of π
+    if ((phaseInPi - phaseInPi.round()).abs() < 0.05) {
+      int multiple = phaseInPi.round();
+      if (multiple == 0) return '0';
+      if (multiple == 1) return '\\pi';
+      if (multiple == -1) return '-\\pi';
+      return '$multiple\\pi';
+    }
+    
+    // Check for common fractions of π
+    for (int denominator = 2; denominator <= 6; denominator++) {
+      for (int numerator = 1; numerator < denominator; numerator++) {
+        double fraction = numerator / denominator;
+        if ((phaseInPi - fraction).abs() < 0.05) {
+          if (numerator == 1) return '\\frac{\\pi}{$denominator}';
+          return '\\frac{$numerator\\pi}{$denominator}';
+        }
+        if ((phaseInPi + fraction).abs() < 0.05) {
+          if (numerator == 1) return '-\\frac{\\pi}{$denominator}';
+          return '-\\frac{$numerator\\pi}{$denominator}';
+        }
+      }
+    }
+    
+    // If no simple fraction found, return as radians
+    return phaseShift.toStringAsFixed(2);
   }
 }

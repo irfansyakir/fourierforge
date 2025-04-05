@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../routes/routes.dart';
 import '../features/sample_solutions/question8_1/question8_1_screen.dart';
-import '../features/sample_solutions/2122S1/question3_screen.dart';
 import '../themes/colours.dart';
 
 class SampleSolutionScreen extends StatelessWidget {
@@ -8,65 +8,56 @@ class SampleSolutionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sample Solutions'),
-        backgroundColor: Colors.indigo,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          // Header section
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Sample Questions',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return ListView(
+      padding: const EdgeInsets.all(16.0),
+      children: [
+        // Header section
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Sample Questions',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
-                SizedBox(height: 8),
-                Text(
-                  'Sample questions and solutions from the course IE2110 Signals and Systems.',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Sample questions and solutions from the course IE2110 Signals and Systems.',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+        ),
 
-          const SizedBox(height: 16),
+        const SizedBox(height: 16),
 
-          // Question 8.1 Card
-          _buildQuestionCard(
+        // Question 8.1 Card
+        _buildQuestionCard(
+          context,
+          'Tutorial 8.1',
+          'Full-Wave Rectifier Fourier Series',
+          'Find the trigonometric Fourier series representation of a rectified sinusoidal signal.',
+          () => Navigator.push(
             context,
-            'Tutorial 8.1',
-            'Full-Wave Rectifier Fourier Series',
-            'Find the trigonometric Fourier series representation of a rectified sinusoidal signal.',
-            () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const Question801Screen()),
-            ),
+            MaterialPageRoute(builder: (context) => const Question801Screen()),
           ),
+        ),
 
-          _buildQuestionCard(
-            context,
-            'PYP 21/22 Semester 1',
-            'Question 3',
-            'Determine the Fourier series coefficients of a given equation.',
-            () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AY2122S1Question3Screen()),
-            ),
-          ),
-        ],
-      ),
+        _buildQuestionCard(
+          context,
+          'PYP 21/22 Semester 1',
+          'Question 3',
+          'Determine the Fourier series coefficients of a given equation.',
+          () => Navigator.pushNamed(context, AppRoutes.pypSolutionScreen),
+        ),
+      ],
     );
   }
 
