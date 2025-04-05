@@ -36,7 +36,7 @@ class SampleSolutionScreen extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 20), // Increased spacing
 
         // Question 8.1 Card
         _buildQuestionCard(
@@ -48,7 +48,10 @@ class SampleSolutionScreen extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => const Question801Screen()),
           ),
+          Icons.integration_instructions,
         ),
+
+        const SizedBox(height: 16), // Spacing between cards
 
         _buildQuestionCard(
           context,
@@ -56,6 +59,7 @@ class SampleSolutionScreen extends StatelessWidget {
           'Question 3',
           'Determine the Fourier series coefficients of a given equation.',
           () => Navigator.pushNamed(context, AppRoutes.pypSolutionScreen),
+          Icons.history_edu,
         ),
       ],
     );
@@ -67,56 +71,91 @@ class SampleSolutionScreen extends StatelessWidget {
     String title,
     String subtitle,
     VoidCallback onTap,
+    IconData icon,
   ) {
     return Card(
-      elevation: 4,
+      elevation: 6, // Increased elevation
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16), // Larger border radius
       ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
+          padding: const EdgeInsets.all(24.0), // Increased padding
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      questionNumber,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Icon for the question type
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColours.primaryLight.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Icon(
+                      icon,
+                      size: 32,
+                      color: AppColours.primary,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColours.textSecondary,
-                      ),
+                  ),
+                  const SizedBox(width: 16),
+                  // Question info
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          questionNumber,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // Subtitle/description
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColours.textSecondary,
                 ),
               ),
-
-              // Arrow icon
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: AppColours.grey,
+              const SizedBox(height: 16),
+              // Action row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'View Solution',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColours.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    color: AppColours.primary,
+                  ),
+                ],
               ),
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fourier_forge/themes/colours.dart';
 import 'question3a_card.dart';
 import 'question3a_solution.dart';
 import 'question3b_card.dart';
@@ -17,7 +18,7 @@ class AY2122S1Question3ScreenState extends State<AY2122S1Question3Screen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Q3(a): Fourier Series'),
-        backgroundColor: Colors.indigo,
+        backgroundColor: AppColours.primaryLight,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

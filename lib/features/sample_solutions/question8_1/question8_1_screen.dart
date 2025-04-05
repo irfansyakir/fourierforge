@@ -59,7 +59,7 @@ class Question801ScreenState extends State<Question801Screen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Question 8.1'),
-        backgroundColor: AppColours.primary,
+        backgroundColor: AppColours.primaryLight,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
