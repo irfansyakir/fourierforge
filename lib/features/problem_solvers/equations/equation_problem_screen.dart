@@ -68,20 +68,15 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   void dispose() {
     // Dispose all controllers with null safety check
     try {
-      if (controllers != null && controllers.isNotEmpty) {
+      if (controllers.isNotEmpty) {
         for (var controllerList in controllers) {
-          if (controllerList != null) {
-            for (var controller in controllerList) {
-              if (controller != null) {
-                controller.dispose();
-              }
-            }
-          }
-        }
+          for (var controller in controllerList) {
+            controller.dispose();
+                    }
+                }
       }
     } catch (e) {
-      // Silently handle the case where controllers aren't initialized yet
-      print('Note: Controllers were not properly initialized before dispose');
+      // Nothing
     }
     super.dispose();
   }
@@ -106,13 +101,13 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
       
       // No positive sign for the first term
       if (i == 0) {
-        if (validTerms[i].isPositive) {
-          latex += termLatex.substring(1); // Remove the + sign
+        if (termLatex.startsWith('+')) {
+          latex += termLatex.substring(1).trim(); // Remove the + sign
         } else {
           latex += termLatex; // Keep the - sign
         }
       } else {
-        latex += termLatex; // Include the sign
+        latex += ' ' + termLatex; // Include the sign
       }
     }
     
@@ -201,6 +196,27 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     calculateFourierSeries();
   }
 
+  // Remove all terms and reset to default single term
+  void removeAllTerms() {
+    setState(() {
+      // Dispose all existing controllers
+      for (var controllerList in controllers) {
+        for (var controller in controllerList) {
+          controller.dispose();
+        }
+      }
+      
+      // Clear terms list
+      terms.clear();
+      controllers.clear();
+      
+      // Reset to preset 0 (default case)
+      preset = 0;
+      presetTerms(preset);
+      calculateFourierSeries();
+    });
+  }
+
   void presetTerms(int preset) {
     // Dispose existing controllers (if any) to prevent memory leaks
     try {
@@ -217,6 +233,50 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     
     switch (preset) {
       case 1:
+        //  -3cos(7πt + π/6) + 4sin(11πt - π/3) - 9cos(16πt/3 - 7/18π)
+        terms = [
+          // Term 1: -3cos(7πt + π/6)
+          EquationTerm(
+            amplitude: -3,
+            hasTrigFunction: true,
+            functionType: 'cos',
+            frequencyNumerator: 7,
+            frequencyDenominator: 1,
+            includesPi: true,
+            phaseShiftNumerator: 1,
+            phaseShiftDenominator: 6,
+            isPositive: true, // No longer needed, amplitude is negative
+          ),
+          
+          // Term 2: 4sin(11πt - π/3)
+          EquationTerm(
+            amplitude: 4,
+            hasTrigFunction: true,
+            functionType: 'sin',
+            frequencyNumerator: 11,
+            frequencyDenominator: 1,
+            includesPi: true, 
+            phaseShiftNumerator: -1,
+            phaseShiftDenominator: 3,
+            isPositive: true,
+          ),
+
+          // Term 3: -9cos(16πt/3 - 7/18π)
+          EquationTerm(
+            amplitude: -9,
+            hasTrigFunction: true,
+            functionType: 'cos',
+            frequencyNumerator: 16,
+            frequencyDenominator: 3,
+            includesPi: true, 
+            phaseShiftNumerator: -7,
+            phaseShiftDenominator: 18,
+            isPositive: true, // No longer needed, amplitude is negative
+          ),
+        ];
+        break;
+      // 1
+      case 2:
         // 4cos(3t/5 + π/3) + 3sin(t/7) 
         terms = [
           // Term 1: 4cos(3t/5 + π/3)
@@ -246,12 +306,12 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
           ),
         ];
         break;
-      case 2:
+      case 3:
         //  -2 - 4cos(7/9t) + 6sin(3t) + 2cos(13/6t + π/4)
         terms = [
           // Term 1: -2 
           EquationTerm(
-            amplitude: 2,
+            amplitude: -2,
             hasTrigFunction: false,
             functionType: 'cos',
             frequencyNumerator: 1,
@@ -259,12 +319,12 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             includesPi: false,
             phaseShiftNumerator: 1,
             phaseShiftDenominator: 1,
-            isPositive: false,
+            isPositive: true, // No longer needed, amplitude is negative
           ),
           
           // Term 2: -4cos(7/9t)
           EquationTerm(
-            amplitude: 4,
+            amplitude: -4,
             hasTrigFunction: true,
             functionType: 'cos',
             frequencyNumerator: 7,
@@ -272,7 +332,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             includesPi: false, 
             phaseShiftNumerator: 0,
             phaseShiftDenominator: 1,
-            isPositive: false,
+            isPositive: true, // No longer needed, amplitude is negative
           ),
 
           // Term 3: 6 sin(3t)
@@ -303,49 +363,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
         ];
         break;
 
-        case 3:
-        //  -3cos(7πt + π/6) + 4sin(11πt - π/3) - 9cos(16πt/3 - 7/18π)
-        terms = [
-          // Term 1: -3cos(7πt + π/6)
-          EquationTerm(
-            amplitude: 3,
-            hasTrigFunction: true,
-            functionType: 'cos',
-            frequencyNumerator: 7,
-            frequencyDenominator: 1,
-            includesPi: true,
-            phaseShiftNumerator: 1,
-            phaseShiftDenominator: 6,
-            isPositive: false,
-          ),
-          
-          // Term 2: 4sin(11πt - π/3)
-          EquationTerm(
-            amplitude: 4,
-            hasTrigFunction: true,
-            functionType: 'sin',
-            frequencyNumerator: 11,
-            frequencyDenominator: 1,
-            includesPi: true, 
-            phaseShiftNumerator: -1,
-            phaseShiftDenominator: 3,
-            isPositive: true,
-          ),
-
-          // Term 3: - 9cos(16πt/3 - 7/18π)
-          EquationTerm(
-            amplitude: 9,
-            hasTrigFunction: true,
-            functionType: 'cos',
-            frequencyNumerator: 16,
-            frequencyDenominator: 3,
-            includesPi: true, 
-            phaseShiftNumerator: -7,
-            phaseShiftDenominator: 18,
-            isPositive: false,
-          ),
-        ];
-        break;
+      
       default: 
         terms = [
           EquationTerm(
@@ -357,7 +375,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             phaseShiftNumerator: 1, 
             phaseShiftDenominator: 1,
             isPositive: true
-            ),
+          ),
         ];
     }
     
@@ -395,19 +413,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     return combinedPoints;
   }
 
-  int _hcf(int a, int b) {
-    a = a.abs();
-    b = b.abs();
-    if (b == 0) return a;
-    return _hcf(b, a % b);
-  }
-
-  int _lcm(int a, int b) {
-    if (a == 0 || b == 0) return 0;
-    return (a * b) ~/ _hcf(a, b);
-  }
-
 /// ***********************************************************************************************
+/// Main Screen Build Method
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -438,6 +445,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   }
 
 /// ***********************************************************************************************
+/// Problem Description Card that displays the problem statement
   Widget _buildProblemDescriptionCard() {
     return Card(
       elevation: 4,
@@ -468,11 +476,12 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             const SizedBox(height: 10),
 
             const Text(
-              'Determine if the signal f(t) is periodic.',
+              '1) Determine if the signal f(t) is periodic.',
               style: TextStyle(fontSize: 16),
             ),
+            const SizedBox(height: 5),
             const Text(
-              'If so, find the Fourier series of f(t).',
+              '2) If so, find the Fourier series of f(t).',
               style: TextStyle(fontSize: 16),
             ),
           ],
@@ -481,6 +490,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     );
   }
 /// ***********************************************************************************************
+/// Parameters Card that allows user to set parameters for the equation
+/// Dynamically calls buildTermInputs() to create input fields for each term according to the number of terms
   Widget _buildParametersCard() {
     return Card(
       elevation: 4,
@@ -526,14 +537,22 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                 )
               ]
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+
+            Container(
+            height: 2,
+            decoration: BoxDecoration(
+              color: AppColours.primaryLight,
+              borderRadius: BorderRadius.circular(1.5),
+            ),
+          ),
             
             // List of term input rows
-            ...List.generate(terms.length, (index) => _buildTermInputRow(index)),
+            ...List.generate(terms.length, (index) => _buildTermInputs(index)),
             
-            const SizedBox(height: 24),
+            const SizedBox(height: 5),
             
-            // Add and Remove term buttons
+            // Add and Remove all term buttons
             Row(
               children: [
                 Expanded(
@@ -549,16 +568,16 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                 ),
                 
                 const SizedBox(width: 10),
-                
+           
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: terms.length > 1 ? removeLastTerm : null,
+                    onPressed: terms.length > 1 ? removeAllTerms : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: terms.length > 1 ? AppColours.error : AppColours.greyLight,
                       foregroundColor: AppColours.white,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                     ),
-                    child: const Text('Remove Last Term'),
+                    child: const Text('Remove All Terms'),
                   ),
                 ),
               ],
@@ -569,13 +588,15 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     );
   }
 /// ***********************************************************************************************
-  Widget _buildTermInputRow(int index) {
+/// Term input fields for the equation
+/// Input for amplitude, function type (sin/cos), frequency, and phase shift
+  Widget _buildTermInputs(int index) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        // Title row with term number and sign
+        // Title row with term number and remove button
         Row(
           children: [
             Text(
@@ -586,28 +607,19 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
               ),
             ),
             const Spacer(),
-            
-            // Added "Sign:" label before the button
-            const Text('Sign: ', style: TextStyle(fontSize: 16)),
-            
-            // Sign toggle button
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  terms[index].isPositive = !terms[index].isPositive;
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: terms[index].isPositive ? AppColours.success : AppColours.error,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                minimumSize: const Size(40, 36),
-                shape: const CircleBorder(),
+            // Add remove button for this specific term
+            if (terms.length > 1) // Only show button if there's more than one term
+              ElevatedButton.icon(
+                onPressed: () => removeTerm(index),
+                icon: const Icon(Icons.close, size: 16),
+                label: const Text('Remove', style: TextStyle(fontSize: 12)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColours.warning,
+                  foregroundColor: AppColours.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  minimumSize: const Size(80, 32),
+                ),
               ),
-              child: Text(
-                terms[index].isPositive ? '+' : '-',
-                style: const TextStyle(fontSize: 18),
-              ),
-            ),
           ],
         ),
           
@@ -617,34 +629,46 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
           Row(
             children: [
               // Amplitude input on the left
+
+              const Text('Amplitude: ', style: TextStyle(fontSize: 16)),
               Expanded(
                 flex: 2,
                 child: TextField(
                   controller: controllers[index][0],
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(signed: true),
                   decoration: const InputDecoration(
-                    labelText: 'Amplitude (1-10)',
+                    labelText: '-10 to 10',
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   ),
                   textAlign: TextAlign.center,
                   inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly, // Only allow digits
+                    // Allow negative numbers
+                    FilteringTextInputFormatter.allow(RegExp(r'^-?\d*')),
                   ],
                   onChanged: (value) {
-                    if (value.isEmpty) return;
+                    if (value.isEmpty || value == "-") return;
                     
                     int? parsed = int.tryParse(value);
                     if (parsed != null) {
-                      if (parsed < 1) {
-                        // If amplitude < 1, remove the term or reset it
+                      // Check if amplitude is 0
+                      if (parsed == 0) {
+                        // If amplitude = 0, remove the term or reset it
                         removeTerm(index);
                         return;
-                      } else if (parsed > 10) {
+                      } 
+                      // Check if amplitude is out of range
+                      else if (parsed > 10) {
                         parsed = 10; // Clamp to max 10
                         controllers[index][0].text = '10';
                         controllers[index][0].selection = TextSelection.fromPosition(
                           const TextPosition(offset: 2), // Position at end of "10"
+                        );
+                      } else if (parsed < -10) {
+                        parsed = -10; // Clamp to min -10
+                        controllers[index][0].text = '-10';
+                        controllers[index][0].selection = TextSelection.fromPosition(
+                          const TextPosition(offset: 3), // Position at end of "-10"
                         );
                       }
                       
@@ -666,10 +690,11 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                   onPressed: () {
                     setState(() {
                       terms[index].hasTrigFunction = !terms[index].hasTrigFunction;
+                      calculateFourierSeries();
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: terms[index].hasTrigFunction ? AppColours.primary : AppColours.greyLight,
+                    backgroundColor: terms[index].hasTrigFunction ? AppColours.primaryLight : AppColours.greyLight,
                     foregroundColor: terms[index].hasTrigFunction ? AppColours.white : AppColours.textPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
@@ -692,58 +717,46 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                 const Text('Function: ', style: TextStyle(fontSize: 16)),
                 
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                terms[index].functionType = 'sin';
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: terms[index].functionType == 'sin' ? AppColours.secondary : AppColours.greyLight,
-                              foregroundColor: terms[index].functionType == 'sin' ? AppColours.white : AppColours.textPrimary,
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4),
-                                  bottomLeft: Radius.circular(4),
-                                ),
-                              ),
-                            ),
-                            child: const Text('sin'),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              terms[index].functionType = 'sin';
+                              calculateFourierSeries();
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: terms[index].functionType == 'sin' ? AppColours.primaryLight : AppColours.greyLight,
+                            foregroundColor: terms[index].functionType == 'sin' ? AppColours.white : AppColours.textPrimary,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            
                           ),
+                          child: const Text('sin'),
                         ),
-                        
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                terms[index].functionType = 'cos';
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: terms[index].functionType == 'cos' ? AppColours.secondary : AppColours.greyLight,
-                              foregroundColor: terms[index].functionType == 'cos' ? AppColours.white : AppColours.textPrimary,
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(4),
-                                  bottomRight: Radius.circular(4),
-                                ),
-                              ),
-                            ),
-                            child: const Text('cos'),
+                      ),
+
+                      const SizedBox(width: 5),
+                      
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              terms[index].functionType = 'cos';
+                              calculateFourierSeries();
+
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: terms[index].functionType == 'cos' ? AppColours.primaryLight : AppColours.greyLight,
+                            foregroundColor: terms[index].functionType == 'cos' ? AppColours.white : AppColours.textPrimary,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
+                          child: const Text('cos'),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -756,12 +769,15 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
               children: [
                 const Text('Frequency includes π: ', style: TextStyle(fontSize: 16)),
                 
+                Spacer(),
                 Switch(
                   value: terms[index].includesPi,
                   activeColor: AppColours.primary,
                   onChanged: (value) {
                     setState(() {
                       terms[index].includesPi = value;
+                      calculateFourierSeries();
+
                     });
                   },
                 ),
@@ -769,126 +785,134 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             ),
             
             // Frequency row 
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  const Text('Frequency: ', style: TextStyle(fontSize: 16)),
-                  
-                  // Frequency numerator
-                  SizedBox(
-                    width: 80,
-                    height: 40,
-                    child: TextField(
-                      controller: controllers[index][1],
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        hintText: '1-200',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                      ),
-                      textAlign: TextAlign.center,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      onChanged: (value) {
-                        if (value.isEmpty) return;
-                        
-                        int? parsed = int.tryParse(value);
-                        if (parsed != null) {
-                          if (parsed == 0) {
-                            // Reset both the numerator and denominator to defaults
-                            setState(() {
-                              terms[index].frequencyNumerator = 1;
-                              terms[index].frequencyDenominator = 1;
-                              controllers[index][1].text = '1';
-                              controllers[index][2].text = '1';
-                            });
-                          } else if (parsed > 200) {
-                            parsed = 200; // Clamp to max 200
-                            controllers[index][1].text = '200';
-                            controllers[index][1].selection = TextSelection.fromPosition(
-                              const TextPosition(offset: 3), // Position at end of "200"
-                            );
-                            setState(() {
-                              terms[index].frequencyNumerator = parsed!;
-                              terms[index].simplifyFraction();
-                            });
-                          } else {
-                            setState(() {
-                              terms[index].frequencyNumerator = parsed!;
-                              terms[index].simplifyFraction();
-                            });
-                          }
-                        }
-                      },
+            Row(
+              children: [
+                const Text('Frequency: ', style: TextStyle(fontSize: 16)),
+                
+                const Spacer(),
+                
+                // Frequency numerator
+                SizedBox(
+                  width: 80,
+                  height: 40,
+                  child: TextField(
+                    controller: controllers[index][1],
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: '1-200',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                     ),
-                  ),
-                  
-                  Text(
-                    terms[index].includesPi ? ' π·t / ' : ' t / ', 
-                    style: const TextStyle(fontSize: 16)
-                  ),
-                  
-                  // Frequency denominator
-                  SizedBox(
-                    width: 80,
-                    height: 40,
-                    child: TextField(
-                      controller: controllers[index][2],
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        hintText: '1-200',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                      ),
-                      textAlign: TextAlign.center,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      onChanged: (value) {
-                        if (value.isEmpty) return;
-                        
-                        int? parsed = int.tryParse(value);
-                        if (parsed != null) {
-                          if (parsed == 0) {
-                            // Reset both numerator and denominator to defaults
-                            setState(() {
-                              terms[index].frequencyNumerator = 1;
-                              terms[index].frequencyDenominator = 1;
-                              controllers[index][1].text = '1';
-                              controllers[index][2].text = '1';
-                            });
-                          } else if (parsed > 200) {
-                            parsed = 200; // Clamp to max 200
-                            controllers[index][2].text = '200';
-                            controllers[index][2].selection = TextSelection.fromPosition(
-                              const TextPosition(offset: 3), // Position at end of "200"
-                            );
-                            setState(() {
-                              terms[index].frequencyDenominator = parsed!;
-                              terms[index].simplifyFraction();
-                            });
-                          } else {
-                            setState(() {
-                              terms[index].frequencyDenominator = parsed!;
-                              terms[index].simplifyFraction();
-                            });
-                          }
+                    textAlign: TextAlign.center,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    onChanged: (value) {
+                      if (value.isEmpty) return;
+                      
+                      int? parsed = int.tryParse(value);
+                      if (parsed != null) {
+                        if (parsed == 0) {
+                          // Reset both the numerator and denominator to defaults
+                          setState(() {
+                            terms[index].frequencyNumerator = 1;
+                            terms[index].frequencyDenominator = 1;
+                            controllers[index][1].text = '1';
+                            controllers[index][2].text = '1';
+                            calculateFourierSeries();
+                          });
+                        } else if (parsed > 200) {
+                          parsed = 200; // Clamp to max 200
+                          controllers[index][1].text = '200';
+                          controllers[index][1].selection = TextSelection.fromPosition(
+                            const TextPosition(offset: 3), // Position at end of "200"
+                          );
+                          setState(() {
+                            terms[index].frequencyNumerator = parsed!;
+                            terms[index].simplifyFraction();
+                            calculateFourierSeries();
+                          });
+                        } else {
+                          setState(() {
+                            terms[index].frequencyNumerator = parsed!;
+                            terms[index].simplifyFraction();
+                            calculateFourierSeries();
+                          });
                         }
-                      },
-                    ),
+                      }
+                    },
                   ),
-                ],
-              ),
+                ),
+                
+                Text(
+                  terms[index].includesPi ? 'π·t / ' : '   t / ', 
+                  style: const TextStyle(fontSize: 16)
+                ),
+                
+                // Frequency denominator
+                SizedBox(
+                  width: 80,
+                  height: 40,
+                  child: TextField(
+                    controller: controllers[index][2],
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: '1-200',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                    ),
+                    textAlign: TextAlign.center,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    onChanged: (value) {
+                      if (value.isEmpty) return;
+                      
+                      int? parsed = int.tryParse(value);
+                      if (parsed != null) {
+                        if (parsed == 0) {
+                          // Reset both numerator and denominator to defaults
+                          setState(() {
+                            terms[index].frequencyNumerator = 1;
+                            terms[index].frequencyDenominator = 1;
+                            controllers[index][1].text = '1';
+                            controllers[index][2].text = '1';
+                            calculateFourierSeries();
+                          });
+                        } else if (parsed > 200) {
+                          parsed = 200; // Clamp to max 200
+                          controllers[index][2].text = '200';
+                          controllers[index][2].selection = TextSelection.fromPosition(
+                            const TextPosition(offset: 3), // Position at end of "200"
+                          );
+                          setState(() {
+                            terms[index].frequencyDenominator = parsed!;
+                            terms[index].simplifyFraction();
+                            calculateFourierSeries();
+                          });
+                        } else {
+                          setState(() {
+                            terms[index].frequencyDenominator = parsed!;
+                            terms[index].simplifyFraction();
+                            calculateFourierSeries();
+                          });
+                        }
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
             
             const SizedBox(height: 8),
             
-            // Phase shift row
+            // Phase shift row - also pushed to the right
             Row(
               children: [
                 const Text('Phase (in radians): ', style: TextStyle(fontSize: 16)),
+                
+                // Add a Spacer to push the rest to the right
+                const Spacer(),
                 
                 // Phase numerator
                 SizedBox(
@@ -898,7 +922,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                     controller: controllers[index][3],
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
-                      hintText: '≤ 360',
+                      labelText: '-360 - 360',
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                     ),
@@ -922,13 +946,15 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                         
                         setState(() {
                           terms[index].phaseShiftNumerator = parsed!;
+                          calculateFourierSeries();
+
                         });
                       }
                     },
                   ),
                 ),
                 
-                const Text(' π / ', style: TextStyle(fontSize: 16)),
+                const Text('  π / ', style: TextStyle(fontSize: 16)),
                 
                 // Phase denominator
                 SizedBox(
@@ -938,7 +964,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                     controller: controllers[index][4],
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
-                      hintText: '1-180',
+                      labelText: '1-180',
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                     ),
@@ -966,6 +992,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                         
                         setState(() {
                           terms[index].phaseShiftDenominator = parsed!;
+                          calculateFourierSeries();
                         });
                       }
                     },
@@ -974,11 +1001,21 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
               ],
             ),
           ],
+          const SizedBox(height: 16),
+
+          Container(
+            height: 2,
+            decoration: BoxDecoration(
+              color: AppColours.primaryLight,
+              borderRadius: BorderRadius.circular(1.5),
+            ),
+          ),
         ],
       ),
     );
   }
 /// ***********************************************************************************************
+/// Visualises the signal using fl_chart and points calculated in equation_term.dart
   Widget _buildSignalVisualisationCard() {
     // Calculate combined signal points
     List<FlSpot> signalPoints = getCombinedSignalPoints(0, 2 * math.pi, 0.01);
@@ -1100,6 +1137,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   }
 
 /// ***********************************************************************************************
+/// Card that checks the periodicity of the signal
+/// and displays the results
   Widget _buildCheckPeriodicityCard() {
     // Check for empty terms
     if (terms.isEmpty) {
@@ -1128,78 +1167,16 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
       );
     }
 
-    // Calculate frequencies and periods for each term
-    List<Map<String, dynamic>> termAnalysis = [];
+    // Use the utility function to check periodicity
+    Map<String, bool> periodicity = checkSignalPeriodicity(terms);
+    bool hasFrequencyTerms = periodicity['hasFrequencyTerms']!;
+    bool isSignalPeriodic = periodicity['isPeriodic']!;
+    bool hasMixedTerms = periodicity['hasMixedTerms']!;
+    bool allPiTerms = periodicity['allPiTerms']!;
+    bool allNonPiTerms = periodicity['allNonPiTerms']!;
     
-    // Track whether we have terms with frequencies
-    bool hasFrequencyTerms = false;
-    // Track whether all terms include π or all don't include π
-    bool allPiTerms = true;
-    bool allNonPiTerms = true;
-    
-    for (int i = 0; i < terms.length; i++) {
-      var term = terms[i];
-      Map<String, dynamic> analysis = {};
-      
-      // Constant terms have no frequency
-      if (!term.hasTrigFunction) {
-        analysis['hasFrequency'] = false;
-        termAnalysis.add(analysis);
-        continue;
-      }
-      
-      // Get frequency as p/q (possibly * π)
-      int p = term.frequencyNumerator;
-      int q = term.frequencyDenominator;
-      
-      // Skip invalid frequencies
-      if (p <= 0 || q <= 0) {
-        analysis['hasFrequency'] = false;
-        termAnalysis.add(analysis);
-        continue;
-      }
-      
-      // Simplify the fraction
-      int hcf = _hcf(p, q);
-      p = p ~/ hcf;
-      q = q ~/ hcf;
-      
-      analysis['hasFrequency'] = true;
-      hasFrequencyTerms = true;
-      analysis['freqNumerator'] = p;
-      analysis['freqDenominator'] = q;
-      analysis['includesPi'] = term.includesPi;
-      
-      // Track if all terms include π or all don't include π
-      if (term.includesPi) {
-        allNonPiTerms = false;
-      } else {
-        allPiTerms = false;
-      }
-      
-      // Calculate period
-      int periodNum, periodDenom;
-      
-      if (term.includesPi) {
-        // For terms with π: T = 2π/ω = 2π/(pπ/q) = 2q/p
-        periodNum = 2 * q;
-        periodDenom = p;
-      } else {
-        // For terms without π: T = 2π/ω = 2π/(p/q) = 2πq/p
-        periodNum = 2 * q;
-        periodDenom = p;
-      }
-      
-      // Simplify period fraction
-      hcf = _hcf(periodNum, periodDenom);
-      periodNum = periodNum ~/ hcf;
-      periodDenom = periodDenom ~/ hcf;
-      
-      analysis['periodNumerator'] = periodNum;
-      analysis['periodDenominator'] = periodDenom;
-      
-      termAnalysis.add(analysis);
-    }
+    // Calculate frequencies and periods for each term using the utility function
+    List<Map<String, dynamic>> termAnalysis = analyzeTermPeriodicity(terms);
     
     // If no frequency terms, signal is constant
     if (!hasFrequencyTerms) {
@@ -1220,7 +1197,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
               const SizedBox(height: 16),
               const Text(
                 'The signal consists only of constant terms, so it is periodic with any period.',
-                style: TextStyle(fontSize: 16, color: AppColours.success),
+                style: TextStyle(fontSize: 16),
               ),
             ],
           ),
@@ -1228,62 +1205,12 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
       );
     }
     
-    // If we have both π and non-π terms, the signal is aperiodic
-    bool hasMixedTerms = !allPiTerms && !allNonPiTerms;
-    
     // Calculate fundamental period and frequency
-    bool isSignalPeriodic = !hasMixedTerms;
-    
-    // For non-mixed term cases, calculate the fundamental period
-    List<int> periodNumerators = [];
-    List<int> periodDenominators = [];
-    
-    for (var analysis in termAnalysis) {
-      if (analysis['hasFrequency'] == true) {
-        periodNumerators.add(analysis['periodNumerator']);
-        periodDenominators.add(analysis['periodDenominator']);
-      }
-    }
-    
-    // Calculate LCM of period numerators and HCF of period denominators
-    int periodNumLCM = 0;
-    int periodDenomHCF = 0;
-    
-    if (periodNumerators.isNotEmpty) {
-      periodNumLCM = periodNumerators[0];
-      for (int i = 1; i < periodNumerators.length; i++) {
-        periodNumLCM = _lcm(periodNumLCM, periodNumerators[i]);
-      }
-    }
-    
-    if (periodDenominators.isNotEmpty) {
-      periodDenomHCF = periodDenominators[0];
-      for (int i = 1; i < periodDenominators.length; i++) {
-        periodDenomHCF = _hcf(periodDenomHCF, periodDenominators[i]);
-      }
-    }
-    
-    // Calculate T₀ = LCM(T₁, T₂, ...)
-    int fundPeriodNum = periodNumLCM;
-    int fundPeriodDenom = periodDenomHCF;
-    
-    // Simplify
-    int periodHcf = _hcf(fundPeriodNum, fundPeriodDenom);
-    if (periodHcf > 0) {
-      fundPeriodNum = fundPeriodNum ~/ periodHcf;
-      fundPeriodDenom = fundPeriodDenom ~/ periodHcf;
-    }
-    
-    // Calculate ω₀ = 2π/T₀
-    int fundFreqNum = 2 * fundPeriodDenom;
-    int fundFreqDenom = fundPeriodNum;
-    
-    // Simplify
-    int freqHcf = _hcf(fundFreqNum, fundFreqDenom);
-    if (freqHcf > 0) {
-      fundFreqNum = fundFreqNum ~/ freqHcf;
-      fundFreqDenom = fundFreqDenom ~/ freqHcf;
-    }
+    Map<String, dynamic> fundamentalValues = calculateFundamentalPeriodicity(termAnalysis);
+    int fundPeriodNum = fundamentalValues['fundPeriodNum'];
+    int fundPeriodDenom = fundamentalValues['fundPeriodDenom'];
+    int fundFreqNum = fundamentalValues['fundFreqNum'];
+    int fundFreqDenom = fundamentalValues['fundFreqDenom'];
     
     // Build the explanation card
     return Card(
@@ -1406,11 +1333,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Math.tex(
-                  r'T_0 = \text{LCM}(T_1, T_2, \ldots) = \frac{' + 
-                  (allNonPiTerms 
-                    ? fundPeriodNum.toString() + r'\pi}{' + fundPeriodDenom.toString() 
-                    : fundPeriodNum.toString() + r'}{' + fundPeriodDenom.toString()) + 
-                  r'}',
+                  formatPeriodLatex(allNonPiTerms, fundPeriodNum, fundPeriodDenom),
                   textStyle: const TextStyle(fontSize: 16),
                 ),
               ),
@@ -1418,11 +1341,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Math.tex(
-                  r'\omega_0 = \frac{2\pi}{T_0} = \frac{' + 
-                  (allPiTerms 
-                    ? fundFreqNum.toString() + r'\pi}{' + fundFreqDenom.toString()
-                    : fundFreqNum.toString() + r'}{' + fundFreqDenom.toString()) + 
-                  r'} \text{ rad/s}',
+                  formatFrequencyLatex(allPiTerms, fundFreqNum, fundFreqDenom),
                   textStyle: const TextStyle(fontSize: 16),
                 ),
               ),
@@ -1443,12 +1362,18 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             ),
           ],
         ),
-      ),
+      )
     );
   }
 
 //***************************************************************************** */
+// Card that computes the Fourier series
+// and displays the steps
   Widget _buildFourierSeriesCard() {
+    // Use the utility function to check periodicity
+    Map<String, bool> periodicity = checkSignalPeriodicity(terms);
+    bool isSignalPeriodic = periodicity['isPeriodic']!;
+
     return Card(
       elevation: 4,
       child: Padding(
@@ -1465,62 +1390,78 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             ),
             const SizedBox(height: 16),
             
-            // Step navigation buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        currentFourierStep = index + 1;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: currentFourierStep == index + 1 
-                        ? AppColours.primaryLight 
-                        : AppColours.greyLight,
-                      foregroundColor: currentFourierStep == index + 1 
-                        ? AppColours.white 
-                        : AppColours.black,
-                      minimumSize: const Size(40, 40),
+            // If signal is not periodic, show message
+            if (!isSignalPeriodic)
+              const Text(
+                'The Fourier series cannot be computed as the signal is not periodic.',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                ),
+              )
+            // If signal is periodic, show the step navigation and content
+            else ...[
+              // Step navigation buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(3, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          currentFourierStep = index + 1;
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: currentFourierStep == index + 1 
+                          ? AppColours.primaryLight 
+                          : AppColours.greyLight,
+                        foregroundColor: currentFourierStep == index + 1 
+                          ? AppColours.white 
+                          : AppColours.black,
+                        minimumSize: const Size(40, 40),
+                      ),
+                      child: Text('${index + 1}'),
                     ),
-                    child: Text('${index + 1}'),
-                  ),
-                );
-              }),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Content based on current step
-            _buildStepContent(),
+                  );
+                }),
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Content based on current step
+              _buildStepContent(),
+            ],
           ],
         ),
       ),
     );
   }
 //***************************************************************************** */
-
+// Build the content for each step of the Fourier series computation
+// This function returns a widget based on the current step
   Widget _buildStepContent() {
     switch (currentFourierStep) {
       case 1:
         return _buildStep1Content();
       case 2:
         return _buildStep2Content();
+      case 3:
+        return _buildStep3Content();
       default:
         return _buildStep1Content();
     }
   }
 //***************************************************************************** */
-
+// Step1: Compute a₀ 
   Widget _buildStep1Content() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Step 1: a₀',
+          'Step 1: Calculate a₀',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
@@ -1544,29 +1485,164 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   }
   //***************************************************************************** */
   Widget _buildStep2Content() {
+    // Get analysis data needed for calculations
+    List<Map<String, dynamic>> termAnalysis = analyzeTermPeriodicity(terms);
+    Map<String, dynamic> fundamentalValues = calculateFundamentalPeriodicity(termAnalysis);
+
+    // Calculate Fourier coefficients using the new functions
+    Map<int, double> anCoefficients = calculateAnCoefficients(terms, fundamentalValues);
+    Map<int, double> bnCoefficients = calculateBnCoefficients(terms, fundamentalValues);
+    List<int> harmonics = getAllHarmonics(anCoefficients, bnCoefficients);
+
+    // Build the UI widget with the calculated data
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Step 2: Calculate the harmonic n',
+          'Step 2: Calculate Fourier Coefficients',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
+        
+        // Formula reminders
         Math.tex(
-          r'a_n = \frac{2}{T}\int_{0}^{T} f(t) \cos{(n\omega t)}dt',
-          textStyle: TextStyle(fontSize: 18), 
+          r'a_n = \frac{2}{T_0}\int_{0}^{T_0} f(t) \cos{(n\omega_0 t)}dt',
+          textStyle: const TextStyle(fontSize: 18), 
         ),
-         const SizedBox(height: 10),
+        const SizedBox(height: 8),
         Math.tex(
-          r'a_n = \text{Sum of Constant Terms}',
-          textStyle: TextStyle(fontSize: 18),
+          r'b_n = \frac{2}{T_0}\int_{0}^{T_0} f(t) \sin{(n\omega_0 t)}dt',
+          textStyle: const TextStyle(fontSize: 18), 
         ),
+        const SizedBox(height: 16),
+        
+        // Explanation of trigonometric identities
+        const Text(
+          'Using trigonometric identities:',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        Math.tex(
+          r'\cos(n\omega_0 t + \phi) = \cos(n\omega_0 t)\cos(\phi) - \sin(n\omega_0 t)\sin(\phi)',
+          textStyle: const TextStyle(fontSize: 16),
+        ),
+        const SizedBox(height: 8),
+        Math.tex(
+          r'\sin(n\omega_0 t + \phi) = \sin(n\omega_0 t)\cos(\phi) + \cos(n\omega_0 t)\sin(\phi)',
+          textStyle: const TextStyle(fontSize: 16),
+        ),
+        const SizedBox(height: 16),
+        
+        // Show coefficients
+        if (harmonics.isEmpty)
+          const Text(
+            'No Fourier coefficients found in this signal.',
+            style: TextStyle(fontSize: 16),
+          )
+        else
+          ...harmonics.map((harmonic) => Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Show an coefficient if it exists and is not very close to zero
+                if (anCoefficients.containsKey(harmonic))
+                  Math.tex(
+                    'a_{$harmonic} = ${anCoefficients[harmonic]!.toStringAsFixed(2)}',
+                    textStyle: const TextStyle(fontSize: 18),
+                  ),
+                  
+                // Show bn coefficient if it exists and is not very close to zero
+                if (bnCoefficients.containsKey(harmonic))
+                  Math.tex(
+                    'b_{$harmonic} = ${bnCoefficients[harmonic]!.toStringAsFixed(2)}',
+                    textStyle: const TextStyle(fontSize: 18),
+                  ),
+              ],
+            ),
+          )),
+        
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+  
+  Widget _buildStep3Content() {
+    // Get analysis data and calculate coefficients
+    List<Map<String, dynamic>> termAnalysis = analyzeTermPeriodicity(terms);
+    Map<String, dynamic> fundamentalValues = calculateFundamentalPeriodicity(termAnalysis);
+    Map<int, double> anCoefficients = calculateAnCoefficients(terms, fundamentalValues);
+    Map<int, double> bnCoefficients = calculateBnCoefficients(terms, fundamentalValues);
+    List<int> harmonics = getAllHarmonics(anCoefficients, bnCoefficients);
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Step 3: Complete Fourier Series',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        
+        // General formula for Trigonometric Form
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColours.greyLight,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'General Formula:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Math.tex(
+                  r'f(t) = a_0 + \sum_{n=1}^{\infty} \left( a_n\cos(n\omega_0 t) + b_n\sin(n\omega_0 t) \right)',
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
+              ),
+              
+            ],
+          ),
+        ),
+        
+        const SizedBox(height: 20),
+    
+        
+        if (harmonics.isEmpty && a0 == 0)
+          const Text(
+            'No Fourier coefficients found in this signal.',
+            style: TextStyle(fontSize: 16),
+          )
+        else
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Math.tex(
+              formatFourierSeriesLatex(a0, anCoefficients, bnCoefficients),
+              textStyle: const TextStyle(fontSize: 18),
+            ),
+          ),
+
         const SizedBox(height: 10),
-        Math.tex(
-          r'a_n = ' + a0.toString(),
-          textStyle: TextStyle(fontSize: 18),
-        ),
-         const SizedBox(height: 5),
+                  
+        if (harmonics.isEmpty && a0 == 0)
+          const Text(
+            '',
+            style: TextStyle(fontSize: 16),
+          )
+        else
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Math.tex(
+              formatFourierSeriesWithOmega0(a0, anCoefficients, bnCoefficients, fundamentalValues),
+              textStyle: const TextStyle(fontSize: 18),
+            ),
+          ),
       ],
     );
   }

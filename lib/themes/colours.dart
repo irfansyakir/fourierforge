@@ -39,7 +39,7 @@ class AppColours {
   static const Color divider = Color(0xFFBDBDBD); // grey[400]
   
   // Chart/Graph colors
-  static const Color chartLine = Colors.blue;
+  static const Color chartLine = AppColours.primary;
   static const Color chartGrid = Color(0xFFEEEEEE);
   static const Color chartPoint = Colors.black;
   static const Color chartBar = Colors.blue;

@@ -208,8 +208,11 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                       controller: amplitudeController,
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
+                        hintText: '0-4',
                         border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12), // Increased vertical padding
+                        isDense: false, // Ensure the field isn't set to dense
+                        floatingLabelBehavior: FloatingLabelBehavior.always, // Keep label above input
                       ),
                       textAlign: TextAlign.center,
                       inputFormatters: [
@@ -288,6 +291,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                       controller: frequencyController,
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
+    
                         border: OutlineInputBorder(),
                         contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                       ),
@@ -418,7 +422,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                   lineBarsData: [
                     LineChartBarData(
                       spots: inputSignalPoints,
-                      color: Colors.blue,
+                      color: AppColours.chartLine,
                       barWidth: 2,
                       dotData: const FlDotData(show: false),
                     ),
@@ -741,7 +745,6 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
         const Text('First few aₙ values:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         
-        // Example values for the first few coefficients
         Math.tex(
           rectifierType == 'full'
          // \frac{' + (2 * amplitude).toString() + r'}{\pi} = ' + (2 * amplitude / math.pi).toStringAsFixed(4)
