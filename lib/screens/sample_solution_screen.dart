@@ -93,13 +93,13 @@ class SampleSolutionScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColours.primaryLight.withOpacity(0.2),
+                      color: AppColours.primaryLight,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       icon,
                       size: 32,
-                      color: AppColours.primary,
+                      color: AppColours.white,
                     ),
                   ),
                   const SizedBox(width: 16),

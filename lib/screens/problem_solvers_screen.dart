@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fourier_forge/themes/colours.dart';
 import '../routes/routes.dart';
 
 class ProblemsScreen extends StatelessWidget {
@@ -88,13 +89,13 @@ class ProblemsScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
+                      color: AppColours.primaryLight,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       icon,
                       size: 32,
-                      color: Colors.blue,
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(width: 16),
