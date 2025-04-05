@@ -24,41 +24,22 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   // Maximum number of terms allowed = 4
   final int maxTerms = 4;
 
+  late int preset = 1;
+  late int currentFourierStep = 1;
+  late int a0;
+
   @override
   void initState() {
     super.initState();
     
     // Initialize terms with example values
-    terms = [
-      // Term 1: 4cos(3t/5 + π/3)
-      EquationTerm(
-        amplitude: 4,
-        hasTrigFunction: true,
-        functionType: 'cos',
-        frequencyNumerator: 3,
-        frequencyDenominator: 5,
-        includesPi: false,
-        phaseShiftNumerator: 1,
-        phaseShiftDenominator: 3,
-        isPositive: true,
-      ),
-      
-      // Term 2: 3sin(t/7) 
-      EquationTerm(
-        amplitude: 3,
-        hasTrigFunction: true,
-        functionType: 'sin',
-        frequencyNumerator: 1,
-        frequencyDenominator: 7,
-        includesPi: false, 
-        phaseShiftNumerator: 0,
-        phaseShiftDenominator: 1,
-        isPositive: true,
-      ),
-    ];
+
+    presetTerms(preset);
     
     // Initialize controllers for each term
     initializeControllers();
+
+    calculateFourierSeries();
   }
   
   void initializeControllers() {
@@ -85,11 +66,22 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   
   @override
   void dispose() {
-    // Dispose all controllers
-    for (var controllerList in controllers) {
-      for (var controller in controllerList) {
-        controller.dispose();
+    // Dispose all controllers with null safety check
+    try {
+      if (controllers != null && controllers.isNotEmpty) {
+        for (var controllerList in controllers) {
+          if (controllerList != null) {
+            for (var controller in controllerList) {
+              if (controller != null) {
+                controller.dispose();
+              }
+            }
+          }
+        }
       }
+    } catch (e) {
+      // Silently handle the case where controllers aren't initialized yet
+      print('Note: Controllers were not properly initialized before dispose');
     }
     super.dispose();
   }
@@ -151,6 +143,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
           TextEditingController(text: '0'),
           TextEditingController(text: '1'),
         ]);
+
+        calculateFourierSeries();
       });
     }
   }
@@ -168,6 +162,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
         controllers.removeLast();
       });
     }
+
+    calculateFourierSeries();
   }
   
   // Remove a specific term
@@ -199,6 +195,181 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
         updateControllers(index);
       });
     }
+
+    
+
+    calculateFourierSeries();
+  }
+
+  void presetTerms(int preset) {
+    // Dispose existing controllers (if any) to prevent memory leaks
+    try {
+      if (controllers.isNotEmpty) {
+        for (var controllerList in controllers) {
+          for (var controller in controllerList) {
+            controller.dispose();
+          }
+        }
+      }
+    } catch (e) {
+      // Nothing
+    }
+    
+    switch (preset) {
+      case 1:
+        // 4cos(3t/5 + π/3) + 3sin(t/7) 
+        terms = [
+          // Term 1: 4cos(3t/5 + π/3)
+          EquationTerm(
+            amplitude: 4,
+            hasTrigFunction: true,
+            functionType: 'cos',
+            frequencyNumerator: 3,
+            frequencyDenominator: 5,
+            includesPi: false,
+            phaseShiftNumerator: 1,
+            phaseShiftDenominator: 3,
+            isPositive: true,
+          ),
+          
+          // Term 2: 3sin(t/7) 
+          EquationTerm(
+            amplitude: 3,
+            hasTrigFunction: true,
+            functionType: 'sin',
+            frequencyNumerator: 1,
+            frequencyDenominator: 7,
+            includesPi: false, 
+            phaseShiftNumerator: 0,
+            phaseShiftDenominator: 1,
+            isPositive: true,
+          ),
+        ];
+        break;
+      case 2:
+        //  -2 - 4cos(7/9t) + 6sin(3t) + 2cos(13/6t + π/4)
+        terms = [
+          // Term 1: -2 
+          EquationTerm(
+            amplitude: 2,
+            hasTrigFunction: false,
+            functionType: 'cos',
+            frequencyNumerator: 1,
+            frequencyDenominator: 1,
+            includesPi: false,
+            phaseShiftNumerator: 1,
+            phaseShiftDenominator: 1,
+            isPositive: false,
+          ),
+          
+          // Term 2: -4cos(7/9t)
+          EquationTerm(
+            amplitude: 4,
+            hasTrigFunction: true,
+            functionType: 'cos',
+            frequencyNumerator: 7,
+            frequencyDenominator: 9,
+            includesPi: false, 
+            phaseShiftNumerator: 0,
+            phaseShiftDenominator: 1,
+            isPositive: false,
+          ),
+
+          // Term 3: 6 sin(3t)
+          EquationTerm(
+            amplitude: 6,
+            hasTrigFunction: true,
+            functionType: 'sin',
+            frequencyNumerator: 3,
+            frequencyDenominator: 1,
+            includesPi: false, 
+            phaseShiftNumerator: 0,
+            phaseShiftDenominator: 1,
+            isPositive: true,
+          ),
+
+          // Term 4: 2cos(13/6t + π/4)
+          EquationTerm(
+            amplitude: 2,
+            hasTrigFunction: true,
+            functionType: 'cos',
+            frequencyNumerator: 13,
+            frequencyDenominator: 6,
+            includesPi: false, 
+            phaseShiftNumerator: 1,
+            phaseShiftDenominator: 4,
+            isPositive: true,
+          ),
+        ];
+        break;
+
+        case 3:
+        //  -3cos(7πt + π/6) + 4sin(11πt - π/3) - 9cos(16πt/3 - 7/18π)
+        terms = [
+          // Term 1: -3cos(7πt + π/6)
+          EquationTerm(
+            amplitude: 3,
+            hasTrigFunction: true,
+            functionType: 'cos',
+            frequencyNumerator: 7,
+            frequencyDenominator: 1,
+            includesPi: true,
+            phaseShiftNumerator: 1,
+            phaseShiftDenominator: 6,
+            isPositive: false,
+          ),
+          
+          // Term 2: 4sin(11πt - π/3)
+          EquationTerm(
+            amplitude: 4,
+            hasTrigFunction: true,
+            functionType: 'sin',
+            frequencyNumerator: 11,
+            frequencyDenominator: 1,
+            includesPi: true, 
+            phaseShiftNumerator: -1,
+            phaseShiftDenominator: 3,
+            isPositive: true,
+          ),
+
+          // Term 3: - 9cos(16πt/3 - 7/18π)
+          EquationTerm(
+            amplitude: 9,
+            hasTrigFunction: true,
+            functionType: 'cos',
+            frequencyNumerator: 16,
+            frequencyDenominator: 3,
+            includesPi: true, 
+            phaseShiftNumerator: -7,
+            phaseShiftDenominator: 18,
+            isPositive: false,
+          ),
+        ];
+        break;
+      default: 
+        terms = [
+          EquationTerm(
+            amplitude: 1, 
+            hasTrigFunction: false,
+            functionType: 'sin', 
+            frequencyNumerator: 1, 
+            frequencyDenominator: 1, 
+            phaseShiftNumerator: 1, 
+            phaseShiftDenominator: 1,
+            isPositive: true
+            ),
+        ];
+    }
+    
+    // Re-initialize controllers for the new terms
+    initializeControllers();
+    
+    // Recalculate Fourier series
+    calculateFourierSeries();
+  }
+
+  void calculateFourierSeries() {
+      a0 = calculatea0(terms);
   }
 
   List<FlSpot> getCombinedSignalPoints(double startX, double endX, double step) {
@@ -257,6 +428,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
               _buildSignalVisualisationCard(),
               const SizedBox(height: 16),
               _buildCheckPeriodicityCard(),
+              const SizedBox(height: 16,),
+              _buildFourierSeriesCard()
             ],
           ),
         )
@@ -316,12 +489,42 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Set Parameters',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              children: [
+                const Text(
+                  'Set Parameters',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                Row(
+                  children: List.generate(3, (index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        preset = index + 1;
+                        presetTerms(preset);
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: preset == index + 1 
+                        ? AppColours.primaryLight 
+                        : AppColours.greyLight,
+                      foregroundColor: preset == index + 1 
+                        ? AppColours.white 
+                        : AppColours.black,
+                      minimumSize: const Size(40, 40),
+                    ),
+                    child: Text('${index + 1}'),
+                  ),
+                );
+              }),
+                )
+              ]
             ),
             const SizedBox(height: 20),
             
@@ -447,6 +650,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                       
                       setState(() {
                         terms[index].amplitude = parsed!;
+                        calculateFourierSeries();
                       });
                     }
                   },
@@ -1240,6 +1444,130 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
           ],
         ),
       ),
+    );
+  }
+
+//***************************************************************************** */
+  Widget _buildFourierSeriesCard() {
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Fourier Series Computation',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            // Step navigation buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(5, (index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        currentFourierStep = index + 1;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: currentFourierStep == index + 1 
+                        ? AppColours.primaryLight 
+                        : AppColours.greyLight,
+                      foregroundColor: currentFourierStep == index + 1 
+                        ? AppColours.white 
+                        : AppColours.black,
+                      minimumSize: const Size(40, 40),
+                    ),
+                    child: Text('${index + 1}'),
+                  ),
+                );
+              }),
+            ),
+            
+            const SizedBox(height: 16),
+            
+            // Content based on current step
+            _buildStepContent(),
+          ],
+        ),
+      ),
+    );
+  }
+//***************************************************************************** */
+
+  Widget _buildStepContent() {
+    switch (currentFourierStep) {
+      case 1:
+        return _buildStep1Content();
+      case 2:
+        return _buildStep2Content();
+      default:
+        return _buildStep1Content();
+    }
+  }
+//***************************************************************************** */
+
+  Widget _buildStep1Content() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Step 1: a₀',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        Math.tex(
+          r'a_0 = \int_{0}^{T} f(t) dt',
+          textStyle: TextStyle(fontSize: 18), 
+        ),
+         const SizedBox(height: 10),
+        Math.tex(
+          r'a_0 = \text{Sum of Constant Terms}',
+          textStyle: TextStyle(fontSize: 18),
+        ),
+        const SizedBox(height: 10),
+        Math.tex(
+          r'a_0 = ' + a0.toString(),
+          textStyle: TextStyle(fontSize: 18),
+        ),
+         const SizedBox(height: 5),
+      ],
+    );
+  }
+  //***************************************************************************** */
+  Widget _buildStep2Content() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Step 2: Calculate the harmonic n',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        Math.tex(
+          r'a_n = \frac{2}{T}\int_{0}^{T} f(t) \cos{(n\omega t)}dt',
+          textStyle: TextStyle(fontSize: 18), 
+        ),
+         const SizedBox(height: 10),
+        Math.tex(
+          r'a_n = \text{Sum of Constant Terms}',
+          textStyle: TextStyle(fontSize: 18),
+        ),
+        const SizedBox(height: 10),
+        Math.tex(
+          r'a_n = ' + a0.toString(),
+          textStyle: TextStyle(fontSize: 18),
+        ),
+         const SizedBox(height: 5),
+      ],
     );
   }
 }

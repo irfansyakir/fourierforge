@@ -745,40 +745,36 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
         Math.tex(
           rectifierType == 'full'
          // \frac{' + (2 * amplitude).toString() + r'}{\pi} = ' + (2 * amplitude / math.pi).toStringAsFixed(4)
-            ? r'a₀ = \frac{' + (2 * amplitude).toString() + r'}{\pi} = ' + (2 * amplitude / math.pi).toStringAsFixed(4)
-            : r'a₀ = \frac{' + (amplitude).toString() + r'}{\pi} = ' + (amplitude / math.pi).toStringAsFixed(4),
+            ? r'a_0 = \frac{' + (2 * amplitude).toString() + r'}{\pi} = ' + (2 * amplitude / math.pi).toStringAsFixed(4)
+            : r'a_0 = \frac{' + (amplitude).toString() + r'}{\pi} = ' + (amplitude / math.pi).toStringAsFixed(4),
           textStyle: TextStyle(fontSize: 16),
         ),
         const SizedBox(height: 4),
         
         Math.tex(
-          rectifierType == 'full'
-            ? 'a₁ = 0'
-            : 'a₁ = 0',
+          r'a_1 = 0',
           textStyle: TextStyle(fontSize: 16),
         ),
         const SizedBox(height: 4),
         
         Math.tex( 
           rectifierType == 'full'
-            ? r'a₂ = \frac{' + (4 * amplitude).toString() + r'}{'+ (1 - 4 * (2 * 2)).toString() + r'\pi} = ' + ((4 * amplitude) / (math.pi * (1 - 16))).toStringAsFixed(4)
-            : r'a₂ = \frac{' + (-2 * amplitude).toString() + r'}{'+ (3).toString() + r'\pi} = ' + ((2 * amplitude) / (math.pi * (3))).toStringAsFixed(4),
+            ? r'a_2 = \frac{' + (4 * amplitude).toString() + r'}{'+ (1 - 4 * (2 * 2)).toString() + r'\pi} = ' + ((4 * amplitude) / (math.pi * (1 - 16))).toStringAsFixed(4)
+            : r'a_2 = \frac{' + (-2 * amplitude).toString() + r'}{'+ (3).toString() + r'\pi} = ' + ((2 * amplitude) / (math.pi * (3))).toStringAsFixed(4),
           textStyle: TextStyle(fontSize: 16),
         ),
         const SizedBox(height: 4),
 
         Math.tex( 
-          rectifierType == 'full'
-            ? 'a₃ = 0'
-            : 'a₃ =  0',
+          r'a_3 = 0',
           textStyle: TextStyle(fontSize: 16),
         ),
         const SizedBox(height: 4),
         
         Math.tex(
           rectifierType == 'full'
-            ? r'a₄ = \frac{' + (4 * amplitude).toString() + r'}{'+ (1 - 4 * (4 * 4)).toString() + r'\pi} = ' + ((4 * amplitude) / (math.pi * (1 - 64))).toStringAsFixed(4)
-            : r'a₄ = \frac{' + (-2 * amplitude).toString() + r'}{'+ (15).toString() + r'\pi} = ' + ((2 * amplitude) / (math.pi * (15))).toStringAsFixed(4),
+            ? r'a_4 = \frac{' + (4 * amplitude).toString() + r'}{'+ (1 - 4 * (4 * 4)).toString() + r'\pi} = ' + ((4 * amplitude) / (math.pi * (1 - 64))).toStringAsFixed(4)
+            : r'a_4 = \frac{' + (-2 * amplitude).toString() + r'}{'+ (15).toString() + r'\pi} = ' + ((2 * amplitude) / (math.pi * (15))).toStringAsFixed(4),
           textStyle: TextStyle(fontSize: 16),
         ),
       ],

@@ -204,5 +204,17 @@ class EquationTerm {
     } else { // cos
       return signedAmplitude * math.cos(angle);
     }
-  }
+  } 
 }
+
+int calculatea0(List<EquationTerm> terms) {
+
+    int a0 = 0;
+    for (int i = 0; i < terms.length; i++) {
+      if (terms[i].hasTrigFunction == false ) {
+        a0 += terms[i].amplitude;
+      }
+    }
+    return a0;
+
+  }
