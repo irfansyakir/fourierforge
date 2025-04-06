@@ -103,6 +103,7 @@ class HomeScreen extends StatelessWidget {
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: AppColours.primaryLight),
       ),
       child: InkWell(
         onTap: onTap,
@@ -119,7 +120,7 @@ class HomeScreen extends StatelessWidget {
               child: Icon(
                 icon,
                 size: 40,
-                color: AppColours.primary,
+                color: AppColours.white,
               ),
             ),
             const SizedBox(height: 16),

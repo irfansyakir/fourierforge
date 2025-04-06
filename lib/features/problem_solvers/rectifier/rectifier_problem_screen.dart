@@ -106,6 +106,10 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
   Widget _buildProblemDescriptionCard() {
   return Card(
     elevation: 4,
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: AppColours.primaryLight),
+      ),
     child: Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -158,6 +162,10 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
   Widget _buildParametersCard() {
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: AppColours.primaryLight),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -339,6 +347,10 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
   Widget _buildSignalVisualisationCard() {
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: AppColours.primaryLight),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -486,6 +498,10 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
   Widget _buildSolutionCard() {
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: AppColours.primaryLight),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

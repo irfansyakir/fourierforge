@@ -166,7 +166,7 @@ class FormulaCard extends StatelessWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
-        side: BorderSide(color: AppColours.secondaryLight),
+        side: BorderSide(color: AppColours.primaryLight),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -236,7 +236,7 @@ class PropertyCard extends StatelessWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
-        side: BorderSide(color: AppColours.secondaryLight),
+        side: BorderSide(color: AppColours.primaryLight),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),

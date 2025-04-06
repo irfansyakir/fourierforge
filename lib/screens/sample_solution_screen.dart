@@ -76,7 +76,8 @@ class SampleSolutionScreen extends StatelessWidget {
     return Card(
       elevation: 6, // Increased elevation
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16), // Larger border radius
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: AppColours.primaryLight),
       ),
       child: InkWell(
         onTap: onTap,

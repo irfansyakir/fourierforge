@@ -114,7 +114,7 @@ class WaveVisualisationScreenState extends State<WaveVisualisationScreen> {
           ),
           const SizedBox(height: 16),
           
-          // Add a reset button to reset all parameters
+          // Reset button to reset all parameters
           Center(
             child: ElevatedButton.icon(
               onPressed: () {
@@ -133,6 +133,7 @@ class WaveVisualisationScreenState extends State<WaveVisualisationScreen> {
               label: const Text('Reset Parameters'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                
               ),
             ),
           ),

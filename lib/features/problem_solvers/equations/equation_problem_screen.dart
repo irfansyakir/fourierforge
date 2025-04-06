@@ -447,6 +447,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   Widget _buildProblemDescriptionCard() {
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: AppColours.primaryLight),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -493,6 +497,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   Widget _buildParametersCard() {
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: AppColours.primaryLight),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -1047,6 +1055,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: AppColours.primaryLight),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -1142,6 +1154,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     if (terms.isEmpty) {
       return Card(
         elevation: 4,
+        shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: AppColours.primaryLight),
+      ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -1180,6 +1196,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     if (!hasFrequencyTerms) {
       return Card(
         elevation: 4,
+        shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: AppColours.primaryLight),
+      ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -1213,6 +1233,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     // Build the explanation card
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: AppColours.primaryLight),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -1374,6 +1398,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
 
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: AppColours.primaryLight),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

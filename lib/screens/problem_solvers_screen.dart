@@ -73,13 +73,14 @@ class ProblemsScreen extends StatelessWidget {
     return Card(
       elevation: 6, // Increased elevation for more prominence
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16), // Larger border radius
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: AppColours.primaryLight),
       ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.all(24.0), // Increased padding
+          padding: const EdgeInsets.all(24.0), 
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -12,7 +12,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'FourierForge',
+      title: 'Fourier Forge',
       initialRoute: AppRoutes.home,
       onGenerateRoute: AppRoutes.generateRoute,
     );

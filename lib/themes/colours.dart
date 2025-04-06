@@ -49,5 +49,5 @@ class AppColours {
   // Title colors
   static const Color titleText = Color(0xFF303F9F); // indigo[700], same as primaryDark
   static const Color titleUnderline = Color(0xFF5C6BC0); // indigo[400]
-  static const Color iconCirle = Color(0xFFC5CAE9); // indigo[100]
+  static const Color iconCirle = Color(0xFF7986CB); // indigo[300]
 }
