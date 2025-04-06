@@ -26,7 +26,7 @@ class ProblemsScreen extends StatelessWidget {
               ),
               SizedBox(height: 8),
               Text(
-                'These problems are based on questions from tutorial questions, quizzes and Past Year Papers.',
+                'These problems are based on questions from tutorial questions, quizzes and Past Year Papers from the course IE2110 Signals and Systems.',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black,

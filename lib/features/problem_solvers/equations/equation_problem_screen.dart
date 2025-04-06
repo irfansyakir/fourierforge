@@ -1053,7 +1053,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Signal Visualization',
+              'Signal Visualisation',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -1061,7 +1061,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             ),
             const SizedBox(height: 16),
             
-            // Signal visualization
+            // Signal visualisation
             SizedBox(
               height: 250,
               child: LineChart(
@@ -1156,7 +1156,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Add terms to analyze periodicity.',
+                'Add terms to analyse periodicity.',
                 style: TextStyle(fontSize: 16),
               ),
             ],
@@ -1174,7 +1174,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     bool allNonPiTerms = periodicity['allNonPiTerms']!;
     
     // Calculate frequencies and periods for each term using the utility function
-    List<Map<String, dynamic>> termAnalysis = analyzeTermPeriodicity(terms);
+    List<Map<String, dynamic>> termAnalysis = analyseTermPeriodicity(terms);
     
     // If no frequency terms, signal is constant
     if (!hasFrequencyTerms) {
@@ -1484,7 +1484,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   //***************************************************************************** */
   Widget _buildStep2Content() {
     // Get analysis data needed for calculations
-    List<Map<String, dynamic>> termAnalysis = analyzeTermPeriodicity(terms);
+    List<Map<String, dynamic>> termAnalysis = analyseTermPeriodicity(terms);
     Map<String, dynamic> fundamentalValues = calculateFundamentalPeriodicity(termAnalysis);
 
     // Calculate Fourier coefficients using the new functions
@@ -1567,7 +1567,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   
   Widget _buildStep3Content() {
     // Get analysis data and calculate coefficients
-    List<Map<String, dynamic>> termAnalysis = analyzeTermPeriodicity(terms);
+    List<Map<String, dynamic>> termAnalysis = analyseTermPeriodicity(terms);
     Map<String, dynamic> fundamentalValues = calculateFundamentalPeriodicity(termAnalysis);
     Map<int, double> anCoefficients = calculateAnCoefficients(terms, fundamentalValues);
     Map<int, double> bnCoefficients = calculateBnCoefficients(terms, fundamentalValues);

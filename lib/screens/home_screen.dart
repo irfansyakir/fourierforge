@@ -52,10 +52,10 @@ class HomeScreen extends StatelessWidget {
                   crossAxisSpacing: 16.0,
                   childAspectRatio: 1.0,
                   children: [
-                    // Wave Visualization Card - Navigate to the appropriate tab
+                    // Wave Visualisation Card - Navigate to the appropriate tab
                     _buildFeatureCard(
                       context,
-                      'Waves Visualization',
+                      'Waves Visualisation',
                       Icons.ssid_chart,
                       () => Navigator.pushNamed(context, AppRoutes.waveVisualisation),
                     ),
@@ -79,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                     // Cheat Sheet Card
                     _buildFeatureCard(
                       context,
-                      'Fourier Series Cheat Sheet',
+                      'Cheat Sheet',
                       Icons.sticky_note_2_outlined,
                       () => Navigator.pushNamed(context, AppRoutes.cheatSheet),
                     ),

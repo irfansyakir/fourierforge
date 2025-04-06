@@ -87,8 +87,8 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
               
               const SizedBox(height: 16),
               
-              // Signal visualization
-              _buildSignalVisualizationCard(),
+              // Signal visualisation
+              _buildSignalVisualisationCard(),
               
               const SizedBox(height: 16),
               
@@ -336,7 +336,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
   }
 //*****************************************************************************/
 
-  Widget _buildSignalVisualizationCard() {
+  Widget _buildSignalVisualisationCard() {
     return Card(
       elevation: 4,
       child: Padding(
@@ -345,7 +345,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Signal Visualization',
+              'Signal Visualisation',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -353,7 +353,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
             ),
             const SizedBox(height: 16),
             
-            // Input signal visualization
+            // Input signal visualisation
             const Text(
               'Input Signal x(t):',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -415,7 +415,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
             
             const SizedBox(height: 24),
             
-            // Output signal visualization
+            // Output signal visualisation
             const Text(
               'Rectified Output Signal y(t):',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

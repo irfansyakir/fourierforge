@@ -254,9 +254,9 @@ int findLcm(int a, int b) {
   return (a * b) ~/ findHcf(a, b);
 }
 
-/// Analyzes each term in the equation and extracts frequency and period information
+/// Analyses each term in the equation and extracts frequency and period information
 /// Returns a list of maps, each containing analysis for one term
-List<Map<String, dynamic>> analyzeTermPeriodicity(List<EquationTerm> terms) {
+List<Map<String, dynamic>> analyseTermPeriodicity(List<EquationTerm> terms) {
   List<Map<String, dynamic>> termAnalysis = [];
   
   for (int i = 0; i < terms.length; i++) {

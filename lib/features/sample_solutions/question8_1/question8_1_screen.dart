@@ -15,7 +15,7 @@ class Question801Screen extends StatefulWidget {
 }
 
 class Question801ScreenState extends State<Question801Screen> {
-  // For the input signal visualization
+  // For the input signal visualisation
   List<FlSpot> inputSignalPoints = [];
   List<FlSpot> outputSignalPoints = [];
   List<FlSpot> magnitudeSpectraPoints = [];
@@ -69,9 +69,9 @@ class Question801ScreenState extends State<Question801Screen> {
             // Question card
             const QuestionCard(),
             const SizedBox(height: 16),
-            // Signal visualization card
+            // Signal visualisation card
             VideoCard(
-                videoName: 'Signal Visualization',
+                videoName: 'Signal Visualisation',
                 videoPath: 'lib/assets/animations/Tutorial8.mp4'),
             const SizedBox(height: 16),
             // Solution part (a) - Fourier series

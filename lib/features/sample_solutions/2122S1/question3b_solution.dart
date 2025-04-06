@@ -25,9 +25,9 @@ class Question3BSolutionCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             
-            // Signal visualization
+            // Signal visualisation
             const Text(
-              'Signal Visualization',
+              'Signal Visualisation',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -36,7 +36,7 @@ class Question3BSolutionCard extends StatelessWidget {
             const SizedBox(height: 8),
             SizedBox(
               height: 180,
-              child: SignalVisualization(),
+              child: SignalVisualisation(),
             ),
             const SizedBox(height: 16),
             
@@ -413,22 +413,6 @@ class Question3BSolutionCard extends StatelessWidget {
               r'\omega_0 = \frac{2\pi}{5}',
               textStyle: const TextStyle(fontSize: 16),
             ),
-            
-            const SizedBox(height: 16),
-            
-            // Coefficient visualization
-            const Text(
-              'Add Visualisations below',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            // const SizedBox(height: 8),r
-            // SizedBox(
-            //   height: 220,R
-            //   child: CoefficientVisualization(),
-            // ),
           ],
         ),
       ),
@@ -436,8 +420,8 @@ class Question3BSolutionCard extends StatelessWidget {
   }
 }
 
-class SignalVisualization extends StatelessWidget {
-  const SignalVisualization({super.key});
+class SignalVisualisation extends StatelessWidget {
+  const SignalVisualisation({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -527,10 +511,10 @@ class SignalVisualization extends StatelessWidget {
   }
 }
 
-class CoefficientVisualization extends StatelessWidget {
-  const CoefficientVisualization({super.key});
+class CoefficientVisualisation extends StatelessWidget {
+  const CoefficientVisualisation({super.key});
 
-  // Calculate coefficients for visualization
+  // Calculate coefficients for visualisation
   double calculateA(int n) {
     if (n == 0) return 0.6; // a₀ = 3/5
     
@@ -564,7 +548,7 @@ class CoefficientVisualization extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                // aₙ coefficients visualization
+                // aₙ coefficients visualisation
                 Padding(
                   padding: const EdgeInsets.only(top: 16.0),
                   child: BarChart(
@@ -638,7 +622,7 @@ class CoefficientVisualization extends StatelessWidget {
                   ),
                 ),
                 
-                // bₙ coefficients visualization
+                // bₙ coefficients visualisation
                 Padding(
                   padding: const EdgeInsets.only(top: 16.0),
                   child: BarChart(
