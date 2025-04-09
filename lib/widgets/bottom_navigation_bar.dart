@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import '../themes/colours.dart';
 
+// This widget is a custom bottom navigation bar for the app.
+// It allows the user to navigate between different features of the app.
+// The bottom navigation bar contains four items:
+// 1. Waves
+// 2. Solver
+// 3. Solutions
+// 4. Cheat Sheet
+
 class AppBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
@@ -28,7 +36,7 @@ class AppBottomNavigationBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.science_outlined),
-          label: 'Problem Solver',
+          label: 'Solver',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.tungsten_outlined),

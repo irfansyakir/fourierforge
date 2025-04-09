@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../routes/routes.dart';
+import 'package:fourier_forge/features/sample_solutions/2122S1/question3_screen.dart';
 import '../features/sample_solutions/question8_1/question8_1_screen.dart';
 import '../themes/colours.dart';
 
@@ -58,7 +58,10 @@ class SampleSolutionScreen extends StatelessWidget {
           'PYP 21/22 Semester 1',
           'Question 3',
           'Determine the Fourier series coefficients of a given equation.',
-          () => Navigator.pushNamed(context, AppRoutes.pypSolutionScreen),
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AY2122S1Question3Screen()),
+          ),
           Icons.history_edu,
         ),
       ],

@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import '../routes/routes.dart';
 import '../themes/colours.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+/// HomeScreen is the main screen of the app.
+/// It contains the app name, slogan, and a grid of feature cards.
+/// Each card represents a feature of the app and navigates to the respective screen when tapped.
 
+class HomeScreen extends StatelessWidget {
+
+  const HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,6 +21,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 20),
+              // App Name
               const Text(
                 'Fourier Forge',
                 style: TextStyle(
@@ -27,6 +32,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
+              // App Slogan
               const Text(
                 'Forge your understanding of Fourier Series!',
                 style: TextStyle(
@@ -35,6 +41,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
+              // Title Underline
               Container(
                 width: 100,
                 height: 3,
@@ -44,6 +51,8 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
+
+              // Grid of Feature Cards
               Expanded(
                 child: GridView.count(
                   shrinkWrap: true,
@@ -52,7 +61,7 @@ class HomeScreen extends StatelessWidget {
                   crossAxisSpacing: 16.0,
                   childAspectRatio: 1.0,
                   children: [
-                    // Wave Visualisation Card - Navigate to the appropriate tab
+                    // Wave Visualisation Card
                     _buildFeatureCard(
                       context,
                       'Waves Visualisation',
@@ -93,6 +102,11 @@ class HomeScreen extends StatelessWidget {
     );
   }
   
+  // Widget to build each feature card
+  // This widget is reusable for each feature
+  // It takes the context, title, icon, and onTap function as parameters
+  // to create a card with an icon and title
+  // that navigates to the respective screen when tapped
   Widget _buildFeatureCard(
     BuildContext context, 
     String title, 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fourier_forge/features/problem_solvers/equations/equation_problem_screen.dart';
+import 'package:fourier_forge/features/problem_solvers/rectifier/rectifier_problem_screen.dart';
 import 'package:fourier_forge/themes/colours.dart';
-import '../routes/routes.dart';
 
 class ProblemsScreen extends StatelessWidget {
   const ProblemsScreen({super.key});
@@ -43,7 +44,11 @@ class ProblemsScreen extends StatelessWidget {
           context,
           'Rectifier Problem',
           'Compute the Fourier series coefficients for a full and half wave rectifier circuits.',
-          () => Navigator.pushNamed(context, AppRoutes.rectifierProblem),
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const RectifierProblemScreen()),
+          ),
+          //() => Navigator.pushNamed(context, AppRoutes.rectifierProblem),
           Icons.waves,
         ),
 
@@ -54,7 +59,10 @@ class ProblemsScreen extends StatelessWidget {
           context,
           'Equations Problem',
           'Compute the Fourier Series coefficients for the given equations.',
-          () => Navigator.pushNamed(context, AppRoutes.equationProblem),
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const EquationProblemScreen()),
+          ),
           Icons.functions,
         ),
       ],
