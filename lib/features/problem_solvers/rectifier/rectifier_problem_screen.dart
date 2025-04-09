@@ -6,7 +6,13 @@ import 'package:fourier_forge/themes/colours.dart';
 import 'rectifier_solver.dart';
 import 'dart:math' as math;
 
-
+// This class represents the Rectifier Problem screen in the app
+// It displays the problem statement, parameters input, signal visualisation, and solution steps
+// It has 4 components for each section of the screen
+// The problem statement describes the question details
+// The parameters input allows the user to set the amplitude, frequency, and rectifier type
+// The signal visualisation shows the input and output signals
+// The solution steps provide a step-by-step guide to solving the problem
 class RectifierProblemScreen extends StatefulWidget {
   const RectifierProblemScreen({super.key});
 
@@ -15,9 +21,9 @@ class RectifierProblemScreen extends StatefulWidget {
 }
 
 class RectifierProblemScreenState extends State<RectifierProblemScreen> {
-  // Default parameters
+  // Default parameters for input signal and type of rectifier
   double amplitude = 2.0;
-  double frequency = 2.0;
+  double frequency = 1.0;
   String waveType = 'cos';
   String rectifierType = 'full';
 
@@ -27,12 +33,13 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
   final TextEditingController frequencyController = TextEditingController(text: '1.0');
   
   // Calculated values
-  late List<FlSpot> inputSignalPoints;
-  late List<FlSpot> outputSignalPoints;
+  late List<FlSpot> inputSignalPoints; // points for the input signal
+  late List<FlSpot> outputSignalPoints; // points for the output signal
   late String outputPeriod = '0';
   late String outputFrequency = '0';
-  late int currentSolutionStep = 1;
+  late int currentSolutionStep = 1; // index for the current solution step
   
+  // Initialisation of the input signal points
   @override
   void initState() {
     super.initState();
@@ -41,6 +48,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
     calculateSolution();
   }
   
+  // Dispose the controllers when the widget is removed from the widget tree
   @override
   void dispose() {
     amplitudeController.dispose();
@@ -48,6 +56,8 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
     super.dispose();
   }
   
+  // Calculate the solution based on the parameters set by the user
+  // Update the input and output signal points, output period, and output frequency
   void calculateSolution() {
     RectifierSolver solver = RectifierSolver(
       amplitude: amplitude,
@@ -103,6 +113,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
     );
   }
 //*****************************************************************************/
+// This widget builds the problem description card
   Widget _buildProblemDescriptionCard() {
   return Card(
     elevation: 4,
@@ -124,18 +135,28 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
           ),
           const SizedBox(height: 12),
           
+          // Description of the problem
           Text(
             'A sinusoidal signal x(t) is passed through a $rectifierType-wave rectifier to produce y(t):',
             style: TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 16),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Math.tex(
+              r'x(t) = \boxed {' + amplitude.toString() + r'}\' + waveType + r'(\boxed{' + frequency.toString() + r'}\cdot2\pi t)',
+              textStyle: const TextStyle(fontSize: 20),
+            )
+            
+            
+            ),
+          const SizedBox(height: 16),
           
           // Rectifier definition
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: rectifierType == 'full' 
+            child: rectifierType == 'full' 
                 ? Math.tex(
                     'y(t) = \\begin{cases} x(t), & \\text{if } x(t) \\geq 0 \\\\ -x(t), & \\text{if } x(t) < 0 \\end{cases}',
                     textStyle: const TextStyle(fontSize: 20),
@@ -144,10 +165,10 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                     'y(t) = \\begin{cases} x(t), & \\text{if } x(t) \\geq 0 \\\\ 0, & \\text{if } x(t) < 0 \\end{cases}',
                     textStyle: const TextStyle(fontSize: 20),
                   ),
-            ),
           ),
           const SizedBox(height: 16),
           
+          // Problem statement
           const Text(
             'Find the Fourier series of the output signal.',
             style: TextStyle(fontSize: 16),
@@ -158,7 +179,8 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
   );
 }
 //*****************************************************************************/
-
+// This widget builds the parameters input card
+// It allows the user to set the amplitude, frequency, and rectifier type
   Widget _buildParametersCard() {
     return Card(
       elevation: 4,
@@ -180,7 +202,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
             ),
             const SizedBox(height: 20),
             
-            // Input signal equation with blanks
+            // Input signal equation with textfields as blanks
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -196,9 +218,9 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                       decoration: const InputDecoration(
                         hintText: '0-4',
                         border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12), // Increased vertical padding
-                        isDense: false, // Ensure the field isn't set to dense
-                        floatingLabelBehavior: FloatingLabelBehavior.always, // Keep label above input
+                        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12), 
+                        isDense: false, 
+                        floatingLabelBehavior: FloatingLabelBehavior.always, 
                       ),
                       textAlign: TextAlign.center,
                       inputFormatters: [
@@ -212,13 +234,15 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                           // Ensure the value is within (0, 4]
                           double clampedValue = parsed.clamp(0.1, 4.0);
 
+                          // Reset the text field to the clamped value (0.1 or 4) if imput value is out of range
                           if (clampedValue != parsed) {
                             amplitudeController.text = clampedValue.toString();
                             amplitudeController.selection = TextSelection.fromPosition(
-                              TextPosition(offset: amplitudeController.text.length), // Keep cursor at end
+                              TextPosition(offset: amplitudeController.text.length),
                             );
                           }
 
+                          // Update the amplitude state variables
                           setState(() {
                             amplitude = clampedValue;
                           });
@@ -232,11 +256,13 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                   
                   const SizedBox(width: 8),
                   
-                  // sin / cos buttons to toggle
+                  // Sin and Cos Trigonometric function toggle buttons
                   Row(
                     children: [
+                      // Sin Button
                       ElevatedButton(
                         onPressed: () {
+                          // update values
                           setState(() {
                             waveType = 'sin';
                             calculateSolution();
@@ -250,6 +276,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                         child: const Text('sin'),
                       ),
                       const SizedBox(width: 8),
+                      // Cos Button
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
@@ -277,13 +304,13 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                       controller: frequencyController,
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
                       decoration: const InputDecoration(
-    
                         border: OutlineInputBorder(),
                         contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                       ),
                       textAlign: TextAlign.center,
                       onChanged: (value) {
                         double? parsed = double.tryParse(value);
+                        // update frequency value if input is not null and > 0
                         if (parsed != null && parsed > 0) {
                           setState(() {
                             frequency = parsed;
@@ -294,14 +321,15 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                     ),
                   ),
                   
-                  const Text('π·t)', style: TextStyle(fontSize: 18)),
+                  const Text('·2·π·t)', style: TextStyle(fontSize: 18)),
                 ],
               ),
             ),        
             const SizedBox(height: 24),
-            // Rectifier type buttons
+            // Rectifier type buttons, toggle between Full and Half Wave
             Row(
               children: [
+                // Full Wave Button
                 Expanded(child: 
                   ElevatedButton(
                     onPressed: () {
@@ -321,6 +349,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                 SizedBox(width: 10), 
 
                 Expanded(child: 
+                // Half Wave Button
                   ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -343,7 +372,10 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
     );
   }
 //*****************************************************************************/
-
+// This widget builds the signal visualisation card
+// It shows the input and output signals using fl_chart
+// The input signal is represented by a blue line
+// The output signal is represented by an orange line
   Widget _buildSignalVisualisationCard() {
     return Card(
       elevation: 4,
@@ -371,6 +403,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
+            // Graph of the input signal
             SizedBox(
               height: 200,
               child: LineChart(
@@ -381,6 +414,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                     drawVerticalLine: true,
                   ),
                   titlesData: FlTitlesData(
+                    // x-axis
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
@@ -391,6 +425,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                         },
                       ),
                     ),
+                    // y-axis
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
@@ -433,6 +468,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
+            // Graph of the output signal
             SizedBox(
               height: 200,
               child: LineChart(
@@ -443,6 +479,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                     drawVerticalLine: true,
                   ),
                   titlesData: FlTitlesData(
+                    // x-axis
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
@@ -453,6 +490,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
                         },
                       ),
                     ),
+                    // y-axis
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
@@ -494,7 +532,8 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
     );
   }
 //*****************************************************************************/
-
+// This widget builds the solution card 
+// It contains the solution steps and allows the user to navigate through them
   Widget _buildSolutionCard() {
     return Card(
       elevation: 4,
@@ -517,6 +556,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
             const SizedBox(height: 16),
             
             // Step navigation buttons
+            // Allow the user to navigate through the solution steps
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(5, (index) {
@@ -553,6 +593,11 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
     );
   }
 
+//*****************************************************************************/
+// This widget builds the content for each step of the solution
+// It uses a switch statement to determine which step to display
+// Each step contains a description and mathematical equations
+
   Widget _buildStepContent() {
     switch (currentSolutionStep) {
       case 1:
@@ -570,6 +615,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
     }
   }
 
+// Step 1 Content
   Widget _buildStep1Content() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -589,7 +635,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 5),
-
+        // Display the amplitude value
         Math.tex(
           r'A=\boxed{' + amplitude.toString() + r'}',
           textStyle: TextStyle(fontSize: 16),
@@ -601,7 +647,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 5),
-
+        // Display the fundamental period value
         Math.tex(
           r'T_0=\boxed{' + outputPeriod + r'}',
           textStyle: TextStyle(fontSize: 16),
@@ -613,6 +659,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
         ),
         Math.tex(r'f_0=\frac{1}{T_0}'),
         const SizedBox(height: 5),
+        // Display the fundamental frequency value
         Math.tex(
           r'f_0=\boxed{' + outputFrequency + r'}',
           textStyle: TextStyle(fontSize: 16),
@@ -620,7 +667,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
       ],
     );
   }
-
+// Step 2
   Widget _buildStep2Content() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -651,7 +698,6 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
           textStyle: const TextStyle(fontSize: 16),
           ),
 
-
         
         const SizedBox(height: 16),
         const Text('Due to symmetry, we can simplify:', style: TextStyle(fontSize: 16)),
@@ -661,11 +707,11 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
           scrollDirection: Axis.horizontal,
           child: rectifierType == 'full'
             ? Math.tex(
-                r'a_0 = \frac{2}{T_0}\int_{0}^{T_0/2} ' + amplitude.toString() + r'|' + waveType + r'(' + frequency.toString() + r'\pi t)|dt',
+                r'a_0 = \frac{2}{T_0}\int_{0}^{T_0/2} ' + amplitude.toString() + r'|' + waveType + r'(' + (frequency * 2).toString() + r'\pi t)|dt',
                 textStyle: const TextStyle(fontSize: 16),
               )
             : Math.tex(
-                r'a_0 = \frac{1}{T_0}\int_{0}^{T_0/2} ' + amplitude.toString() + waveType + r'(' + frequency.toString() + r'\pi t)dt',
+                r'a_0 = \frac{1}{T_0}\int_{0}^{T_0/2} ' + amplitude.toString() + waveType + r'(' + (frequency * 2).toString() + r'\pi t)dt',
                 textStyle: const TextStyle(fontSize: 16),
               ),
         ),
@@ -695,7 +741,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
       ],
     );
   }
-
+// Step 3
   Widget _buildStep3Content() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -777,7 +823,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
       ],
     );
   }
-
+// Step 4
   Widget _buildStep4Content() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -850,6 +896,7 @@ class RectifierProblemScreenState extends State<RectifierProblemScreen> {
     );
   }
 
+// Step 5
   Widget _buildStep5Content() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

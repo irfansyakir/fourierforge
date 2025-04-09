@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fourier_forge/themes/colours.dart';
 import 'question3a_card.dart';
 import 'question3a_solution.dart';
-import 'question3b_card.dart';
-import 'question3b_solution.dart';
+
 
 class AY2122S1Question3Screen extends StatefulWidget {
   const AY2122S1Question3Screen({super.key});
@@ -31,14 +30,6 @@ class AY2122S1Question3ScreenState extends State<AY2122S1Question3Screen> {
             const SizedBox(height: 16),
 
             Question3ASolutionCard(),
-
-            const SizedBox(height: 16),
-
-            Question3BCard(),
-
-            const SizedBox(height: 16),
-
-            Question3BSolutionCard(),
           ],
         ),
       ),

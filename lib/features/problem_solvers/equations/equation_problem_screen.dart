@@ -6,6 +6,11 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../../themes/colours.dart';
 import 'equation_solver.dart';
 
+// This class represents the screen for solving equations
+// It allows the user to input parameters for the equation and displays the solution
+// It also provides functionality to add or remove terms from the equation
+// change term values such as amplitude, frequency, and phase shift
+// and calculate the Fourier series of the equation
 class EquationProblemScreen extends StatefulWidget {
   const EquationProblemScreen({super.key});
 
@@ -18,15 +23,30 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   late List<EquationTerm> terms;
   
   // Controllers for each term
+  // list of a list of TextEditingControllers
+  // Each term has 5 parameters, so we need a list of 5 controllers for each term
+  // that list of 5 controllers is added to a list
   late List<List<TextEditingController>> controllers;
   
   // Maximum number of terms allowed = 4
   final int maxTerms = 4;
-
+  // Current preset for the equation
   late int preset = 1;
+  // Current Fourier step
   late int currentFourierStep = 1;
-  late int a0;
+  
+  // Fourier series coefficients
+  late int a0; // a0 coefficient
+  // an coefficient map where int key is the harmonic number and double value is the coefficient
+  late Map<int, double> anCoefficients = {};
+  // bn coefficient map where int key is the harmonic number and double value is the coefficient
+  late Map<int, double> bnCoefficients = {};
+  // List of harmonics
+  late List<int> harmonics = [];
+  late Map<String, dynamic> fundamentalValues = {};
+  late List<Map<String, dynamic>> termAnalysis = [];
 
+  // initialization of the state
   @override
   void initState() {
     super.initState();
@@ -37,9 +57,11 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     // Initialize controllers for each term
     initializeControllers();
 
+    // Calculate the Fourier series
     calculateFourierSeries();
   }
   
+  // Initialize the 5 controllers for each term's 5 textfields
   void initializeControllers() {
     controllers = [];
     for (int i = 0; i < terms.length; i++) {
@@ -53,7 +75,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     }
   }
   
-  // Update the controllers with current values from the terms
+  // Update a specific term's controllers with current values from the terms
+  // index specifies which term to update
   void updateControllers(int index) {
     controllers[index][0].text = terms[index].amplitude.toString();
     controllers[index][1].text = terms[index].frequencyNumerator.toString();
@@ -62,6 +85,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     controllers[index][4].text = terms[index].phaseShiftDenominator.toString();
   }
   
+
   @override
   void dispose() {
     // Dispose all controllers with null safety check
@@ -70,8 +94,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
         for (var controllerList in controllers) {
           for (var controller in controllerList) {
             controller.dispose();
-                    }
-                }
+          }
+        }
       }
     } catch (e) {
       // Nothing
@@ -85,13 +109,16 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
       return '0';
     }
     
-    // Filter out invalid terms
+    // Filter out invalid terms using .where() and isValid()
+    // var newList = oldList.where((element) => condition);
     List<EquationTerm> validTerms = terms.where((term) => term.isValid()).toList();
     
+    // If no valid terms, return '0'
     if (validTerms.isEmpty) {
       return '0';
     }
     
+    // Build the latex string
     String latex = '';
     for (int i = 0; i < validTerms.length; i++) {
       String termLatex = validTerms[i].toLatexString();
@@ -116,6 +143,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   void addTerm() {
     if (terms.length < maxTerms) {
       setState(() {
+        // Add a new term with default values
         terms.add(EquationTerm(
           amplitude: 1,
           hasTrigFunction: true,
@@ -125,10 +153,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
           includesPi: true,
           phaseShiftNumerator: 0,
           phaseShiftDenominator: 1,
-          isPositive: true,
         ));
         
-        // Add new controllers
+
+        // Add a list of new controllers
         controllers.add([
           TextEditingController(text: '1'),
           TextEditingController(text: '1'),
@@ -137,29 +165,13 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
           TextEditingController(text: '1'),
         ]);
 
+        // recalculate the Fourier series
         calculateFourierSeries();
       });
     }
   }
 
-  // Remove the last term from the equation
-  void removeLastTerm() {
-    if (terms.length > 1) {
-      setState(() {
-        // Dispose controllers for the removed term
-        for (var controller in controllers.last) {
-          controller.dispose();
-        }
-        
-        terms.removeLast();
-        controllers.removeLast();
-      });
-    }
-
-    calculateFourierSeries();
-  }
-  
-  // Remove a specific term
+  // Remove a specific term via index
   void removeTerm(int index) {
     if (terms.length > 1) {
       setState(() {
@@ -172,7 +184,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
         controllers.removeAt(index);
       });
     } else {
-      // If there is only 1 term left, reset it to default values
+      // If there is only 1 term left, reset it to default values to prevent 0 terms
       setState(() {
         terms[index] = EquationTerm(
           amplitude: 1,
@@ -183,14 +195,12 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
           includesPi: true,
           phaseShiftNumerator: 0,
           phaseShiftDenominator: 1,
-          isPositive: true,
+
         );
         updateControllers(index);
       });
     }
-
-    
-
+    // Recalculate the Fourier series after removing a term
     calculateFourierSeries();
   }
 
@@ -229,9 +239,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
       // Nothing
     }
     
+    // Switch case to set terms based on the preset value
     switch (preset) {
       case 1:
-        //  -3cos(7πt + π/6) + 4sin(11πt - π/3) - 9cos(16πt/3 - 7/18π)
+        // Preset 1: -3cos(7πt + π/6) + 4sin(11πt - π/3) - 9cos(16πt/3 - 7/18π)
         terms = [
           // Term 1: -3cos(7πt + π/6)
           EquationTerm(
@@ -243,7 +254,6 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             includesPi: true,
             phaseShiftNumerator: 1,
             phaseShiftDenominator: 6,
-            isPositive: true, // No longer needed, amplitude is negative
           ),
           
           // Term 2: 4sin(11πt - π/3)
@@ -256,7 +266,6 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             includesPi: true, 
             phaseShiftNumerator: -1,
             phaseShiftDenominator: 3,
-            isPositive: true,
           ),
 
           // Term 3: -9cos(16πt/3 - 7/18π)
@@ -269,13 +278,12 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             includesPi: true, 
             phaseShiftNumerator: -7,
             phaseShiftDenominator: 18,
-            isPositive: true, // No longer needed, amplitude is negative
           ),
         ];
         break;
       // 1
       case 2:
-        // 4cos(3t/5 + π/3) + 3sin(t/7) 
+        // Preset 2: 4cos(3t/5 + π/3) + 3sin(t/7) 
         terms = [
           // Term 1: 4cos(3t/5 + π/3)
           EquationTerm(
@@ -287,7 +295,6 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             includesPi: false,
             phaseShiftNumerator: 1,
             phaseShiftDenominator: 3,
-            isPositive: true,
           ),
           
           // Term 2: 3sin(t/7) 
@@ -300,12 +307,11 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             includesPi: false, 
             phaseShiftNumerator: 0,
             phaseShiftDenominator: 1,
-            isPositive: true,
           ),
         ];
         break;
       case 3:
-        //  -2 - 4cos(7/9t) + 6sin(3t) + 2cos(13/6t + π/4)
+        //  Preset 3: -2 - 4cos(7/9t) + 6sin(3t) + 2cos(13/6t + π/4)
         terms = [
           // Term 1: -2 
           EquationTerm(
@@ -317,7 +323,6 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             includesPi: false,
             phaseShiftNumerator: 1,
             phaseShiftDenominator: 1,
-            isPositive: true, // No longer needed, amplitude is negative
           ),
           
           // Term 2: -4cos(7/9t)
@@ -330,7 +335,6 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             includesPi: false, 
             phaseShiftNumerator: 0,
             phaseShiftDenominator: 1,
-            isPositive: true, // No longer needed, amplitude is negative
           ),
 
           // Term 3: 6 sin(3t)
@@ -343,7 +347,6 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             includesPi: false, 
             phaseShiftNumerator: 0,
             phaseShiftDenominator: 1,
-            isPositive: true,
           ),
 
           // Term 4: 2cos(13/6t + π/4)
@@ -356,12 +359,11 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             includesPi: false, 
             phaseShiftNumerator: 1,
             phaseShiftDenominator: 4,
-            isPositive: true,
           ),
         ];
         break;
 
-      
+      // Preset 0: Default case
       default: 
         terms = [
           EquationTerm(
@@ -372,7 +374,6 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             frequencyDenominator: 1, 
             phaseShiftNumerator: 1, 
             phaseShiftDenominator: 1,
-            isPositive: true
           ),
         ];
     }
@@ -385,34 +386,27 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   }
 
   void calculateFourierSeries() {
-      a0 = calculatea0(terms);
-  }
-
-  List<FlSpot> getCombinedSignalPoints(double startX, double endX, double step) {
-    // Calculate the number of points
-    int numPoints = ((endX - startX) / step).ceil() + 1;
-    List<double> combinedYValues = List.filled(numPoints, 0.0);
+    // Calculate a0 coefficient
+    a0 = calculatea0(terms);
     
-    // For each term, add its contribution
-    for (var term in terms) {
-      List<FlSpot> termPoints = term.getSignalPoints(startX, endX, step);
-      for (int i = 0; i < termPoints.length && i < numPoints; i++) {
-        combinedYValues[i] += termPoints[i].y;
-      }
-    }
+    // Calculate term analysis for periodicity
+    termAnalysis = analyseTermPeriodicity(terms);
     
-    // Convert back to FlSpot list
-    List<FlSpot> combinedPoints = [];
-    for (int i = 0; i < numPoints; i++) {
-      double x = startX + i * step;
-      combinedPoints.add(FlSpot(x, combinedYValues[i]));
-    }
+    // Calculate fundamental periodicity values
+    fundamentalValues = calculateFundamentalPeriodicity(termAnalysis);
     
-    return combinedPoints;
+    // Calculate Fourier coefficients an and bn
+    anCoefficients = calculateAnCoefficients(terms, fundamentalValues);
+    bnCoefficients = calculateBnCoefficients(terms, fundamentalValues);
+    
+    // Get all harmonics
+    harmonics = getAllHarmonics(anCoefficients, bnCoefficients);
   }
 
 /// ***********************************************************************************************
 /// Main Screen Build Method
+/// This method builds the entire screen layout
+/// Calls all the components to be displayed on the screen
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -465,6 +459,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             ),
             const SizedBox(height: 12),
             
+            // Scrollable equation
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Math.tex(
@@ -516,42 +511,45 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                   ),
                 ),
                 const Spacer(),
+
+                // Row of Preset buttons
                 Row(
                   children: List.generate(3, (index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        preset = index + 1;
-                        presetTerms(preset);
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: preset == index + 1 
-                        ? AppColours.primaryLight 
-                        : AppColours.greyLight,
-                      foregroundColor: preset == index + 1 
-                        ? AppColours.white 
-                        : AppColours.black,
-                      minimumSize: const Size(40, 40),
-                    ),
-                    child: Text('${index + 1}'),
-                  ),
-                );
-              }),
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            preset = index + 1;
+                            presetTerms(preset);
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: preset == index + 1 
+                            ? AppColours.primaryLight 
+                            : AppColours.greyLight,
+                          foregroundColor: preset == index + 1 
+                            ? AppColours.white 
+                            : AppColours.black,
+                          minimumSize: const Size(40, 40),
+                        ),
+                        child: Text('${index + 1}'),
+                      ),
+                    );
+                  }),
                 )
               ]
             ),
             const SizedBox(height: 10),
 
+            // Divider line
             Container(
-            height: 2,
-            decoration: BoxDecoration(
-              color: AppColours.primaryLight,
-              borderRadius: BorderRadius.circular(1.5),
+              height: 2,
+              decoration: BoxDecoration(
+                color: AppColours.primaryLight,
+                borderRadius: BorderRadius.circular(1.5),
+              ),
             ),
-          ),
             
             // List of term input rows
             ...List.generate(terms.length, (index) => _buildTermInputs(index)),
@@ -561,9 +559,11 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             // Add and Remove all term buttons
             Row(
               children: [
+                // add term button 
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: terms.length < maxTerms ? addTerm : null,
+                    // disabled if max terms reached
+                    onPressed: terms.length < maxTerms ? addTerm : null, 
                     style: ElevatedButton.styleFrom(
                       backgroundColor: terms.length < maxTerms ? AppColours.secondary : AppColours.greyLight,
                       foregroundColor: AppColours.white,
@@ -574,9 +574,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                 ),
                 
                 const SizedBox(width: 10),
-           
+                // remove all terms button
                 Expanded(
                   child: ElevatedButton(
+                    // disabled if only one term left
                     onPressed: terms.length > 1 ? removeAllTerms : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: terms.length > 1 ? AppColours.error : AppColours.greyLight,
@@ -605,6 +606,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
         // Title row with term number and remove button
         Row(
           children: [
+            // Term number
             Text(
               'Term ${index + 1}:',
               style: const TextStyle(
@@ -649,35 +651,40 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                   ),
                   textAlign: TextAlign.center,
                   inputFormatters: [
-                    // Allow negative numbers
+                    // Only positve and negative integers
                     FilteringTextInputFormatter.allow(RegExp(r'^-?\d*')),
                   ],
                   onChanged: (value) {
+                    // Check if the value is empty or just a dash
                     if (value.isEmpty || value == "-") return;
                     
                     int? parsed = int.tryParse(value);
+                    // Validation Check
                     if (parsed != null) {
                       // Check if amplitude is 0
                       if (parsed == 0) {
-                        // If amplitude = 0, remove the term or reset it
+                        // If amplitude = 0, remove the term as 0 * anything = 0 and it is not valid
                         removeTerm(index);
                         return;
                       } 
-                      // Check if amplitude is out of range
+                      // Check if amplitude is out of range [-10, 10]
+                      // Clamp the value to the range [-10, 10]
                       else if (parsed > 10) {
                         parsed = 10; // Clamp to max 10
                         controllers[index][0].text = '10';
                         controllers[index][0].selection = TextSelection.fromPosition(
-                          const TextPosition(offset: 2), // Position at end of "10"
+                          const TextPosition(offset: 2), // Move cursor position to end of "10"
                         );
                       } else if (parsed < -10) {
                         parsed = -10; // Clamp to min -10
                         controllers[index][0].text = '-10';
                         controllers[index][0].selection = TextSelection.fromPosition(
-                          const TextPosition(offset: 3), // Position at end of "-10"
+                          const TextPosition(offset: 3), // Move cursor Position to at end of "-10"
                         );
                       }
                       
+                      // Update the amplitude value in the term
+                      // and recalculate the Fourier series
                       setState(() {
                         terms[index].amplitude = parsed!;
                         calculateFourierSeries();
@@ -694,6 +701,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                 flex: 3,
                 child: ElevatedButton(
                   onPressed: () {
+                    // toggle the hasTrigFunction property
+                    // and calculate the Fourier series
                     setState(() {
                       terms[index].hasTrigFunction = !terms[index].hasTrigFunction;
                       calculateFourierSeries();
@@ -721,10 +730,10 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             Row(
               children: [
                 const Text('Function: ', style: TextStyle(fontSize: 16)),
-                
                 Expanded(
                   child: Row(
                     children: [
+                      // sin button
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
@@ -745,6 +754,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
 
                       const SizedBox(width: 5),
                       
+                      // cos button
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
@@ -770,16 +780,18 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             
             const SizedBox(height: 8),
             
-            // Pi toggle row
+            // Toggle for frequency includes π
             Row(
               children: [
                 const Text('Frequency includes π: ', style: TextStyle(fontSize: 16)),
-                
                 Spacer(),
+                // Toggle Switch
                 Switch(
                   value: terms[index].includesPi,
                   activeColor: AppColours.primary,
                   onChanged: (value) {
+                    // Toggle the includesPi property
+                    // and recalculate the Fourier series
                     setState(() {
                       terms[index].includesPi = value;
                       calculateFourierSeries();
@@ -811,15 +823,20 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                     ),
                     textAlign: TextAlign.center,
                     inputFormatters: [
+                      // only whole numbers
                       FilteringTextInputFormatter.digitsOnly,
                     ],
                     onChanged: (value) {
+                      // Check if the value is empty
                       if (value.isEmpty) return;
                       
                       int? parsed = int.tryParse(value);
+
+                      // Validation Check 
                       if (parsed != null) {
                         if (parsed == 0) {
                           // Reset both the numerator and denominator to defaults
+                          // as 0 / n is not valid
                           setState(() {
                             terms[index].frequencyNumerator = 1;
                             terms[index].frequencyDenominator = 1;
@@ -827,29 +844,29 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                             controllers[index][2].text = '1';
                             calculateFourierSeries();
                           });
+                          // check if the value is out of range [1, 200]
                         } else if (parsed > 200) {
-                          parsed = 200; // Clamp to max 200
+                          parsed = 200; // Clamp to max 200 if value more than 200
                           controllers[index][1].text = '200';
                           controllers[index][1].selection = TextSelection.fromPosition(
-                            const TextPosition(offset: 3), // Position at end of "200"
+                            const TextPosition(offset: 3), // Move cursor Position at end of "200"
                           );
-                          setState(() {
-                            terms[index].frequencyNumerator = parsed!;
-                            terms[index].simplifyFraction();
-                            calculateFourierSeries();
-                          });
-                        } else {
-                          setState(() {
-                            terms[index].frequencyNumerator = parsed!;
-                            terms[index].simplifyFraction();
-                            calculateFourierSeries();
-                          });
-                        }
+                          // Update the frequency numerator
+                          
+                        } 
+                        // update the frequency numerator, simplify the fraction and recalculate forier series
+                        setState(() {
+                          terms[index].frequencyNumerator = parsed!; //
+                          terms[index].simplifyFraction();
+                          calculateFourierSeries();
+                        });
+                        
                       }
                     },
                   ),
                 ),
                 
+                // show π·t if includesPi is true, else just t
                 Text(
                   terms[index].includesPi ? 'π·t / ' : '   t / ', 
                   style: const TextStyle(fontSize: 16)
@@ -877,7 +894,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                       int? parsed = int.tryParse(value);
                       if (parsed != null) {
                         if (parsed == 0) {
-                          // Reset both numerator and denominator to defaults
+                          // Reset both numerator and denominator to default values
+                          // as n / 0 is invalid
                           setState(() {
                             terms[index].frequencyNumerator = 1;
                             terms[index].frequencyDenominator = 1;
@@ -885,24 +903,21 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                             controllers[index][2].text = '1';
                             calculateFourierSeries();
                           });
+                          // check if the value is out of range [1, 200]
                         } else if (parsed > 200) {
                           parsed = 200; // Clamp to max 200
                           controllers[index][2].text = '200';
                           controllers[index][2].selection = TextSelection.fromPosition(
-                            const TextPosition(offset: 3), // Position at end of "200"
+                            const TextPosition(offset: 3), // Move cursor Position to end of "200"
                           );
-                          setState(() {
-                            terms[index].frequencyDenominator = parsed!;
-                            terms[index].simplifyFraction();
-                            calculateFourierSeries();
-                          });
-                        } else {
-                          setState(() {
-                            terms[index].frequencyDenominator = parsed!;
-                            terms[index].simplifyFraction();
-                            calculateFourierSeries();
-                          });
-                        }
+                          
+                        } 
+                        // update state values, simplify fraction and calculate fourier series
+                        setState(() {
+                          terms[index].frequencyDenominator = parsed!;
+                          terms[index].simplifyFraction();
+                          calculateFourierSeries();
+                        });
                       }
                     },
                   ),
@@ -912,15 +927,14 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             
             const SizedBox(height: 8),
             
-            // Phase shift row - also pushed to the right
+     
             Row(
               children: [
                 const Text('Phase (in radians): ', style: TextStyle(fontSize: 16)),
                 
-                // Add a Spacer to push the rest to the right
                 const Spacer(),
                 
-                // Phase numerator
+                // Phase Shift numerator
                 SizedBox(
                   width: 80,
                   height: 40,
@@ -937,10 +951,13 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                       FilteringTextInputFormatter.allow(RegExp(r'^-?\d*')), // Allow negative numbers
                     ],
                     onChanged: (value) {
+                      // check if value is empty
                       if (value.isEmpty || value == '-') return;
                       
+                      // validation check
                       int? parsed = int.tryParse(value);
                       if (parsed != null) {
+                        // check if value is within range [-360 to 360]
                         if (parsed.abs() > 360) {
                           // Clamp to -360 to 360 range
                           parsed = parsed.isNegative ? -360 : 360;
@@ -950,10 +967,11 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                           );
                         }
                         
+                        // update state variables
                         setState(() {
                           terms[index].phaseShiftNumerator = parsed!;
+                          terms[index].simplifyFraction();
                           calculateFourierSeries();
-
                         });
                       }
                     },
@@ -998,6 +1016,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                         
                         setState(() {
                           terms[index].phaseShiftDenominator = parsed!;
+                          terms[index].simplifyFraction();
                           calculateFourierSeries();
                         });
                       }
@@ -1024,15 +1043,17 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
 /// Visualises the signal using fl_chart and points calculated in equation_term.dart
   Widget _buildSignalVisualisationCard() {
     // Calculate combined signal points
-    List<FlSpot> signalPoints = getCombinedSignalPoints(0, 2 * math.pi, 0.01);
+    List<FlSpot> signalPoints = getCombinedSignalPoints(0, 2 * math.pi, 0.01, terms);
     
-    // Determine Y-axis limits
+    // Initialise min and max y axis values to infinity
     double minY = double.infinity;
     double maxY = double.negativeInfinity;
     
+
+    // change min and max y axis values depending on the highest y value
     if (signalPoints.isNotEmpty) {
       for (var point in signalPoints) {
-        if (point.y < minY) minY = point.y;
+        if (point.y < minY) minY = point.y; 
         if (point.y > maxY) maxY = point.y;
       }
     } else {
@@ -1041,18 +1062,15 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
       maxY = 5;
     }
     
-    // Add some padding to the Y-axis
-    double padding = (maxY - minY) * 0.1;
-    minY -= padding;
-    maxY += padding;
     
-    // Ensure minimum range
+    // Ensure minimum range between y and -y is more than 4
     if (maxY - minY < 4) {
       double mid = (maxY + minY) / 2;
       minY = mid - 2;
       maxY = mid + 2;
     }
     
+    // Signal Visualisation Card
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -1073,7 +1091,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
             ),
             const SizedBox(height: 16),
             
-            // Signal visualisation
+            // Signal visualisation Graph
             SizedBox(
               height: 250,
               child: LineChart(
@@ -1090,6 +1108,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                         reservedSize: 30,
                         interval: math.pi / 2,
                         getTitlesWidget: (value, meta) {
+                          // label x axis values from 0 to 2 pi
                           String text = '';
                           if (value.abs() < 0.1) {
                             text = '0';
@@ -1511,16 +1530,6 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   }
   //***************************************************************************** */
   Widget _buildStep2Content() {
-    // Get analysis data needed for calculations
-    List<Map<String, dynamic>> termAnalysis = analyseTermPeriodicity(terms);
-    Map<String, dynamic> fundamentalValues = calculateFundamentalPeriodicity(termAnalysis);
-
-    // Calculate Fourier coefficients using the new functions
-    Map<int, double> anCoefficients = calculateAnCoefficients(terms, fundamentalValues);
-    Map<int, double> bnCoefficients = calculateBnCoefficients(terms, fundamentalValues);
-    List<int> harmonics = getAllHarmonics(anCoefficients, bnCoefficients);
-
-    // Build the UI widget with the calculated data
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1569,7 +1578,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
           ...harmonics.map((harmonic) => Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+             crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Show an coefficient if it exists and is not very close to zero
                 if (anCoefficients.containsKey(harmonic))
@@ -1594,13 +1603,6 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
   }
   
   Widget _buildStep3Content() {
-    // Get analysis data and calculate coefficients
-    List<Map<String, dynamic>> termAnalysis = analyseTermPeriodicity(terms);
-    Map<String, dynamic> fundamentalValues = calculateFundamentalPeriodicity(termAnalysis);
-    Map<int, double> anCoefficients = calculateAnCoefficients(terms, fundamentalValues);
-    Map<int, double> bnCoefficients = calculateBnCoefficients(terms, fundamentalValues);
-    List<int> harmonics = getAllHarmonics(anCoefficients, bnCoefficients);
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

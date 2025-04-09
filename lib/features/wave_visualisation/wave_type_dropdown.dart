@@ -4,7 +4,6 @@ import '../../themes/colours.dart';
 
 class WaveTypeDropdown extends StatelessWidget {
 
-  
   final WaveType selectedType;
   final Function(WaveType) onTypeChanged;
 

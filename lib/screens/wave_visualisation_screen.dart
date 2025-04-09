@@ -73,7 +73,7 @@ class WaveVisualisationScreenState extends State<WaveVisualisationScreen> {
             selectedType: waveModel.type,
             onTypeChanged: (WaveType type) {
               setState(() {
-                waveModel = waveModel.copyWith(type: type);
+                waveModel.type = type;
                 updateGraph();
               });
             },
@@ -89,25 +89,25 @@ class WaveVisualisationScreenState extends State<WaveVisualisationScreen> {
             phaseShift: waveModel.phaseShift,
             onTermsChanged: (int value) {
               setState(() {
-                waveModel = waveModel.copyWith(terms: value);
+                waveModel.terms = value;
                 updateGraph();
               });
             },
             onFrequencyChanged: (double value) {
               setState(() {
-                waveModel = waveModel.copyWith(frequency: value);
+                waveModel.frequency = value;
                 updateGraph();
               });
             },
             onAmplitudeChanged: (double value) {
               setState(() {
-                waveModel = waveModel.copyWith(amplitude: value);
+                waveModel.amplitude = value;
                 updateGraph();
               });
             },
             onPhaseShiftChanged: (double value) {
               setState(() {
-                waveModel = waveModel.copyWith(phaseShift: value);
+                waveModel.phaseShift = value;
                 updateGraph();
               });
             },

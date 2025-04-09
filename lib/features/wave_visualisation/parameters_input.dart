@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:math';
 import '../../themes/colours.dart';
 
@@ -7,7 +6,12 @@ import '../../themes/colours.dart';
 // ParameterInputs: A StatelessWidget that calls the ParameterInput widget for each parameter.
 // ParameterInput: A StatefulWidget that displays a slider and a text field for a parameter.
 
-class ParameterInputs extends StatelessWidget {
+// Front End
+class ParameterInputs extends StatefulWidget {
+  /// This widget displays the inputs for the parameters of the wave
+  /// It includes the number of terms, frequency, amplitude, and phase shift
+  /// Each parameter has a slider and a text field for input
+  /// The slider allows the user to select a value within a range
   final int terms;
   final double frequency;
   final double amplitude;
@@ -30,6 +34,11 @@ class ParameterInputs extends StatelessWidget {
   });
 
   @override
+  State<ParameterInputs> createState() => _ParameterInputsState();
+}
+
+class _ParameterInputsState extends State<ParameterInputs> {
+  @override
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 16,
@@ -37,250 +46,126 @@ class ParameterInputs extends StatelessWidget {
       // 4 ParameterInput widgets for Number of terms, Frequency, Amplitude, and Phase Shift
       children: [
         // Number of terms input
-        SizedBox(
-          child: ParameterInput(
-            label: 'Number of Terms',
-            value: terms.toDouble(),
-            min: 1,
-            max: 20,
-            divisions: 19,
-            formatLabel: (value) => value.toInt().toString(),
-            onChanged: (value) => onTermsChanged(value.toInt()),
-            decimalPlaces: 0,
-          ),
+        _parameterInputRow(
+          'Number of Terms',
+          widget.terms.toDouble(),
+          1,
+          20,
+          19,
+          (value) => value.toInt().toString(),
+          (value) => widget.onTermsChanged(value.toInt()),
+          0,
         ),
-        
         // Frequency input
-        SizedBox(
-          child: ParameterInput(
-            label: 'Frequency',
-            value: frequency,
-            min: 0.1,
-            max: 3.0,
-            divisions: 29,
-            formatLabel: (value) => value.toStringAsFixed(1),
-            onChanged: onFrequencyChanged,
-          ),
+        _parameterInputRow(
+          'Frequency',
+          widget.frequency,
+          0.1,
+          3.0,
+          29,
+          (value) => value.toStringAsFixed(1),
+          (value) => widget.onFrequencyChanged(value),
+          1,
         ),
-        
+         
         // Amplitude input
-        SizedBox(
-          child: ParameterInput(
-            label: 'Amplitude',
-            value: amplitude,
-            min: 0.1,
-            max: 2.0,
-            divisions: 19,
-            formatLabel: (value) => value.toStringAsFixed(1),
-            onChanged: onAmplitudeChanged,
-          ),
+        _parameterInputRow(
+          'Amplitude',
+          widget.amplitude,
+          0.1,
+          2.0,
+          19,
+          (value) => value.toStringAsFixed(1),
+          (value) => widget.onAmplitudeChanged(value),
+          1,
         ),
-        
+
         // Phase shift input
-        SizedBox(
-          child: ParameterInput(
-            label: 'Phase Shift',
-            value: phaseShift,
-            min: 0,
-            max: 2 * pi,
-            divisions: 20,
-            formatLabel: (value) => '${(value / pi).toStringAsFixed(2)}π',
-            onChanged: onPhaseShiftChanged,
+        _parameterInputRow(
+          'Phase Shift',
+          widget.phaseShift,
+          0,
+          2 * pi,
+          20,
+          (value) => '${(value / pi).toStringAsFixed(2)}π',
+          (value) => widget.onPhaseShiftChanged(value),
+          2,
+        ),
+
+
+      
+      ],
+    );
+  }
+  // This function creates a row with a label, a slider and the value of the parameter
+  Widget _parameterInputRow(
+    String label,   
+    double value,        
+    double min,        
+    double max,         
+    int? divisions,     
+    String Function(double) formatLabel,
+    Function(double) onChanged,        
+    int decimalPlaces,
+
+  ) {
+     return SizedBox(
+       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Label for the parameter
+          Text(
+            label,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-
-class ParameterInput extends StatefulWidget {
-  final String label;
-  final double value;
-  final double min;
-  final double max;
-  final int? divisions;
-  final String Function(double) formatLabel;
-  final Function(double) onChanged;
-  final int decimalPlaces;
-
-  const ParameterInput({
-    super.key,
-    required this.label,
-    required this.value,
-    required this.min,
-    required this.max,
-    this.divisions,
-    required this.formatLabel,
-    required this.onChanged,
-    this.decimalPlaces = 1,
-  });
-
-  @override
-  State<ParameterInput> createState() => _ParameterInputState();
-}
-
-class _ParameterInputState extends State<ParameterInput> {
-  late TextEditingController _controller;
-
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-    _updateTextController();
-  }
-
-  void _applyTextValue() {
-    double? newValue = double.tryParse(_controller.text);
-    if (newValue != null) {
-      newValue = newValue.clamp(widget.min, widget.max);
-      widget.onChanged(newValue); 
-      _controller.text = newValue.toStringAsFixed(widget.decimalPlaces);
-    } else {
-      _updateTextController();
-    }
-   
-  }
-
-  @override
-  void didUpdateWidget(ParameterInput oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.value != widget.value) {
-      _updateTextController();
-    }
-  }
-
-  void _updateTextController() {
-    _controller.text = widget.value.toStringAsFixed(widget.decimalPlaces);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-
-        Text(
-          widget.label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        
-        Row(
-          children: [
-            // Slider
-            Expanded(
-              flex: 7,
-              child: SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: AppColours.primary,
-                  inactiveTrackColor: AppColours.greyLight,
-                  thumbColor: AppColours.primary,
-                  overlayColor: AppColours.primary, 
-                  trackHeight: 8.0,
-                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
-                  tickMarkShape: const RoundSliderTickMarkShape(tickMarkRadius: 6.0),
-                  activeTickMarkColor: Colors.blueAccent,
-                  inactiveTickMarkColor: Colors.grey,
-                  showValueIndicator: ShowValueIndicator.always,
-                ),
-                child: Slider(
-                  value: widget.value,
-                  min: widget.min,
-                  max: widget.max,
-                  divisions: widget.divisions,
-                  label: widget.formatLabel(widget.value),
-                  onChanged: (value) {
-                    widget.onChanged(value);
-                  },
+          const SizedBox(height: 8),
+          
+          
+          Row(
+            children: [
+              // Slider for the parameter
+              Expanded(
+                flex: 8,
+                // Slider theme to customize the appearance of the slider
+                child: SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    activeTrackColor: AppColours.primary,
+                    inactiveTrackColor: AppColours.greyLight,
+                    thumbColor: AppColours.primary,
+                    overlayColor: AppColours.primary, 
+                    trackHeight: 8.0,
+                    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                    tickMarkShape: const RoundSliderTickMarkShape(tickMarkRadius: 6.0),
+                    activeTickMarkColor: Colors.blueAccent,
+                    inactiveTickMarkColor: Colors.grey,
+                    showValueIndicator: ShowValueIndicator.always,
+                  ),
+                  // Slider widget to select a value
+                  child: Slider(
+                    value: value,
+                    min: min,
+                    max: max,
+                    divisions: divisions,
+                    label: formatLabel(value),
+                    onChanged: (value) {
+                      onChanged(value);
+                    },
+                  ),
                 ),
               ),
-            ),
-            
-            Expanded(
-              flex: 3,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _controller,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            borderSide: BorderSide(color: Colors.grey[300]!),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.check, size: 16),
-                            onPressed: () {
-                              _applyTextValue();
-                            },
-                          ),
-                          isDense: true,
-                        ),
-                        textInputAction: TextInputAction.done,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-                          TextInputFormatter.withFunction((oldValue, newValue) {
-                            if (newValue.text.isEmpty) {
-                              return newValue;
-                            }
-
-                            double? value = double.tryParse(newValue.text);
-                            if (value == null) {
-                              return oldValue;
-                            }
-                            
-                            if (value > widget.max) {
-                              return TextEditingValue(
-                                text: widget.max.toStringAsFixed(widget.decimalPlaces),
-                                selection: TextSelection.collapsed(offset: widget.max.toStringAsFixed(widget.decimalPlaces).length),
-                              );
-                            }
-                            
-                            if (value < widget.min) {
-                              return TextEditingValue(
-                                text: widget.min.toStringAsFixed(widget.decimalPlaces),
-                                selection: TextSelection.collapsed(offset: widget.min.toStringAsFixed(widget.decimalPlaces).length),
-                              );
-                            }
-                            
-                            return newValue;
-                          }),
-                        ],
-                        
-                        onSubmitted: (text) {
-                          _applyTextValue();
-                        },
-                        onTap: () {
-                          setState(() {
-                            _controller.selection = TextSelection(
-                              baseOffset: 0,
-                              extentOffset: _controller.text.length,
-                            );
-                          });
-                        },
-                      ),
-                    ),
-                  ],
+       
+              Flexible(
+                child: Text(
+                  label.contains('Phase Shift')
+                      ? '${(value / pi).toStringAsFixed(2)}π'
+                      : value.toStringAsFixed(decimalPlaces),
                 ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+              )
+            ],
+          ),
+        ],
+      ),
+     );
   }
 }
 

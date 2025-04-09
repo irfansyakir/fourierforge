@@ -3,6 +3,9 @@ import 'package:fourier_forge/features/problem_solvers/equations/equation_proble
 import 'package:fourier_forge/features/problem_solvers/rectifier/rectifier_problem_screen.dart';
 import 'package:fourier_forge/themes/colours.dart';
 
+// This class represents the Problems screen in the app
+// It displays a list of 2 problems that the user can explore
+// The problems are Rectifier Problem and Equations Problem
 class ProblemsScreen extends StatelessWidget {
   const ProblemsScreen({super.key});
 
@@ -37,7 +40,7 @@ class ProblemsScreen extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 20), // Increased spacing
+        const SizedBox(height: 20),
 
         // Problem Card for Rectifier Problem
         _buildProblemCard(
@@ -52,7 +55,7 @@ class ProblemsScreen extends StatelessWidget {
           Icons.waves,
         ),
 
-        const SizedBox(height: 16), // Spacing between cards
+        const SizedBox(height: 16),
 
         // Problem Card for Equation Problem
         _buildProblemCard(
@@ -79,7 +82,7 @@ class ProblemsScreen extends StatelessWidget {
     IconData icon, // Icon to represent the problem type
   ) {
     return Card(
-      elevation: 6, // Increased elevation for more prominence
+      elevation: 6, 
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(color: AppColours.primaryLight),

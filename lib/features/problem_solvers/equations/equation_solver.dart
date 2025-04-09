@@ -4,6 +4,7 @@ import 'dart:math' as math;
 // Data structure to represent each term in the equation
 class EquationTerm {
   int amplitude; 
+
   bool hasTrigFunction; // Whether the term has a sin/cos function
   String functionType; // 'sin' or 'cos'
   
@@ -18,8 +19,7 @@ class EquationTerm {
   int phaseShiftNumerator;
   int phaseShiftDenominator;
   
-  // isPositive is now redundant since amplitude can be negative
-  bool isPositive; // Keeping for backward compatibility but will be ignored
+  
 
   EquationTerm({
     required this.amplitude,
@@ -30,9 +30,9 @@ class EquationTerm {
     this.includesPi = true,
     required this.phaseShiftNumerator,
     required this.phaseShiftDenominator,
-    this.isPositive = true,
   });
 
+  //******************************************************************** */
   // Convert the term to LaTeX string for display
   String toLatexString() {
     // If there's no trig function, just return the constant term
@@ -45,10 +45,49 @@ class EquationTerm {
       return '';
     }
     
-    // Format phase shift as a fraction of π
+    // Handle amplitude special cases
+    String sign = amplitude >= 0 ? '+' : '-'; // sign based if amplitude is positive or negative
+    int absAmplitude = amplitude.abs(); 
+    String freqStr;
     String phaseStr = '';
+
+    // Handle frequency display as a fraction
+    // based on whether π is included or not
+    if (includesPi) {
+      // Format with π next to numerator
+      if (frequencyNumerator == frequencyDenominator) {
+        // if numerator = denominator, show nπt nstead of (n/n)
+        freqStr = '\\pi t';
+      } else if (frequencyDenominator == 1) {
+        // If denominator = 1, just show numerator nπt instead of (nπt/1)
+        freqStr = '$frequencyNumerator\\pi t';
+      } else if (frequencyNumerator == 1) {
+        // if numerator = 1, show πt in numerator (πt/n) instead of (1πnt/n)
+        freqStr = '\\frac{\\pi t}{$frequencyDenominator}';
+      } else {
+        // (nπt/m) format
+        freqStr = '\\frac{$frequencyNumerator\\pi t}{$frequencyDenominator}';
+      }
+    } else {
+      // Regular format without π
+      if (frequencyNumerator == frequencyDenominator) {
+        // if numerator = denominator, show t nstead of (n/n)
+        freqStr = 't';
+      } else if (frequencyDenominator == 1) {
+        // If denominator = 1, just show numerator nt instead of (nπt/1)
+        freqStr = '$frequencyNumerator t';
+      } else if (frequencyNumerator == 1) {
+        // if numerator = 1, show t in numerator (πt/n) instead of (1πnt/n)
+        freqStr = '\\frac{t}{$frequencyDenominator}';
+      } else {
+        // (nt/m) format
+        freqStr = '\\frac{$frequencyNumerator t}{$frequencyDenominator}';
+      }
+    }
+
+    // Format phase shift as a fraction of π
     if (phaseShiftNumerator != 0) {
-      // Special case for numerator = 1 or -1
+      // Special case for numerator = 1 or -1, to prevent showing 1pi or -1pi, instead just show pi or -pi
       if (phaseShiftNumerator.abs() == 1 && phaseShiftDenominator == 1) {
         // Just π (or -π) without the 1
         phaseStr = phaseShiftNumerator > 0 ? '+\\pi' : '-\\pi';
@@ -70,44 +109,6 @@ class EquationTerm {
       }
     }
     
-    // Handle frequency display as a fraction
-    String freqStr;
-    if (includesPi) {
-      // Format with π next to numerator
-      if (frequencyNumerator == frequencyDenominator) {
-        // If frequency = 1 (n/n)
-        freqStr = '\\pi t';
-      } else if (frequencyDenominator == 1) {
-        // If it's a whole number
-        freqStr = '$frequencyNumerator\\pi t';
-      } else if (frequencyNumerator == 1) {
-        // Special case for numerator = 1
-        freqStr = '\\frac{\\pi t}{$frequencyDenominator}';
-      } else {
-        // It's a proper fraction
-        freqStr = '\\frac{$frequencyNumerator\\pi t}{$frequencyDenominator}';
-      }
-    } else {
-      // Regular format without π
-      if (frequencyNumerator == frequencyDenominator) {
-        // If frequency = 1 (n/n)
-        freqStr = 't';
-      } else if (frequencyDenominator == 1) {
-        // If it's a whole number
-        freqStr = '$frequencyNumerator t';
-      } else if (frequencyNumerator == 1) {
-        // Special case for numerator = 1
-        freqStr = '\\frac{t}{$frequencyDenominator}';
-      } else {
-        // It's a proper fraction
-        freqStr = '\\frac{$frequencyNumerator t}{$frequencyDenominator}';
-      }
-    }
-    
-    // Handle amplitude special cases
-    String sign = amplitude >= 0 ? '+' : '-';
-    int absAmplitude = amplitude.abs();
-    
     // For amplitude with absolute value 1, we don't show the 1
     if (absAmplitude == 1) {
       return '$sign\\$functionType($freqStr$phaseStr)';
@@ -116,25 +117,51 @@ class EquationTerm {
     }
   }
   
-  // Helper function to find Greatest Common Divisor
-  int _findHcf(int a, int b) {
-    a = a.abs();
-    b = b.abs();
-    return b == 0 ? a : _findHcf(b, a % b);
-  }
   
-  // Simplify the fraction
+  //******************************************************************** */
+  // Simplify the fraction into lowest terms
   void simplifyFraction() {
+
+    // avoid divison by 0
     if (frequencyNumerator == 0 || frequencyDenominator == 0) {
+
+      // simplify phase shift if possible
+      if (phaseShiftNumerator == 0 || phaseShiftDenominator == 0) {
       return; // Avoid division by zero
     }
-    int hcf = _findHcf(frequencyNumerator, frequencyDenominator);
+
+      int hcf = findHcf(phaseShiftNumerator, phaseShiftDenominator);
+      // simplify phase shift
+      if (hcf > 0) {
+        phaseShiftNumerator ~/= hcf; 
+        phaseShiftDenominator ~/= hcf;
+      }
+      return; // Avoid division by zero
+    }
+
+
+    int hcf = findHcf(frequencyNumerator, frequencyDenominator);
+    // simplify frequency
     if (hcf > 0) {
-      frequencyNumerator ~/= hcf;
+      frequencyNumerator ~/= hcf; 
       frequencyDenominator ~/= hcf;
     }
+
+    // after simplifying frequency, simplify phase shift if possible
+    if (phaseShiftNumerator == 0 || phaseShiftDenominator == 0) {
+      return; // Avoid Divison by zero
+    }
+
+    hcf = findHcf(phaseShiftNumerator, phaseShiftDenominator);
+    // simplify phase shift
+    if (hcf > 0) {
+      phaseShiftNumerator ~/= hcf; 
+      phaseShiftDenominator ~/= hcf;
+    }
+
   }
-  
+
+  //******************************************************************** */
   // Validate and constrain all values to their allowed ranges
   void validate() {
     // Amplitude constraints (-10 to 10, excluding 0)
@@ -154,18 +181,22 @@ class EquationTerm {
     simplifyFraction();
   }
   
+  //******************************************************************** */
   // Check if this term should be rendered (valid values for each part)
   bool isValid() {
+    // return false if amplitude is 0 when the term does not have a trig function
     if (!hasTrigFunction) {
-      return amplitude != 0;
+      return amplitude != 0; 
     }
     
+    // return false if any of the following are invalid (amplitude must not be 0, other values must be > 0)
     return amplitude != 0 && 
            frequencyNumerator > 0 && 
            frequencyDenominator > 0 && 
            phaseShiftDenominator > 0;
   }
 
+  //******************************************************************** */
   List<FlSpot> getSignalPoints(double startX, double endX, double step) {
     List<FlSpot> points = [];
     
@@ -176,7 +207,7 @@ class EquationTerm {
     
     return points;
   }
-
+  //******************************************************************** */
   double calculateValueAt(double t) {
     // For constant term without trig function
     if (!hasTrigFunction) {
@@ -206,6 +237,33 @@ class EquationTerm {
   } 
 }
 
+//******************************************************************** */
+/// This function combines multiple signal points into a single list.
+List<FlSpot> getCombinedSignalPoints(double startX, double endX, double step, List<EquationTerm> terms) {
+  // Calculate the number of points
+  int numPoints = ((endX - startX) / step).ceil() + 1;
+  List<double> combinedYValues = List.filled(numPoints, 0.0);
+  
+  // For each term, add its contribution
+  for (var term in terms) {
+    List<FlSpot> termPoints = term.getSignalPoints(startX, endX, step);
+    for (int i = 0; i < termPoints.length && i < numPoints; i++) {
+      combinedYValues[i] += termPoints[i].y;
+    }
+  }
+  
+  // Convert back to FlSpot list
+  List<FlSpot> combinedPoints = [];
+  for (int i = 0; i < numPoints; i++) {
+    double x = startX + i * step;
+    combinedPoints.add(FlSpot(x, combinedYValues[i]));
+  }
+  
+  return combinedPoints;
+}
+
+
+//******************************************************************** */
 /// Checks if the signal represented by the given terms is periodic.
 /// Returns a map containing:
 /// - 'isPeriodic': Whether the signal is periodic
@@ -218,6 +276,8 @@ Map<String, bool> checkSignalPeriodicity(List<EquationTerm> terms) {
   bool allNonPiTerms = true;
   bool hasFrequencyTerms = false;
   
+  // check if each term has a trig function
+  // if have, check whether that term has pi
   for (var term in terms) {
     if (term.hasTrigFunction) {
       hasFrequencyTerms = true;
@@ -229,6 +289,7 @@ Map<String, bool> checkSignalPeriodicity(List<EquationTerm> terms) {
     }
   }
   
+  //
   bool hasMixedTerms = !allPiTerms && !allNonPiTerms;
   bool isPeriodic = hasFrequencyTerms ? !hasMixedTerms : true;
   
@@ -240,20 +301,23 @@ Map<String, bool> checkSignalPeriodicity(List<EquationTerm> terms) {
     'hasMixedTerms': hasMixedTerms,
   };
 }
-
-/// Helper function to find the Highest Common Factor (HCF) or Greatest Common Divisor (GCD)
+//******************************************************************** */
+// Helper function to find Highest Common Factor or Greatest Common Divisor
+  // Euclidean Algorithm with recursion
+  // https://www.wscubetech.com/resources/dsa/euclidean-algorithm
 int findHcf(int a, int b) {
   a = a.abs();
   b = b.abs();
   return b == 0 ? a : findHcf(b, a % b);
 }
-
+//******************************************************************** */
 /// Helper function to find the Lowest Common Multiple (LCM)
+/// https://www.geeksforgeeks.org/program-to-find-lcm-of-two-numbers/
 int findLcm(int a, int b) {
   if (a == 0 || b == 0) return 0;
   return (a * b) ~/ findHcf(a, b);
 }
-
+//******************************************************************** */
 /// Analyses each term in the equation and extracts frequency and period information
 /// Returns a list of maps, each containing analysis for one term
 List<Map<String, dynamic>> analyseTermPeriodicity(List<EquationTerm> terms) {
@@ -317,7 +381,7 @@ List<Map<String, dynamic>> analyseTermPeriodicity(List<EquationTerm> terms) {
   
   return termAnalysis;
 }
-
+//******************************************************************** */
 /// Calculates the fundamental period and frequency based on term analyses
 /// Returns a map with calculated values for display
 Map<String, dynamic> calculateFundamentalPeriodicity(List<Map<String, dynamic>> termAnalysis) {
@@ -389,7 +453,7 @@ int calculatea0(List<EquationTerm> terms) {
     }
     return a0;
 }
-
+//******************************************************************** */
 // Helper function to calculate which harmonic a term belongs to
 int calculateHarmonicNumber(EquationTerm term, Map<String, dynamic> fundamentalValues) {
   if (!term.hasTrigFunction) return 0; // Constants don't contribute to harmonics
@@ -415,7 +479,7 @@ int calculateHarmonicNumber(EquationTerm term, Map<String, dynamic> fundamentalV
   
   return 0; // Not an integer harmonic
 }
-
+//******************************************************************** */
 /// Calculates the an coefficients (cosine coefficients) for a given signal
 /// Returns a map with harmonic numbers as keys and coefficient values as values
 Map<int, double> calculateAnCoefficients(List<EquationTerm> terms, Map<String, dynamic> fundamentalValues) {
@@ -453,7 +517,7 @@ Map<int, double> calculateAnCoefficients(List<EquationTerm> terms, Map<String, d
   
   return anCoefficients;
 }
-
+//******************************************************************** */
 /// Calculates the bn coefficients (sine coefficients) for a given signal
 /// Returns a map with harmonic numbers as keys and coefficient values as values
 Map<int, double> calculateBnCoefficients(List<EquationTerm> terms, Map<String, dynamic> fundamentalValues) {
@@ -491,14 +555,14 @@ Map<int, double> calculateBnCoefficients(List<EquationTerm> terms, Map<String, d
   
   return bnCoefficients;
 }
-
+//******************************************************************** */
 /// Get all harmonics present in the Fourier series
 List<int> getAllHarmonics(Map<int, double> anCoefficients, Map<int, double> bnCoefficients) {
   Set<int> harmonicSet = {...anCoefficients.keys, ...bnCoefficients.keys};
   List<int> harmonics = harmonicSet.toList()..sort();
   return harmonics;
 }
-
+//******************************************************************** */
 /// Format a single harmonic term for display in LaTeX
 String formatHarmonicTermLatex(int harmonic, double an, double bn) {
   String result = "";
@@ -526,7 +590,7 @@ String formatHarmonicTermLatex(int harmonic, double an, double bn) {
   
   return result;
 }
-
+//******************************************************************** */
 /// Format the complete Fourier series in LaTeX
 String formatFourierSeriesLatex(int a0Value, Map<int, double> anCoeffs, Map<int, double> bnCoeffs) {
   String result = r'f(t) = ';
@@ -573,7 +637,7 @@ String formatFourierSeriesLatex(int a0Value, Map<int, double> anCoeffs, Map<int,
   }
   return result;
 }
-
+//******************************************************************** */
 /// Format the Fourier series with ω₀ substituted with its actual value
 String formatFourierSeriesWithOmega0(int a0Value, Map<int, double> anCoeffs, Map<int, double> bnCoeffs, Map<String, dynamic> fundamentalValues) {
   String result = r'f(t) = ';
@@ -655,85 +719,82 @@ String formatCoefficientValue(double value) {
     return value.toStringAsFixed(2);
   }
 }
-
+//******************************************************************** */
 //***************************************************************************** */
-  // Helper method to format the fundamental frequency LaTeX string
-  String formatFrequencyLatex(bool includesPi, int num, int denom) {
-    String freqStr = r'\omega_0 = \frac{2\pi}{T_0} = ';
-    
-    // Handle cases with π
-    if (includesPi) {
-      // Case: denominator is 1
-      if (denom == 1) {
-        // Case: numerator is also 1
-        if (num == 1) {
-          freqStr += r'\pi \text{ rad/s}';
-        } else {
-          freqStr += num.toString() + r'\pi \text{ rad/s}';
-        }
-      }
-      // Case: numerator is 1, denominator is not 1
-      else if (num == 1) {
-        freqStr += r'\frac{\pi}{' + denom.toString() + r'} \text{ rad/s}';
-      }
-      // General case
-      else {
-        freqStr += r'\frac{' + num.toString() + r'\pi}{' + denom.toString() + r'} \text{ rad/s}';
+// Helper method to format the fundamental frequency LaTeX string
+String formatFrequencyLatex(bool includesPi, int num, int denom) {
+  String freqStr = r'\omega_0 = \frac{2\pi}{T_0} = ';
+  
+  // Handle cases with π
+  if (includesPi) {
+    // Case: denominator is 1
+    if (denom == 1) {
+      // Case: numerator is also 1
+      if (num == 1) {
+        freqStr += r'\pi \text{ rad/s}';
+      } else {
+        freqStr += num.toString() + r'\pi \text{ rad/s}';
       }
     }
-    // Handle cases without π
+    // Case: numerator is 1, denominator is not 1
+    else if (num == 1) {
+      freqStr += r'\frac{\pi}{' + denom.toString() + r'} \text{ rad/s}';
+    }
+    // General case
     else {
-      // Case: denominator is 1
-      if (denom == 1) {
-        freqStr += num.toString() + r' \text{ rad/s}';
-      }
-      // General case
-      else {
-        freqStr += r'\frac{' + num.toString() + r'}{' + denom.toString() + r'} \text{ rad/s}';
-      }
+      freqStr += r'\frac{' + num.toString() + r'\pi}{' + denom.toString() + r'} \text{ rad/s}';
     }
-    
-    return freqStr;
   }
-
-
-
-  //***************************************************************************** */
-  // Helper method to format the fundamental period LaTeX string
-  String formatPeriodLatex(bool includesPi, int num, int denom) {
-    String periodStr = r'T_0 = \text{LCM}(T_1, T_2, \ldots) = ';
-    
-    // Handle cases with π
-    if (includesPi) {
-      // Case: denominator is 1
-      if (denom == 1) {
-        // Case: numerator is also 1
-        if (num == 1) {
-          periodStr += r'\pi';
-        } else {
-          periodStr += num.toString() + r'\pi';
-        }
-      }
-      // Case: numerator is 1, denominator is not 1
-      else if (num == 1) {
-        periodStr += r'\frac{\pi}{' + denom.toString() + r'}';
-      }
-      // General case
-      else {
-        periodStr += r'\frac{' + num.toString() + r'\pi}{' + denom.toString() + r'}';
-      }
-    } 
-    // Handle cases without π
+  // Handle cases without π
+  else {
+    // Case: denominator is 1
+    if (denom == 1) {
+      freqStr += num.toString() + r' \text{ rad/s}';
+    }
+    // General case
     else {
-      // Case: denominator is 1
-      if (denom == 1) {
-        periodStr += num.toString();
-      }
-      // General case
-      else {
-        periodStr += r'\frac{' + num.toString() + r'}{' + denom.toString() + r'}';
+      freqStr += r'\frac{' + num.toString() + r'}{' + denom.toString() + r'} \text{ rad/s}';
+    }
+  }
+  
+  return freqStr;
+}
+//***************************************************************************** */
+// Helper method to format the fundamental period LaTeX string
+String formatPeriodLatex(bool includesPi, int num, int denom) {
+  String periodStr = r'T_0 = \text{LCM}(T_1, T_2, \ldots) = ';
+  
+  // Handle cases with π
+  if (includesPi) {
+    // Case: denominator is 1
+    if (denom == 1) {
+      // Case: numerator is also 1
+      if (num == 1) {
+        periodStr += r'\pi';
+      } else {
+        periodStr += num.toString() + r'\pi';
       }
     }
-    
-    return periodStr;
+    // Case: numerator is 1, denominator is not 1
+    else if (num == 1) {
+      periodStr += r'\frac{\pi}{' + denom.toString() + r'}';
+    }
+    // General case
+    else {
+      periodStr += r'\frac{' + num.toString() + r'\pi}{' + denom.toString() + r'}';
+    }
+  } 
+  // Handle cases without π
+  else {
+    // Case: denominator is 1
+    if (denom == 1) {
+      periodStr += num.toString();
+    }
+    // General case
+    else {
+      periodStr += r'\frac{' + num.toString() + r'}{' + denom.toString() + r'}';
+    }
   }
+  
+  return periodStr;
+}
