@@ -815,7 +815,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                     controller: controllers[index][1],
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
-                      labelText: '1-200',
+                      labelText: '1-2000',
                       border: OutlineInputBorder(),
                       contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                     ),
@@ -843,8 +843,8 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                             calculateFourierSeries();
                           });
                           // check if the value is out of range [1, 200]
-                        } else if (parsed > 200) {
-                          parsed = 200; // Clamp to max 200 if value more than 200
+                        } else if (parsed > 2000) {
+                          parsed = 2000; // Clamp to max 200 if value more than 200
                           controllers[index][1].text = '200';
                           controllers[index][1].selection = TextSelection.fromPosition(
                             const TextPosition(offset: 3), // Move cursor Position at end of "200"
