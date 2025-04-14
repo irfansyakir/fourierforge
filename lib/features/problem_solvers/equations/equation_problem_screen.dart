@@ -61,170 +61,6 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     calculateFourierSeries();
   }
   
-  // Initialize the 5 controllers for each term's 5 textfields
-  void initializeControllers() {
-    controllers = [];
-    for (int i = 0; i < terms.length; i++) {
-      controllers.add([
-        TextEditingController(text: terms[i].amplitude.toString()),
-        TextEditingController(text: terms[i].frequencyNumerator.toString()),
-        TextEditingController(text: terms[i].frequencyDenominator.toString()),
-        TextEditingController(text: terms[i].phaseShiftNumerator.toString()),
-        TextEditingController(text: terms[i].phaseShiftDenominator.toString()),
-      ]);
-    }
-  }
-  
-  // Update a specific term's controllers with current values from the terms
-  // index specifies which term to update
-  void updateControllers(int index) {
-    controllers[index][0].text = terms[index].amplitude.toString();
-    controllers[index][1].text = terms[index].frequencyNumerator.toString();
-    controllers[index][2].text = terms[index].frequencyDenominator.toString();
-    controllers[index][3].text = terms[index].phaseShiftNumerator.toString();
-    controllers[index][4].text = terms[index].phaseShiftDenominator.toString();
-  }
-  
-
-  @override
-  void dispose() {
-    // Dispose all controllers with null safety check
-    try {
-      if (controllers.isNotEmpty) {
-        for (var controllerList in controllers) {
-          for (var controller in controllerList) {
-            controller.dispose();
-          }
-        }
-      }
-    } catch (e) {
-      // Nothing
-    }
-    super.dispose();
-  }
-
-  // Get the latex string representation of the entire equation
-  String getEquationLatex() {
-    if (terms.isEmpty) {
-      return '0';
-    }
-    
-    // Filter out invalid terms using .where() and isValid()
-    // var newList = oldList.where((element) => condition);
-    List<EquationTerm> validTerms = terms.where((term) => term.isValid()).toList();
-    
-    // If no valid terms, return '0'
-    if (validTerms.isEmpty) {
-      return '0';
-    }
-    
-    // Build the latex string
-    String latex = '';
-    for (int i = 0; i < validTerms.length; i++) {
-      String termLatex = validTerms[i].toLatexString();
-      if (termLatex.isEmpty) continue; // Skip empty terms
-      
-      // No positive sign for the first term
-      if (i == 0) {
-        if (termLatex.startsWith('+')) {
-          latex += termLatex.substring(1).trim(); // Remove the + sign
-        } else {
-          latex += termLatex; // Keep the - sign
-        }
-      } else {
-        latex += ' ' + termLatex; // Include the sign
-      }
-    }
-    
-    return latex.isEmpty ? '0' : latex;
-  }
-
-  // Add a new term to the equation
-  void addTerm() {
-    if (terms.length < maxTerms) {
-      setState(() {
-        // Add a new term with default values
-        terms.add(EquationTerm(
-          amplitude: 1,
-          hasTrigFunction: true,
-          functionType: 'cos',
-          frequencyNumerator: 1,
-          frequencyDenominator: 1,
-          includesPi: true,
-          phaseShiftNumerator: 0,
-          phaseShiftDenominator: 1,
-        ));
-        
-
-        // Add a list of new controllers
-        controllers.add([
-          TextEditingController(text: '1'),
-          TextEditingController(text: '1'),
-          TextEditingController(text: '1'),
-          TextEditingController(text: '0'),
-          TextEditingController(text: '1'),
-        ]);
-
-        // recalculate the Fourier series
-        calculateFourierSeries();
-      });
-    }
-  }
-
-  // Remove a specific term via index
-  void removeTerm(int index) {
-    if (terms.length > 1) {
-      setState(() {
-        // Dispose controllers for the removed term
-        for (var controller in controllers[index]) {
-          controller.dispose();
-        }
-        
-        terms.removeAt(index);
-        controllers.removeAt(index);
-      });
-    } else {
-      // If there is only 1 term left, reset it to default values to prevent 0 terms
-      setState(() {
-        terms[index] = EquationTerm(
-          amplitude: 1,
-          hasTrigFunction: true,
-          functionType: 'cos',
-          frequencyNumerator: 1,
-          frequencyDenominator: 1,
-          includesPi: true,
-          phaseShiftNumerator: 0,
-          phaseShiftDenominator: 1,
-
-        );
-        updateControllers(index);
-      });
-    }
-    // Recalculate the Fourier series after removing a term
-    calculateFourierSeries();
-  }
-
-  // Remove all terms and reset to default single term
-  void removeAllTerms() {
-    setState(() {
-      // Dispose all existing controllers
-      for (var controllerList in controllers) {
-        for (var controller in controllerList) {
-          controller.dispose();
-        }
-      }
-      
-      // Clear terms list
-      terms.clear();
-      controllers.clear();
-      
-      // Reset to preset 0 (default case)
-      preset = 0;
-      presetTerms(preset);
-      calculateFourierSeries();
-    });
-  }
-
   void presetTerms(int preset) {
     // Dispose existing controllers (if any) to prevent memory leaks
     try {
@@ -392,7 +228,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     // Calculate term analysis for periodicity
     termAnalysis = analyseTermPeriodicity(terms);
     
-    // Calculate fundamental periodicity values
+    // Calculate fundamental periodicity values (fundamental period and fundamental frequency, both numerator and denominator)  
     fundamentalValues = calculateFundamentalPeriodicity(termAnalysis);
     
     // Calculate Fourier coefficients an and bn
@@ -401,6 +237,168 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
     
     // Get all harmonics
     harmonics = getAllHarmonics(anCoefficients, bnCoefficients);
+  }
+
+  // Initialize the 5 controllers for each term's 5 textfields
+  void initializeControllers() {
+    controllers = [];
+    for (int i = 0; i < terms.length; i++) {
+      controllers.add([
+        TextEditingController(text: terms[i].amplitude.toString()),
+        TextEditingController(text: terms[i].frequencyNumerator.toString()),
+        TextEditingController(text: terms[i].frequencyDenominator.toString()),
+        TextEditingController(text: terms[i].phaseShiftNumerator.toString()),
+        TextEditingController(text: terms[i].phaseShiftDenominator.toString()),
+      ]);
+    }
+  }
+  
+  // Update a specific term's controllers with current values from the terms
+  // index specifies which term to update
+  void updateControllers(int index) {
+    controllers[index][0].text = terms[index].amplitude.toString();
+    controllers[index][1].text = terms[index].frequencyNumerator.toString();
+    controllers[index][2].text = terms[index].frequencyDenominator.toString();
+    controllers[index][3].text = terms[index].phaseShiftNumerator.toString();
+    controllers[index][4].text = terms[index].phaseShiftDenominator.toString();
+  }
+  // Get the latex string representation of the entire equation
+  String getEquationLatex() {
+    if (terms.isEmpty) {
+      return '0';
+    }
+    
+    // Filter out invalid terms using .where() and isValid()
+    // var newList = oldList.where((element) => condition);
+    List<EquationTerm> validTerms = terms.where((term) => term.isValid()).toList();
+    
+    // If no valid terms, return '0'
+    if (validTerms.isEmpty) {
+      return '0';
+    }
+    
+    // Build the latex string
+    String latex = '';
+    for (int i = 0; i < validTerms.length; i++) {
+      String termLatex = validTerms[i].toLatexString();
+      if (termLatex.isEmpty) continue; // Skip empty terms
+      
+      // No positive sign for the first term
+      if (i == 0) {
+        if (termLatex.startsWith('+')) {
+          latex += termLatex.substring(1).trim(); // Remove the + sign
+        } else {
+          latex += termLatex; // Keep the - sign
+        }
+      } else {
+        latex += ' ' + termLatex; // Include the sign
+      }
+    }
+    
+    return latex.isEmpty ? '0' : latex;
+  }
+
+  // Add a new term to the equation
+  void addTerm() {
+    if (terms.length < maxTerms) {
+      setState(() {
+        // Add a new term with default values
+        terms.add(EquationTerm(
+          amplitude: 1,
+          hasTrigFunction: true,
+          functionType: 'cos',
+          frequencyNumerator: 1,
+          frequencyDenominator: 1,
+          includesPi: true,
+          phaseShiftNumerator: 0,
+          phaseShiftDenominator: 1,
+        ));
+        
+
+        // Add a list of new controllers
+        controllers.add([
+          TextEditingController(text: '1'),
+          TextEditingController(text: '1'),
+          TextEditingController(text: '1'),
+          TextEditingController(text: '0'),
+          TextEditingController(text: '1'),
+        ]);
+
+        // recalculate the Fourier series
+        calculateFourierSeries();
+      });
+    }
+  }
+
+  // Remove a specific term via index
+  void removeTerm(int index) {
+    if (terms.length > 1) {
+      setState(() {
+        // Dispose controllers for the removed term
+        for (var controller in controllers[index]) {
+          controller.dispose();
+        }
+        
+        terms.removeAt(index);
+        controllers.removeAt(index);
+      });
+    } else {
+      // If there is only 1 term left, reset it to default values to prevent 0 terms
+      setState(() {
+        terms[index] = EquationTerm(
+          amplitude: 1,
+          hasTrigFunction: true,
+          functionType: 'cos',
+          frequencyNumerator: 1,
+          frequencyDenominator: 1,
+          includesPi: true,
+          phaseShiftNumerator: 0,
+          phaseShiftDenominator: 1,
+
+        );
+        updateControllers(index);
+      });
+    }
+    // Recalculate the Fourier series after removing a term
+    calculateFourierSeries();
+  }
+
+  // Remove all terms and reset to default single term
+  void removeAllTerms() {
+    setState(() {
+      // Dispose all existing controllers
+      for (var controllerList in controllers) {
+        for (var controller in controllerList) {
+          controller.dispose();
+        }
+      }
+      
+      // Clear terms list
+      terms.clear();
+      controllers.clear();
+      
+      // Reset to preset 0 (default case)
+      preset = 0;
+      presetTerms(preset);
+      calculateFourierSeries();
+    });
+  }
+
+  @override
+  void dispose() {
+    // Dispose all controllers with null safety check
+    try {
+      if (controllers.isNotEmpty) {
+        for (var controllerList in controllers) {
+          for (var controller in controllerList) {
+            controller.dispose();
+          }
+        }
+      }
+    } catch (e) {
+      // Nothing
+    }
+    super.dispose();
   }
 
 /// ***********************************************************************************************

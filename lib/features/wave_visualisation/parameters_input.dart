@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import '../../themes/colours.dart';
 
-// This file has 2 widgets: 
-// ParameterInputs: A StatelessWidget that calls the ParameterInput widget for each parameter.
-// ParameterInput: A StatefulWidget that displays a slider and a text field for a parameter.
 
-// Front End
+
+/// This widget displays the inputs for the parameters of the wave
+/// It includes the number of terms, frequency, amplitude, and phase shift
+/// Each parameter has a slider for input
+/// The slider allows the user to select a value within a range
+/// The widget also includes a button to reset the parameters to their default values
 class ParameterInputs extends StatefulWidget {
   /// This widget displays the inputs for the parameters of the wave
   /// It includes the number of terms, frequency, amplitude, and phase shift
@@ -20,6 +22,7 @@ class ParameterInputs extends StatefulWidget {
   final Function(double) onFrequencyChanged;
   final Function(double) onAmplitudeChanged;
   final Function(double) onPhaseShiftChanged;
+  final Function() onReset;
 
   const ParameterInputs({
     super.key,
@@ -31,6 +34,7 @@ class ParameterInputs extends StatefulWidget {
     required this.onFrequencyChanged,
     required this.onAmplitudeChanged,
     required this.onPhaseShiftChanged,
+    required this.onReset,
   });
 
   @override
@@ -92,8 +96,19 @@ class _ParameterInputsState extends State<ParameterInputs> {
           2,
         ),
 
-
-      
+        // Reset Parameters button
+        Center(
+            child: ElevatedButton.icon(
+              onPressed: () {
+                widget.onReset();
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('Reset Parameters'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),    
+              ),
+            ),
+          ) 
       ],
     );
   }
@@ -119,8 +134,7 @@ class _ParameterInputsState extends State<ParameterInputs> {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          
-          
+          // Row to hold the slider and the value
           Row(
             children: [
               // Slider for the parameter
@@ -163,6 +177,8 @@ class _ParameterInputsState extends State<ParameterInputs> {
               )
             ],
           ),
+
+          
         ],
       ),
      );

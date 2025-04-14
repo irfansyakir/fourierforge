@@ -39,9 +39,7 @@ class ProblemsScreen extends StatelessWidget {
             ],
           ),
         ),
-
         const SizedBox(height: 20),
-
         // Problem Card for Rectifier Problem
         _buildProblemCard(
           context,

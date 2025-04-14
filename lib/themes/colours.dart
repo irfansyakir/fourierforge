@@ -47,7 +47,7 @@ class AppColours {
   static const Color phaseSpectrum = Colors.red;
   
   // Title colors
-  static const Color titleText = Color(0xFF303F9F); // indigo[700], same as primaryDark
+  static const Color titleText = Color(0xFF303F9F); // indigo[700], 
   static const Color titleUnderline = Color(0xFF5C6BC0); // indigo[400]
   static const Color iconCirle = Color(0xFF7986CB); // indigo[300]
 }

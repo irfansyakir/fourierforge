@@ -19,8 +19,6 @@ class EquationTerm {
   int phaseShiftNumerator;
   int phaseShiftDenominator;
   
-  
-
   EquationTerm({
     required this.amplitude,
     this.hasTrigFunction = true,
@@ -117,9 +115,9 @@ class EquationTerm {
     }
   }
   
-  
   //******************************************************************** */
   // Simplify the fraction into lowest terms
+  // https://labex.io/tutorials/c-simplify-fractions-gcd-in-c-435194
   void simplifyFraction() {
 
     // avoid divison by 0
@@ -261,8 +259,6 @@ List<FlSpot> getCombinedSignalPoints(double startX, double endX, double step, Li
   
   return combinedPoints;
 }
-
-
 //******************************************************************** */
 /// Checks if the signal represented by the given terms is periodic.
 /// Returns a map containing:
@@ -443,12 +439,12 @@ Map<String, dynamic> calculateFundamentalPeriodicity(List<Map<String, dynamic>> 
     'fundFreqDenom': fundFreqDenom,
   };
 }
-
 int calculatea0(List<EquationTerm> terms) {
     int a0 = 0;
-    for (int i = 0; i < terms.length; i++) {
-      if (terms[i].hasTrigFunction == false) {
-        a0 += terms[i].amplitude;
+    for (var term in terms) {
+      // Only add the amplitude of constant terms
+      if (!term.hasTrigFunction) {
+        a0 += term.amplitude;
       }
     }
     return a0;
@@ -707,7 +703,6 @@ String formatFourierSeriesWithOmega0(int a0Value, Map<int, double> anCoeffs, Map
   }
   return result;
 }
-
 /// Helper function to format coefficient values:
 /// - Whole numbers don't have decimal places
 /// - Non-whole numbers have exactly 2 decimal places

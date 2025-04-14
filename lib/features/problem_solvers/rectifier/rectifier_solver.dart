@@ -19,14 +19,13 @@ class RectifierSolver {
   
   // Generate points for input signal
   List<FlSpot> getInputSignalPoints() {
-    List<FlSpot> points = [];
-    
+    List<FlSpot> points = []; 
+
     // Generate 200 points for smooth curves
     for (double t = 0; t <= 2; t += 0.01) {
       double y = getInputValue(t);
       points.add(FlSpot(t, y));
     }
-    
     return points;
   }
   
@@ -40,7 +39,6 @@ class RectifierSolver {
       double output = getOutputValue(input);
       points.add(FlSpot(t, output));
     }
-    
     return points;
   }
 
@@ -78,7 +76,6 @@ class RectifierSolver {
     } else {
       period = 1 / frequency;
     }
-    
     // Round to 4 decimal places first
     String periodString = period.toStringAsFixed(4);
     
@@ -102,7 +99,6 @@ class RectifierSolver {
     } else {
       period = 2 / frequency;
     }
-
     outputFrequency = 1 / period;
     
     // Round to 4 decimal places first
@@ -115,7 +111,6 @@ class RectifierSolver {
       // Remove decimal point if it's the last character
       outputFrequencyString = outputFrequencyString.replaceAll(RegExp(r'\.$'), '');
     }
-    
     return outputFrequencyString;
   }
 }

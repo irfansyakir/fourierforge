@@ -48,7 +48,6 @@ class Question3ASolutionCard extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
             
-            // Using SingleChildScrollView for potentially wide equation
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Container(

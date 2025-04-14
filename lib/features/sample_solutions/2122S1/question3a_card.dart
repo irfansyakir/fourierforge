@@ -22,7 +22,6 @@ class Question3ACard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             
-            // Question text on its own line
             const Text(
               'Consider the signal:',
               style: TextStyle(fontSize: 16, color: Colors.black),
@@ -30,13 +29,11 @@ class Question3ACard extends StatelessWidget {
             
             const SizedBox(height: 8),
             
-            // Equation on a new line with horizontal scrolling
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Container(
-                // Optional: Adding a minimum width to ensure it's scrollable
                 constraints: BoxConstraints(
-                  minWidth: MediaQuery.of(context).size.width - 64, // Subtract padding
+                  minWidth: MediaQuery.of(context).size.width - 64, 
                 ),
                 child: Math.tex(
                   r'p(t) = -1 + \sin\left(\frac{6}{7}t\right) - 2\cos^2\left(\frac{3}{7}t\right) + 4\cos\left(\frac{6}{5}t + \frac{\pi}{3}\right)',
@@ -58,15 +55,10 @@ class Question3ACard extends StatelessWidget {
 
             )),
             
-            // // Part (i)
-            // const Text(
-            //   '(i) Express the signal p(t) in the form such that all terms are harmonically related.',
-            //   style: TextStyle(fontSize: 16),
-            // ),
-            
+       
             const SizedBox(height: 16),
             
-            // Part (ii) - Text with inline math
+            // Part (ii) 
             RichText(
               text: TextSpan(
                 style: const TextStyle(fontSize: 16, color: Colors.black),

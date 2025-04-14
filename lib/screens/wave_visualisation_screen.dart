@@ -111,13 +111,7 @@ class WaveVisualisationScreenState extends State<WaveVisualisationScreen> {
                 updateGraph();
               });
             },
-          ),
-          const SizedBox(height: 16),
-          
-          // Reset button to reset all parameters
-          Center(
-            child: ElevatedButton.icon(
-              onPressed: () {
+            onReset: () {
                 setState(() {
                   waveModel = WaveModel(
                     type: WaveType.square,
@@ -129,14 +123,7 @@ class WaveVisualisationScreenState extends State<WaveVisualisationScreen> {
                   updateGraph();
                 });
               },
-              icon: const Icon(Icons.refresh),
-              label: const Text('Reset Parameters'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                
-              ),
-            ),
-          ),
+          ),       
         ],
       ),
     );
