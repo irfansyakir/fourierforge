@@ -813,7 +813,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                   height: 40,
                   child: TextField(
                     controller: controllers[index][1],
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.numberWithOptions(signed: true),
                     decoration: const InputDecoration(
                       labelText: '1-2000',
                       border: OutlineInputBorder(),
@@ -876,7 +876,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                   height: 40,
                   child: TextField(
                     controller: controllers[index][2],
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.numberWithOptions(signed: true),
                     decoration: const InputDecoration(
                       labelText: '1-200',
                       border: OutlineInputBorder(),
@@ -938,7 +938,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                   height: 40,
                   child: TextField(
                     controller: controllers[index][3],
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.numberWithOptions(signed: true),
                     decoration: const InputDecoration(
                       labelText: '-360 - 360',
                       border: OutlineInputBorder(),
@@ -984,7 +984,7 @@ class EquationProblemScreenState extends State<EquationProblemScreen> {
                   height: 40,
                   child: TextField(
                     controller: controllers[index][4],
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.numberWithOptions(signed: true),
                     decoration: const InputDecoration(
                       labelText: '1-180',
                       border: OutlineInputBorder(),

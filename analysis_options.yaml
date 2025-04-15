@@ -5,3 +5,4 @@ analyser:
 analyzer:
   errors:
     prefer_interpolation_to_compose_strings: ignore
+    depend_on_referenced_packages: ignore
