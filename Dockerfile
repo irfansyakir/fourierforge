@@ -1,5 +1,5 @@
 # Stage 1: Build the Flutter web app
-FROM dart:stable AS build
+FROM --platform=linux/amd64 dart:stable AS build
 
 # Set working directory
 WORKDIR /app
@@ -26,7 +26,7 @@ RUN flutter pub get
 RUN flutter build web --release
 
 # Stage 2: Create a lightweight web server to serve the application
-FROM nginx:alpine
+FROM --platform=linux/amd64 nginx:alpine
 
 # Copy the built web app from the previous stage
 COPY --from=build /app/build/web /usr/share/nginx/html
