@@ -44,10 +44,9 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-
-
+# Deployment files
 fourier-forge-key.pem
-.gitignore
 fourier-forge.tar
-.gitignore
 ec2-user@ec2-44-203-47-20.compute-1.amazonaws.com
+remote_deploy.sh
+docker-compose.yml
